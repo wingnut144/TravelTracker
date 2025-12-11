@@ -153,30 +153,52 @@ def requires_trip_access(edit=False):
     return decorator
 
 
-def get_coordinates_from_address(address, user_settings):
-    """Get latitude and longitude from address using user's Google Maps API key"""
-    if not user_settings or not user_settings.has_google_maps():
-        logger.warning("User does not have Google Maps API configured")
-        return None, None
+def get_coordinates_from_address(address, user_settings=None):
+    """
+    Get latitude and longitude from address using OpenStreetMap Nominatim (FREE)
+    No API key required!
+    
+    Args:
+        address: Address string to geocode
+        user_settings: Not used (kept for compatibility)
+    
+    Returns:
+        tuple: (latitude, longitude) or (None, None) if geocoding fails
+    """
+    import time
     
     try:
-        url = 'https://maps.googleapis.com/maps/api/geocode/json'
+        url = 'https://nominatim.openstreetmap.org/search'
         params = {
-            'address': address,
-            'key': user_settings.google_maps_api_key
+            'q': address,
+            'format': 'json',
+            'limit': 1,
+            'addressdetails': 1
+        }
+        headers = {
+            'User-Agent': 'TravelTracker/1.0'  # Required by Nominatim usage policy
         }
         
-        response = requests.get(url, params=params, timeout=10)
-        data = response.json()
+        # Nominatim rate limit: 1 request per second
+        time.sleep(1)
         
-        if data['status'] == 'OK' and data['results']:
-            location = data['results'][0]['geometry']['location']
-            return location['lat'], location['lng']
+        response = requests.get(url, params=params, headers=headers, timeout=10)
         
+        if response.status_code == 200:
+            data = response.json()
+            
+            if data and len(data) > 0:
+                result = data[0]
+                lat = float(result['lat'])
+                lng = float(result['lon'])
+                logger.info(f"Successfully geocoded address: {address} -> ({lat}, {lng})")
+                return lat, lng
+        
+        logger.warning(f"No results found for address: {address}")
         return None, None
     
     except Exception as e:
-        logger.error(f"Error geocoding address: {str(e)}")
+        logger.error(f"Error geocoding address with OpenStreetMap: {str(e)}")
         return None, None
 
 

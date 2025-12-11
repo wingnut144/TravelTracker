@@ -279,10 +279,10 @@ def add_accommodation(trip_id):
     if request.method == 'POST':
         address = request.form.get('address')
         
-        # Get coordinates if Google Maps is enabled and configured
+        # Get coordinates using OpenStreetMap (free, no API key needed)
         lat, lng = None, None
-        if current_user.user_settings.google_maps_enabled and current_user.user_settings.has_google_maps() and address:
-            lat, lng = get_coordinates_from_address(address, current_user.user_settings)
+        if address:
+            lat, lng = get_coordinates_from_address(address)
         
         accommodation = Accommodation(
             trip_id=trip.id,
@@ -476,48 +476,6 @@ def test_immich():
         return jsonify({'success': False, 'message': f'Error: {str(e)}'})
 
 
-@app.route('/api/test/google-maps', methods=['POST'])
-@login_required
-def test_google_maps():
-    """Test Google Maps API key"""
-    settings = current_user.user_settings
-    
-    # Use temporary value if provided, otherwise use saved
-    api_key = request.form.get('google_maps_api_key', settings.google_maps_api_key)
-    
-    if not api_key:
-        return jsonify({'success': False, 'message': 'API key is required'})
-    
-    try:
-        # Test geocoding API with a simple address
-        url = 'https://maps.googleapis.com/maps/api/geocode/json'
-        params = {
-            'address': '1600 Amphitheatre Parkway, Mountain View, CA',
-            'key': api_key
-        }
-        
-        response = requests.get(url, params=params, timeout=5)
-        data = response.json()
-        
-        if data['status'] == 'OK':
-            return jsonify({
-                'success': True, 
-                'message': 'Google Maps API key is valid and working!'
-            })
-        elif data['status'] == 'REQUEST_DENIED':
-            return jsonify({
-                'success': False, 
-                'message': f'API key invalid: {data.get("error_message", "Request denied")}'
-            })
-        else:
-            return jsonify({
-                'success': False, 
-                'message': f'API error: {data.get("status")}'
-            })
-    
-    except Exception as e:
-        return jsonify({'success': False, 'message': f'Error: {str(e)}'})
-
 
 @app.route('/api/test/airline/<airline>', methods=['POST'])
 @login_required
@@ -615,8 +573,8 @@ def disconnect_email_account(account_id):
 @app.route('/settings')
 @login_required
 def settings():
-    from datetime import datetime
-    return render_template('settings/index.html', now=datetime.utcnow)
+    """User settings page"""
+    return render_template('settings/index.html')
 
 
 @app.route('/settings/profile', methods=['GET', 'POST'])

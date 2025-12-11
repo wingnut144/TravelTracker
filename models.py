@@ -82,8 +82,8 @@ class UserSettings(db.Model):
     immich_api_url = db.Column(db.String(255))
     immich_api_key = db.Column(db.String(255))
     
-    # Google Maps API
-    google_maps_api_key = db.Column(db.String(255))
+    # Google Maps API - NO LONGER NEEDED (using free OpenStreetMap)
+    # google_maps_api_key = db.Column(db.String(255))
     
     # Airline APIs
     united_api_key = db.Column(db.String(255))
@@ -106,9 +106,10 @@ class UserSettings(db.Model):
         """Check if user has configured Immich"""
         return bool(self.immich_api_url and self.immich_api_key)
     
-    def has_google_maps(self):
-        """Check if user has configured Google Maps"""
-        return bool(self.google_maps_api_key)
+    # Google Maps no longer needed - using free OpenStreetMap
+    # def has_google_maps(self):
+    #     """Check if user has configured Google Maps"""
+    #     return bool(self.google_maps_api_key)
     
     def has_airline_api(self, airline):
         """Check if user has configured specific airline API"""

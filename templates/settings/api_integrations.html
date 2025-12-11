@@ -87,71 +87,24 @@
     </div>
 </div>
 
-<!-- Google Maps Integration -->
-<div class="card mb-4">
-    <div class="card-header bg-danger text-white">
-        <h4 class="mb-0"><i class="bi bi-map"></i> Google Maps API</h4>
+<!-- Geocoding with OpenStreetMap -->
+<div class="card mb-4 border-success">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0"><i class="bi bi-map"></i> Geocoding (OpenStreetMap)</h4>
     </div>
     <div class="card-body">
-        {% if settings.has_google_maps() %}
-        <div class="alert alert-success">
-            <i class="bi bi-check-circle"></i> Google Maps is configured!
+        <div class="alert alert-success mb-0">
+            <i class="bi bi-check-circle-fill"></i> <strong>Automatic geocoding is enabled!</strong>
+            <p class="mt-2 mb-0">
+                Travel Tracker uses <strong>OpenStreetMap Nominatim</strong> for free geocoding. 
+                When you add accommodations with addresses, coordinates are automatically fetched - no API key or configuration needed!
+            </p>
+            <hr>
+            <p class="mb-0 small">
+                <i class="bi bi-info-circle"></i> OpenStreetMap is a free, open-source mapping service maintained by the community. 
+                <a href="https://www.openstreetmap.org/" target="_blank" class="text-white"><u>Learn more <i class="bi bi-box-arrow-up-right"></i></u></a>
+            </p>
         </div>
-        {% endif %}
-        
-        <p>Enable geocoding for accommodations - automatically find coordinates for addresses.</p>
-        
-        <div class="accordion mb-3" id="mapsAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapsSetup">
-                        <i class="bi bi-lightbulb"></i> How to get a Google Maps API key
-                    </button>
-                </h2>
-                <div id="mapsSetup" class="accordion-collapse collapse" data-bs-parent="#mapsAccordion">
-                    <div class="accordion-body">
-                        <ol>
-                            <li>Go to <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console <i class="bi bi-box-arrow-up-right"></i></a></li>
-                            <li>Create a new project or select existing</li>
-                            <li>Navigate to "APIs & Services" → "Library"</li>
-                            <li>Enable "Geocoding API"</li>
-                            <li>Go to "Credentials" → "Create Credentials" → "API key"</li>
-                            <li>Copy the API key and paste below</li>
-                            <li><strong>Recommended:</strong> Restrict the key to "Geocoding API" only</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <form method="POST" action="{{ url_for('api_integrations') }}" id="mapsForm">
-            <input type="hidden" name="action" value="save_google_maps">
-            
-            <div class="mb-3">
-                <label for="google_maps_api_key" class="form-label">Google Maps API Key</label>
-                <input type="password" class="form-control font-monospace" id="google_maps_api_key" 
-                       name="google_maps_api_key" 
-                       value="{{ settings.google_maps_api_key or '' }}" 
-                       placeholder="AIza****************************">
-            </div>
-            
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-danger">
-                    <i class="bi bi-save"></i> Save
-                </button>
-                <button type="button" class="btn btn-outline-danger" onclick="testAPI('google-maps')">
-                    <i class="bi bi-arrow-repeat"></i> Test API Key
-                </button>
-                {% if settings.has_google_maps() %}
-                <button type="submit" name="action" value="delete_google_maps" class="btn btn-outline-danger"
-                        onclick="return confirm('Remove Google Maps API key?');">
-                    <i class="bi bi-trash"></i> Remove
-                </button>
-                {% endif %}
-            </div>
-        </form>
-        
-        <div id="google-maps-result" class="mt-3"></div>
     </div>
 </div>
 

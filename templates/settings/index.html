@@ -106,17 +106,11 @@
                 
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <strong><i class="bi bi-map"></i> Google Maps</strong>
-                        <p class="mb-0 text-muted small">Geocoding and maps for accommodations</p>
+                        <strong><i class="bi bi-map"></i> Geocoding (OpenStreetMap)</strong>
+                        <p class="mb-0 text-muted small">Free automatic geocoding for accommodations - always active</p>
                     </div>
                     <div>
-                        {% if current_user.user_settings.google_maps_enabled and current_user.user_settings.has_google_maps() %}
-                            <span class="badge bg-success">Active</span>
-                        {% elif current_user.user_settings.google_maps_enabled %}
-                            <span class="badge bg-warning text-dark">Enabled - Not Configured</span>
-                        {% else %}
-                            <span class="badge bg-secondary">Disabled</span>
-                        {% endif %}
+                        <span class="badge bg-success">Active</span>
                     </div>
                 </div>
                 
@@ -137,13 +131,9 @@
                     </div>
                     <div class="col-6 col-md-3 mb-2">
                         <div class="p-2 border rounded">
-                            <i class="bi bi-map text-danger" style="font-size: 1.5rem;"></i>
+                            <i class="bi bi-map text-success" style="font-size: 1.5rem;"></i>
                             <p class="mb-0 small mt-1">Maps</p>
-                            {% if current_user.user_settings.has_google_maps() %}
-                                <small class="text-success">✓</small>
-                            {% else %}
-                                <small class="text-muted">-</small>
-                            {% endif %}
+                            <small class="text-success">✓ OpenStreetMap</small>
                         </div>
                     </div>
                     <div class="col-6 col-md-3 mb-2">

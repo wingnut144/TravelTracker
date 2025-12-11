@@ -91,74 +91,52 @@ When viewing a trip:
 
 ---
 
-## Google Maps Integration
+## Geocoding with OpenStreetMap
 
 ### What You Need
-- A Google Cloud account (free tier available)
-- A Google Maps API key with Geocoding API enabled
-
-### Step-by-Step Setup
-
-#### 1. Create Google Cloud Project
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Click **Select a project** → **New Project**
-3. Name: "Travel Tracker" (or any name)
-4. Click **Create**
-
-#### 2. Enable Geocoding API
-
-1. Navigate to **APIs & Services** → **Library**
-2. Search for "Geocoding API"
-3. Click on it and press **Enable**
-
-#### 3. Create API Key
-
-1. Go to **APIs & Services** → **Credentials**
-2. Click **Create Credentials** → **API key**
-3. Copy the generated API key
-
-#### 4. (Recommended) Restrict API Key
-
-1. Click on the API key to edit it
-2. Under **API restrictions**, select **Restrict key**
-3. Choose **Geocoding API** from the dropdown
-4. Save
-
-#### 5. Configure in Travel Tracker
-
-1. Go to **Settings** → **API Integrations**
-2. Find the **Google Maps API** section
-3. Paste your API key
-4. Click **Test API Key** to verify
-5. If successful, click **Save**
-
-#### 6. Enable for Your Account
-
-Ask your administrator to enable **Google Maps** for your account in the admin panel.
-
-### Testing
-
-The test button will:
-- ✅ Make a sample geocoding request
-- ✅ Verify API key is valid
-- ✅ Check for proper permissions
-- ✅ Confirm quota is available
+**Nothing!** Geocoding is built-in and free.
 
 ### How It Works
 
-When adding an accommodation:
-1. You enter an address
-2. Travel Tracker sends it to Google Maps API
+Travel Tracker uses **OpenStreetMap Nominatim** for automatic geocoding - completely free with zero configuration required.
+
+When you add an accommodation:
+1. Enter the address (e.g., "Hilton San Francisco, 333 O'Farrell St, San Francisco, CA")
+2. Travel Tracker automatically geocodes it using OpenStreetMap
 3. Gets back latitude and longitude
-4. Stores coordinates for map display
-5. Shows location on trip view
+4. Stores coordinates in the database
+5. (Future) Display location on maps
 
-### Pricing
+### Features
 
-- **Free tier**: 28,500 geocoding requests per month
-- Travel Tracker usage: ~1 request per accommodation added
-- Most users stay well within free tier
+✅ **Zero Configuration** - Works out of the box  
+✅ **No API Keys** - Nothing to configure  
+✅ **Completely Free** - No usage limits or quotas  
+✅ **Open Source** - Community-maintained data  
+✅ **Privacy Friendly** - No tracking or data collection  
+✅ **Worldwide Coverage** - Global address database
+
+### About OpenStreetMap
+
+OpenStreetMap is a free, editable map of the world created by volunteers. The Nominatim geocoding service is provided free of charge by the OpenStreetMap Foundation.
+
+- **Website**: https://www.openstreetmap.org
+- **Geocoding Service**: https://nominatim.openstreetmap.org
+- **Data**: Community-maintained, open-source map data
+
+### Rate Limiting
+
+OpenStreetMap has a fair-use policy of 1 request per second, which is automatically handled by Travel Tracker. Since users add accommodations manually one at a time, this limit is never an issue.
+
+### Accuracy
+
+OpenStreetMap geocoding is very accurate for most addresses worldwide:
+- Hotels: Excellent accuracy
+- Street addresses: Very good accuracy
+- Landmarks: Excellent coverage
+- Remote locations: Good coverage (improving constantly)
+
+For personal travel tracking, OpenStreetMap provides more than sufficient accuracy.
 
 ---
 
@@ -307,17 +285,6 @@ Covered in detail in [EMAIL_INTEGRATION_GUIDE.md](EMAIL_INTEGRATION_GUIDE.md)
 4. ✅ Check firewall/network settings
 5. ✅ Try with `http://` if `https://` fails (local networks)
 
-### Google Maps API Error
-
-**Symptoms**: "API key invalid" or "Request denied"
-
-**Solutions**:
-1. ✅ Verify API key is copied completely
-2. ✅ Check Geocoding API is enabled
-3. ✅ Confirm API key restrictions allow request
-4. ✅ Check billing is enabled (if past free tier)
-5. ✅ Wait a few minutes after creating key
-
 ### Email Integration Not Working
 
 **Symptoms**: No trips being created automatically
@@ -352,10 +319,10 @@ Before considering an integration complete:
 - [ ] Thumbnails load correctly
 - [ ] Can click through to full photos
 
-### Google Maps
-- [ ] Test API key succeeds
+### Geocoding (OpenStreetMap)
 - [ ] Can add accommodation with address
-- [ ] Coordinates are populated
+- [ ] Coordinates are automatically populated
+- [ ] Works without any configuration
 - [ ] (Future) Map displays location
 
 ### Airline APIs
@@ -378,7 +345,7 @@ Before considering an integration complete:
 | Feature | Requires API | Admin Enable | User Config | Test Available |
 |---------|--------------|--------------|-------------|----------------|
 | Immich Photos | Yes | Yes | Yes | ✅ |
-| Google Maps | Yes | Yes | Yes | ✅ |
+| Geocoding (OpenStreetMap) | No | No | No | ✅ Built-in |
 | Airline Status | Yes | No | Yes | ⚠️ |
 | Gmail Scan | Yes (OAuth) | Yes | Yes | Via Connection |
 | Outlook Scan | Yes (OAuth) | Yes | Yes | Via Connection |
