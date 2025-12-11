@@ -574,7 +574,8 @@ def disconnect_email_account(account_id):
 @login_required
 def settings():
     """User settings page"""
-    return render_template('settings/index.html')
+    from datetime import datetime
+    return render_template('settings/index.html', now=datetime.utcnow)
 
 
 @app.route('/settings/profile', methods=['GET', 'POST'])
