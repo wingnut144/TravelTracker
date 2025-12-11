@@ -19,11 +19,11 @@
             <a href="{{ url_for('preferences_settings') }}" class="list-group-item list-group-item-action">
                 <i class="bi bi-sliders"></i> Preferences
             </a>
-            <a href="#" class="list-group-item list-group-item-action disabled">
-                <i class="bi bi-envelope"></i> Email Accounts
+            <a href="{{ url_for('oauth_apps') }}" class="list-group-item list-group-item-action">
+                <i class="bi bi-key"></i> OAuth Apps
             </a>
-            <a href="#" class="list-group-item list-group-item-action disabled">
-                <i class="bi bi-shield-lock"></i> Privacy & Security
+            <a href="{{ url_for('email_accounts') }}" class="list-group-item list-group-item-action">
+                <i class="bi bi-envelope"></i> Email Accounts
             </a>
         </div>
     </div>

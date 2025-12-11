@@ -71,8 +71,22 @@ class UserSettings(db.Model):
     default_trip_visibility = db.Column(db.Enum(TripVisibility), default=TripVisibility.PRIVATE)
     timezone = db.Column(db.String(50), default='America/New_York')
     
+    # Per-user OAuth app credentials (for Gmail/Outlook integration)
+    google_client_id = db.Column(db.String(255))
+    google_client_secret = db.Column(db.String(255))
+    microsoft_client_id = db.Column(db.String(255))
+    microsoft_client_secret = db.Column(db.String(255))
+    
     # Relationships
     user = db.relationship('User', back_populates='user_settings')
+    
+    def has_google_oauth(self):
+        """Check if user has configured Google OAuth"""
+        return bool(self.google_client_id and self.google_client_secret)
+    
+    def has_microsoft_oauth(self):
+        """Check if user has configured Microsoft OAuth"""
+        return bool(self.microsoft_client_id and self.microsoft_client_secret)
     
     def __repr__(self):
         return f'<UserSettings for User {self.user_id}>'

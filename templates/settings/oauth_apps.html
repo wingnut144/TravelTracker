@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+{% block title %}OAuth Apps - Travel Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('settings') }}">Settings</a></li>
+                <li class="breadcrumb-item active">OAuth Apps</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-key"></i> OAuth App Configuration</h1>
+        <p class="lead">Set up your own Gmail and Outlook integrations</p>
+    </div>
+</div>
+
+<div class="alert alert-info">
+    <h5><i class="bi bi-info-circle"></i> Why do I need this?</h5>
+    <p class="mb-0">
+        To automatically scan your emails for flight confirmations, you need to create your own 
+        OAuth apps with Google and/or Microsoft. This gives Travel Tracker permission to read 
+        your emails. <strong>Your credentials are stored securely and only used for your account.</strong>
+    </p>
+</div>
+
+<!-- Google OAuth App -->
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0"><i class="bi bi-google"></i> Google OAuth App (Gmail)</h4>
+    </div>
+    <div class="card-body">
+        {% if settings.has_google_oauth() %}
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> Google OAuth app is configured!
+        </div>
+        {% endif %}
+        
+        <!-- Step-by-step guide -->
+        <div class="accordion mb-4" id="googleAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#googleStep1">
+                        <strong>Step 1:</strong> Create a Google Cloud Project
+                    </button>
+                </h2>
+                <div id="googleStep1" class="accordion-collapse collapse show" data-bs-parent="#googleAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>Go to <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console <i class="bi bi-box-arrow-up-right"></i></a></li>
+                            <li>Click "Select a project" → "New Project"</li>
+                            <li>Name it "Travel Tracker" and click "Create"</li>
+                            <li>Wait a few seconds for the project to be created</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#googleStep2">
+                        <strong>Step 2:</strong> Enable Gmail API
+                    </button>
+                </h2>
+                <div id="googleStep2" class="accordion-collapse collapse" data-bs-parent="#googleAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>In the Google Cloud Console, click the hamburger menu (☰)</li>
+                            <li>Navigate to "APIs & Services" → "Library"</li>
+                            <li>Search for "Gmail API"</li>
+                            <li>Click on it and press "Enable"</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#googleStep3">
+                        <strong>Step 3:</strong> Configure OAuth Consent Screen
+                    </button>
+                </h2>
+                <div id="googleStep3" class="accordion-collapse collapse" data-bs-parent="#googleAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>Go to "APIs & Services" → "OAuth consent screen"</li>
+                            <li>Select "External" and click "Create"</li>
+                            <li>Fill in:
+                                <ul>
+                                    <li><strong>App name:</strong> Travel Tracker</li>
+                                    <li><strong>User support email:</strong> Your email</li>
+                                    <li><strong>Developer contact:</strong> Your email</li>
+                                </ul>
+                            </li>
+                            <li>Click "Save and Continue"</li>
+                            <li>On "Scopes" page, click "Add or Remove Scopes"</li>
+                            <li>Find and select: <code>https://www.googleapis.com/auth/gmail.readonly</code></li>
+                            <li>Click "Update" then "Save and Continue"</li>
+                            <li>On "Test users" page, add your email address</li>
+                            <li>Click "Save and Continue" then "Back to Dashboard"</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#googleStep4">
+                        <strong>Step 4:</strong> Create OAuth Credentials
+                    </button>
+                </h2>
+                <div id="googleStep4" class="accordion-collapse collapse" data-bs-parent="#googleAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>Go to "APIs & Services" → "Credentials"</li>
+                            <li>Click "Create Credentials" → "OAuth client ID"</li>
+                            <li>Application type: "Web application"</li>
+                            <li>Name: "Travel Tracker Web"</li>
+                            <li>Under "Authorized redirect URIs", click "Add URI"</li>
+                            <li>Add this exact URL: <code>{{ url_for('auth.google_callback', _external=True) }}</code>
+                                <button class="btn btn-sm btn-outline-primary ms-2" onclick="copyToClipboard('{{ url_for('auth.google_callback', _external=True) }}')">
+                                    <i class="bi bi-clipboard"></i> Copy
+                                </button>
+                            </li>
+                            <li>Click "Create"</li>
+                            <li>Copy the <strong>Client ID</strong> and <strong>Client Secret</strong> that appear</li>
+                            <li>Paste them in the form below</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Configuration form -->
+        <form method="POST" action="{{ url_for('oauth_apps') }}">
+            <input type="hidden" name="action" value="save_google">
+            
+            <div class="mb-3">
+                <label for="google_client_id" class="form-label">Google Client ID</label>
+                <input type="text" class="form-control font-monospace" id="google_client_id" name="google_client_id" 
+                       value="{{ settings.google_client_id or '' }}" 
+                       placeholder="123456789-abcdefghijk.apps.googleusercontent.com">
+            </div>
+            
+            <div class="mb-3">
+                <label for="google_client_secret" class="form-label">Google Client Secret</label>
+                <input type="password" class="form-control font-monospace" id="google_client_secret" name="google_client_secret" 
+                       value="{{ settings.google_client_secret or '' }}" 
+                       placeholder="GOCSPX-****************************">
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-save"></i> Save Google Credentials
+                </button>
+                {% if settings.has_google_oauth() %}
+                <button type="submit" name="action" value="delete_google" class="btn btn-outline-danger"
+                        onclick="return confirm('Remove Google OAuth credentials? This will disconnect your Gmail account.');">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Microsoft OAuth App -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-microsoft"></i> Microsoft OAuth App (Outlook)</h4>
+    </div>
+    <div class="card-body">
+        {% if settings.has_microsoft_oauth() %}
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> Microsoft OAuth app is configured!
+        </div>
+        {% endif %}
+        
+        <!-- Step-by-step guide -->
+        <div class="accordion mb-4" id="microsoftAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#msStep1">
+                        <strong>Step 1:</strong> Register an Application
+                    </button>
+                </h2>
+                <div id="msStep1" class="accordion-collapse collapse show" data-bs-parent="#microsoftAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>Go to <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade" target="_blank">Azure App Registrations <i class="bi bi-box-arrow-up-right"></i></a></li>
+                            <li>Click "New registration"</li>
+                            <li>Fill in:
+                                <ul>
+                                    <li><strong>Name:</strong> Travel Tracker</li>
+                                    <li><strong>Supported account types:</strong> "Accounts in any organizational directory and personal Microsoft accounts"</li>
+                                    <li><strong>Redirect URI:</strong> Select "Web" and enter: 
+                                        <code>{{ url_for('auth.microsoft_callback', _external=True) }}</code>
+                                        <button class="btn btn-sm btn-outline-primary ms-2" onclick="copyToClipboard('{{ url_for('auth.microsoft_callback', _external=True) }}')">
+                                            <i class="bi bi-clipboard"></i> Copy
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>Click "Register"</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#msStep2">
+                        <strong>Step 2:</strong> Copy Application ID
+                    </button>
+                </h2>
+                <div id="msStep2" class="accordion-collapse collapse" data-bs-parent="#microsoftAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>On the app's Overview page, copy the <strong>Application (client) ID</strong></li>
+                            <li>This is your <strong>Client ID</strong> - paste it in the form below</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#msStep3">
+                        <strong>Step 3:</strong> Create Client Secret
+                    </button>
+                </h2>
+                <div id="msStep3" class="accordion-collapse collapse" data-bs-parent="#microsoftAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>In the left menu, click "Certificates & secrets"</li>
+                            <li>Click "New client secret"</li>
+                            <li>Description: "Travel Tracker Secret"</li>
+                            <li>Expires: Choose "24 months" (or longer)</li>
+                            <li>Click "Add"</li>
+                            <li><strong>IMPORTANT:</strong> Copy the <strong>Value</strong> (not the Secret ID) immediately!</li>
+                            <li>This is your <strong>Client Secret</strong> - paste it in the form below</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#msStep4">
+                        <strong>Step 4:</strong> Configure API Permissions
+                    </button>
+                </h2>
+                <div id="msStep4" class="accordion-collapse collapse" data-bs-parent="#microsoftAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>In the left menu, click "API permissions"</li>
+                            <li>Click "Add a permission"</li>
+                            <li>Select "Microsoft Graph"</li>
+                            <li>Select "Delegated permissions"</li>
+                            <li>Find and check: <code>Mail.Read</code> and <code>offline_access</code></li>
+                            <li>Click "Add permissions"</li>
+                            <li>Done! No admin consent needed for these permissions</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Configuration form -->
+        <form method="POST" action="{{ url_for('oauth_apps') }}">
+            <input type="hidden" name="action" value="save_microsoft">
+            
+            <div class="mb-3">
+                <label for="microsoft_client_id" class="form-label">Microsoft Client ID</label>
+                <input type="text" class="form-control font-monospace" id="microsoft_client_id" name="microsoft_client_id" 
+                       value="{{ settings.microsoft_client_id or '' }}" 
+                       placeholder="12345678-1234-1234-1234-123456789012">
+            </div>
+            
+            <div class="mb-3">
+                <label for="microsoft_client_secret" class="form-label">Microsoft Client Secret</label>
+                <input type="password" class="form-control font-monospace" id="microsoft_client_secret" name="microsoft_client_secret" 
+                       value="{{ settings.microsoft_client_secret or '' }}" 
+                       placeholder="abc~****************************">
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Save Microsoft Credentials
+                </button>
+                {% if settings.has_microsoft_oauth() %}
+                <button type="submit" name="action" value="delete_microsoft" class="btn btn-outline-danger"
+                        onclick="return confirm('Remove Microsoft OAuth credentials? This will disconnect your Outlook account.');">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card bg-light">
+    <div class="card-body">
+        <h5><i class="bi bi-shield-check"></i> Security & Privacy</h5>
+        <ul class="mb-0">
+            <li>Your OAuth credentials are encrypted and stored securely</li>
+            <li>Only you have access to your OAuth apps</li>
+            <li>These credentials are only used to scan YOUR emails</li>
+            <li>Your emails are never stored - we only extract flight information</li>
+            <li>You can disconnect at any time from the <a href="{{ url_for('email_accounts') }}">Email Accounts</a> page</li>
+        </ul>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('email_accounts') }}" class="btn btn-outline-primary">
+        <i class="bi bi-arrow-right"></i> Next: Connect Your Email
+    </a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        alert('Copied to clipboard!');
+    }, function(err) {
+        prompt('Copy this URL:', text);
+    });
+}
+</script>
+{% endblock %}

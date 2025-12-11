@@ -181,24 +181,34 @@ def get_coordinates_from_address(address, google_maps_api_key):
 
 
 def refresh_oauth_token(email_account):
-    """Refresh OAuth token for email account"""
+    """Refresh OAuth token for email account using user's own credentials"""
     from app import app
+    
+    user_settings = email_account.user.user_settings
     
     try:
         if email_account.email_type == 'gmail':
+            if not user_settings.has_google_oauth():
+                logger.error(f"User {email_account.user_id} missing Google OAuth credentials")
+                return False
+            
             token_url = 'https://oauth2.googleapis.com/token'
             data = {
-                'client_id': app.config['GOOGLE_CLIENT_ID'],
-                'client_secret': app.config['GOOGLE_CLIENT_SECRET'],
+                'client_id': user_settings.google_client_id,
+                'client_secret': user_settings.google_client_secret,
                 'refresh_token': email_account.refresh_token,
                 'grant_type': 'refresh_token'
             }
         
         elif email_account.email_type == 'outlook':
+            if not user_settings.has_microsoft_oauth():
+                logger.error(f"User {email_account.user_id} missing Microsoft OAuth credentials")
+                return False
+            
             token_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
             data = {
-                'client_id': app.config['MICROSOFT_CLIENT_ID'],
-                'client_secret': app.config['MICROSOFT_CLIENT_SECRET'],
+                'client_id': user_settings.microsoft_client_id,
+                'client_secret': user_settings.microsoft_client_secret,
                 'refresh_token': email_account.refresh_token,
                 'grant_type': 'refresh_token'
             }
@@ -222,8 +232,10 @@ def refresh_oauth_token(email_account):
             
             from models import db
             db.session.commit()
+            logger.info(f"Refreshed OAuth token for email account {email_account.id}")
             return True
         
+        logger.error(f"Failed to refresh token: {tokens.get('error', 'Unknown error')}")
         return False
     
     except Exception as e:

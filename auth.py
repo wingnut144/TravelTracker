@@ -121,19 +121,23 @@ def logout():
     return redirect(url_for('auth.login'))
 
 @auth_bp.route('/google')
+@login_required
 def google_auth():
-    """Initiate Google OAuth"""
-    from app import app
+    """Initiate Google OAuth using user's own credentials"""
+    settings = current_user.user_settings
     
-    if not app.config['GOOGLE_CLIENT_ID']:
-        flash('Google integration is not configured.', 'danger')
-        return redirect(url_for('auth.login'))
+    if not settings.has_google_oauth():
+        flash('Please configure your Google OAuth app first.', 'warning')
+        return redirect(url_for('settings.oauth_apps'))
     
-    # Build OAuth URL
+    # Get user's redirect URI
+    redirect_uri = url_for('auth.google_callback', _external=True)
+    
+    # Build OAuth URL with user's credentials
     oauth_url = (
         'https://accounts.google.com/o/oauth2/v2/auth?'
-        f'client_id={app.config["GOOGLE_CLIENT_ID"]}&'
-        f'redirect_uri={app.config["GOOGLE_REDIRECT_URI"]}&'
+        f'client_id={settings.google_client_id}&'
+        f'redirect_uri={redirect_uri}&'
         'response_type=code&'
         'scope=openid email profile https://www.googleapis.com/auth/gmail.readonly&'
         'access_type=offline&'
@@ -143,22 +147,25 @@ def google_auth():
     return redirect(oauth_url)
 
 @auth_bp.route('/google/callback')
+@login_required
 def google_callback():
     """Handle Google OAuth callback"""
-    from app import app
+    settings = current_user.user_settings
     
     code = request.args.get('code')
     if not code:
         flash('Google authentication failed.', 'danger')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('settings.email_accounts'))
     
-    # Exchange code for token
+    # Exchange code for token using user's credentials
     token_url = 'https://oauth2.googleapis.com/token'
+    redirect_uri = url_for('auth.google_callback', _external=True)
+    
     data = {
         'code': code,
-        'client_id': app.config['GOOGLE_CLIENT_ID'],
-        'client_secret': app.config['GOOGLE_CLIENT_SECRET'],
-        'redirect_uri': app.config['GOOGLE_REDIRECT_URI'],
+        'client_id': settings.google_client_id,
+        'client_secret': settings.google_client_secret,
+        'redirect_uri': redirect_uri,
         'grant_type': 'authorization_code'
     }
     
@@ -167,8 +174,8 @@ def google_callback():
         tokens = response.json()
         
         if 'error' in tokens:
-            flash('Failed to authenticate with Google.', 'danger')
-            return redirect(url_for('auth.login'))
+            flash(f'Failed to authenticate with Google: {tokens.get("error_description", "Unknown error")}', 'danger')
+            return redirect(url_for('settings.email_accounts'))
         
         # Get user info
         userinfo_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
@@ -176,36 +183,55 @@ def google_callback():
         userinfo_response = requests.get(userinfo_url, headers=headers)
         userinfo = userinfo_response.json()
         
-        # Store in session for linking to account
-        session['oauth_provider'] = 'google'
-        session['oauth_tokens'] = tokens
-        session['oauth_email'] = userinfo['email']
+        # Create or update email account
+        from models import EmailAccount
+        email_account = EmailAccount.query.filter_by(
+            user_id=current_user.id,
+            email_type='gmail'
+        ).first()
         
-        if current_user.is_authenticated:
-            # Link to existing account
-            return redirect(url_for('settings.link_email_account'))
-        else:
-            flash('Google authentication successful. Please log in or register.', 'info')
-            return redirect(url_for('auth.login'))
+        if not email_account:
+            email_account = EmailAccount(
+                user_id=current_user.id,
+                email_type='gmail',
+                email_address=userinfo['email']
+            )
+            db.session.add(email_account)
+        
+        email_account.email_address = userinfo['email']
+        email_account.access_token = tokens['access_token']
+        email_account.refresh_token = tokens.get('refresh_token', email_account.refresh_token)
+        
+        if 'expires_in' in tokens:
+            email_account.token_expires_at = datetime.utcnow() + timedelta(seconds=tokens['expires_in'])
+        
+        db.session.commit()
+        
+        flash(f'Gmail account {userinfo["email"]} connected successfully!', 'success')
+        return redirect(url_for('settings.email_accounts'))
     
     except Exception as e:
         flash(f'Error during Google authentication: {str(e)}', 'danger')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('settings.email_accounts'))
 
 @auth_bp.route('/microsoft')
+@login_required
 def microsoft_auth():
-    """Initiate Microsoft OAuth"""
-    from app import app
+    """Initiate Microsoft OAuth using user's own credentials"""
+    settings = current_user.user_settings
     
-    if not app.config['MICROSOFT_CLIENT_ID']:
-        flash('Microsoft integration is not configured.', 'danger')
-        return redirect(url_for('auth.login'))
+    if not settings.has_microsoft_oauth():
+        flash('Please configure your Microsoft OAuth app first.', 'warning')
+        return redirect(url_for('settings.oauth_apps'))
     
-    # Build OAuth URL
+    # Get user's redirect URI
+    redirect_uri = url_for('auth.microsoft_callback', _external=True)
+    
+    # Build OAuth URL with user's credentials
     oauth_url = (
         'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?'
-        f'client_id={app.config["MICROSOFT_CLIENT_ID"]}&'
-        f'redirect_uri={app.config["MICROSOFT_REDIRECT_URI"]}&'
+        f'client_id={settings.microsoft_client_id}&'
+        f'redirect_uri={redirect_uri}&'
         'response_type=code&'
         'scope=openid email profile Mail.Read offline_access&'
         'response_mode=query'
@@ -214,22 +240,25 @@ def microsoft_auth():
     return redirect(oauth_url)
 
 @auth_bp.route('/microsoft/callback')
+@login_required
 def microsoft_callback():
     """Handle Microsoft OAuth callback"""
-    from app import app
+    settings = current_user.user_settings
     
     code = request.args.get('code')
     if not code:
         flash('Microsoft authentication failed.', 'danger')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('settings.email_accounts'))
     
-    # Exchange code for token
+    # Exchange code for token using user's credentials
     token_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
+    redirect_uri = url_for('auth.microsoft_callback', _external=True)
+    
     data = {
         'code': code,
-        'client_id': app.config['MICROSOFT_CLIENT_ID'],
-        'client_secret': app.config['MICROSOFT_CLIENT_SECRET'],
-        'redirect_uri': app.config['MICROSOFT_REDIRECT_URI'],
+        'client_id': settings.microsoft_client_id,
+        'client_secret': settings.microsoft_client_secret,
+        'redirect_uri': redirect_uri,
         'grant_type': 'authorization_code'
     }
     
@@ -238,8 +267,8 @@ def microsoft_callback():
         tokens = response.json()
         
         if 'error' in tokens:
-            flash('Failed to authenticate with Microsoft.', 'danger')
-            return redirect(url_for('auth.login'))
+            flash(f'Failed to authenticate with Microsoft: {tokens.get("error_description", "Unknown error")}', 'danger')
+            return redirect(url_for('settings.email_accounts'))
         
         # Get user info
         userinfo_url = 'https://graph.microsoft.com/v1.0/me'
@@ -247,21 +276,36 @@ def microsoft_callback():
         userinfo_response = requests.get(userinfo_url, headers=headers)
         userinfo = userinfo_response.json()
         
-        # Store in session for linking to account
-        session['oauth_provider'] = 'outlook'
-        session['oauth_tokens'] = tokens
-        session['oauth_email'] = userinfo.get('mail') or userinfo.get('userPrincipalName')
+        # Create or update email account
+        from models import EmailAccount
+        email_account = EmailAccount.query.filter_by(
+            user_id=current_user.id,
+            email_type='outlook'
+        ).first()
         
-        if current_user.is_authenticated:
-            # Link to existing account
-            return redirect(url_for('settings.link_email_account'))
-        else:
-            flash('Microsoft authentication successful. Please log in or register.', 'info')
-            return redirect(url_for('auth.login'))
+        if not email_account:
+            email_account = EmailAccount(
+                user_id=current_user.id,
+                email_type='outlook',
+                email_address=userinfo.get('mail') or userinfo.get('userPrincipalName')
+            )
+            db.session.add(email_account)
+        
+        email_account.email_address = userinfo.get('mail') or userinfo.get('userPrincipalName')
+        email_account.access_token = tokens['access_token']
+        email_account.refresh_token = tokens.get('refresh_token', email_account.refresh_token)
+        
+        if 'expires_in' in tokens:
+            email_account.token_expires_at = datetime.utcnow() + timedelta(seconds=tokens['expires_in'])
+        
+        db.session.commit()
+        
+        flash(f'Outlook account {email_account.email_address} connected successfully!', 'success')
+        return redirect(url_for('settings.email_accounts'))
     
     except Exception as e:
         flash(f'Error during Microsoft authentication: {str(e)}', 'danger')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('settings.email_accounts'))
 
 def init_auth(app):
     """Initialize authentication"""

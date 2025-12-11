@@ -391,6 +391,70 @@ def view_shared_trip(token):
     return render_template('trips/view_shared.html', trip=trip, share=share)
 
 
+@app.route('/settings/oauth-apps', methods=['GET', 'POST'])
+@login_required
+def oauth_apps():
+    """Configure OAuth applications"""
+    settings = current_user.user_settings
+    
+    if request.method == 'POST':
+        action = request.form.get('action')
+        
+        if action == 'save_google':
+            settings.google_client_id = request.form.get('google_client_id', '').strip()
+            settings.google_client_secret = request.form.get('google_client_secret', '').strip()
+            db.session.commit()
+            flash('Google OAuth app credentials saved!', 'success')
+        
+        elif action == 'save_microsoft':
+            settings.microsoft_client_id = request.form.get('microsoft_client_id', '').strip()
+            settings.microsoft_client_secret = request.form.get('microsoft_client_secret', '').strip()
+            db.session.commit()
+            flash('Microsoft OAuth app credentials saved!', 'success')
+        
+        elif action == 'delete_google':
+            settings.google_client_id = None
+            settings.google_client_secret = None
+            db.session.commit()
+            flash('Google OAuth app credentials removed.', 'info')
+        
+        elif action == 'delete_microsoft':
+            settings.microsoft_client_id = None
+            settings.microsoft_client_secret = None
+            db.session.commit()
+            flash('Microsoft OAuth app credentials removed.', 'info')
+        
+        return redirect(url_for('oauth_apps'))
+    
+    return render_template('settings/oauth_apps.html', settings=settings)
+
+
+@app.route('/settings/email-accounts')
+@login_required
+def email_accounts():
+    """Manage email accounts"""
+    accounts = EmailAccount.query.filter_by(user_id=current_user.id).all()
+    return render_template('settings/email_accounts.html', accounts=accounts)
+
+
+@app.route('/settings/email-accounts/<int:account_id>/disconnect', methods=['POST'])
+@login_required
+def disconnect_email_account(account_id):
+    """Disconnect an email account"""
+    account = EmailAccount.query.get_or_404(account_id)
+    
+    if account.user_id != current_user.id:
+        flash('Permission denied.', 'danger')
+        return redirect(url_for('email_accounts'))
+    
+    email_address = account.email_address
+    db.session.delete(account)
+    db.session.commit()
+    
+    flash(f'Email account {email_address} disconnected.', 'success')
+    return redirect(url_for('email_accounts'))
+
+
 @app.route('/settings')
 @login_required
 def settings():
