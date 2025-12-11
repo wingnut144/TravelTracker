@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block title %}API Integrations - Travel Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('settings') }}">Settings</a></li>
+                <li class="breadcrumb-item active">API Integrations</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-plug"></i> API Integrations</h1>
+        <p class="lead">Connect your own API services for enhanced features</p>
+    </div>
+</div>
+
+<div class="alert alert-info">
+    <h5><i class="bi bi-info-circle"></i> Why per-user APIs?</h5>
+    <p class="mb-0">
+        Each user configures their own API keys. This gives you complete control, better privacy, 
+        and no shared rate limits with other users. Your API keys are stored securely and only used for your account.
+    </p>
+</div>
+
+<!-- Immich Integration -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-camera"></i> Immich Integration</h4>
+    </div>
+    <div class="card-body">
+        {% if settings.has_immich() %}
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> Immich is configured!
+        </div>
+        {% endif %}
+        
+        <p>Link photos from your Immich server to your trips automatically based on dates.</p>
+        
+        <form method="POST" action="{{ url_for('api_integrations') }}" id="immichForm">
+            <input type="hidden" name="action" value="save_immich">
+            
+            <div class="mb-3">
+                <label for="immich_api_url" class="form-label">Immich Server URL</label>
+                <input type="url" class="form-control" id="immich_api_url" name="immich_api_url" 
+                       value="{{ settings.immich_api_url or '' }}" 
+                       placeholder="http://your-immich-server:2283/api">
+                <div class="form-text">
+                    Example: <code>http://192.168.1.100:2283/api</code> or <code>https://immich.yourdomain.com/api</code>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="immich_api_key" class="form-label">Immich API Key</label>
+                <input type="password" class="form-control font-monospace" id="immich_api_key" name="immich_api_key" 
+                       value="{{ settings.immich_api_key or '' }}" 
+                       placeholder="Your Immich API key">
+                <div class="form-text">
+                    Get your API key from Immich: Account Settings → API Keys → Create new key
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Save
+                </button>
+                <button type="button" class="btn btn-outline-primary" onclick="testAPI('immich')">
+                    <i class="bi bi-arrow-repeat"></i> Test Connection
+                </button>
+                {% if settings.has_immich() %}
+                <button type="submit" name="action" value="delete_immich" class="btn btn-outline-danger"
+                        onclick="return confirm('Remove Immich configuration?');">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+                {% endif %}
+            </div>
+        </form>
+        
+        <div id="immich-result" class="mt-3"></div>
+    </div>
+</div>
+
+<!-- Google Maps Integration -->
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0"><i class="bi bi-map"></i> Google Maps API</h4>
+    </div>
+    <div class="card-body">
+        {% if settings.has_google_maps() %}
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> Google Maps is configured!
+        </div>
+        {% endif %}
+        
+        <p>Enable geocoding for accommodations - automatically find coordinates for addresses.</p>
+        
+        <div class="accordion mb-3" id="mapsAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mapsSetup">
+                        <i class="bi bi-lightbulb"></i> How to get a Google Maps API key
+                    </button>
+                </h2>
+                <div id="mapsSetup" class="accordion-collapse collapse" data-bs-parent="#mapsAccordion">
+                    <div class="accordion-body">
+                        <ol>
+                            <li>Go to <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console <i class="bi bi-box-arrow-up-right"></i></a></li>
+                            <li>Create a new project or select existing</li>
+                            <li>Navigate to "APIs & Services" → "Library"</li>
+                            <li>Enable "Geocoding API"</li>
+                            <li>Go to "Credentials" → "Create Credentials" → "API key"</li>
+                            <li>Copy the API key and paste below</li>
+                            <li><strong>Recommended:</strong> Restrict the key to "Geocoding API" only</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <form method="POST" action="{{ url_for('api_integrations') }}" id="mapsForm">
+            <input type="hidden" name="action" value="save_google_maps">
+            
+            <div class="mb-3">
+                <label for="google_maps_api_key" class="form-label">Google Maps API Key</label>
+                <input type="password" class="form-control font-monospace" id="google_maps_api_key" 
+                       name="google_maps_api_key" 
+                       value="{{ settings.google_maps_api_key or '' }}" 
+                       placeholder="AIza****************************">
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-save"></i> Save
+                </button>
+                <button type="button" class="btn btn-outline-danger" onclick="testAPI('google-maps')">
+                    <i class="bi bi-arrow-repeat"></i> Test API Key
+                </button>
+                {% if settings.has_google_maps() %}
+                <button type="submit" name="action" value="delete_google_maps" class="btn btn-outline-danger"
+                        onclick="return confirm('Remove Google Maps API key?');">
+                    <i class="bi bi-trash"></i> Remove
+                </button>
+                {% endif %}
+            </div>
+        </form>
+        
+        <div id="google-maps-result" class="mt-3"></div>
+    </div>
+</div>
+
+<!-- Airline APIs -->
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0"><i class="bi bi-airplane"></i> Airline APIs</h4>
+    </div>
+    <div class="card-body">
+        {% if settings.united_api_key or settings.american_api_key or settings.delta_api_key or settings.southwest_api_key %}
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> 
+            {{ [settings.united_api_key, settings.american_api_key, settings.delta_api_key, settings.southwest_api_key]|select|list|length }} 
+            airline API(s) configured
+        </div>
+        {% endif %}
+        
+        <p>Get real-time flight status, gate information, and delay notifications.</p>
+        
+        <div class="alert alert-warning">
+            <strong><i class="bi bi-exclamation-triangle"></i> Note:</strong> Airline APIs typically require 
+            direct partnerships with the airlines. These APIs are for production use if you have API access.
+            Contact airlines' developer programs for API keys.
+        </div>
+        
+        <form method="POST" action="{{ url_for('api_integrations') }}" id="airlinesForm">
+            <input type="hidden" name="action" value="save_airlines">
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="united_api_key" class="form-label">
+                        <img src="https://www.united.com/favicon.ico" width="16" height="16" class="me-1">
+                        United Airlines
+                    </label>
+                    <div class="input-group">
+                        <input type="password" class="form-control font-monospace" id="united_api_key" 
+                               name="united_api_key" 
+                               value="{{ settings.united_api_key or '' }}" 
+                               placeholder="United API key">
+                        <button type="button" class="btn btn-outline-secondary" onclick="testAirlineAPI('united')">
+                            <i class="bi bi-arrow-repeat"></i> Test
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="american_api_key" class="form-label">
+                        American Airlines
+                    </label>
+                    <div class="input-group">
+                        <input type="password" class="form-control font-monospace" id="american_api_key" 
+                               name="american_api_key" 
+                               value="{{ settings.american_api_key or '' }}" 
+                               placeholder="American API key">
+                        <button type="button" class="btn btn-outline-secondary" onclick="testAirlineAPI('american')">
+                            <i class="bi bi-arrow-repeat"></i> Test
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="delta_api_key" class="form-label">
+                        Delta Air Lines
+                    </label>
+                    <div class="input-group">
+                        <input type="password" class="form-control font-monospace" id="delta_api_key" 
+                               name="delta_api_key" 
+                               value="{{ settings.delta_api_key or '' }}" 
+                               placeholder="Delta API key">
+                        <button type="button" class="btn btn-outline-secondary" onclick="testAirlineAPI('delta')">
+                            <i class="bi bi-arrow-repeat"></i> Test
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="southwest_api_key" class="form-label">
+                        Southwest Airlines
+                    </label>
+                    <div class="input-group">
+                        <input type="password" class="form-control font-monospace" id="southwest_api_key" 
+                               name="southwest_api_key" 
+                               value="{{ settings.southwest_api_key or '' }}" 
+                               placeholder="Southwest API key">
+                        <button type="button" class="btn btn-outline-secondary" onclick="testAirlineAPI('southwest')">
+                            <i class="bi bi-arrow-repeat"></i> Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-info text-white">
+                    <i class="bi bi-save"></i> Save All
+                </button>
+                {% if settings.united_api_key or settings.american_api_key or settings.delta_api_key or settings.southwest_api_key %}
+                <button type="submit" name="action" value="delete_airlines" class="btn btn-outline-danger"
+                        onclick="return confirm('Remove all airline API keys?');">
+                    <i class="bi bi-trash"></i> Remove All
+                </button>
+                {% endif %}
+            </div>
+        </form>
+        
+        <div id="airline-result" class="mt-3"></div>
+    </div>
+</div>
+
+<!-- Security Notice -->
+<div class="card bg-light">
+    <div class="card-body">
+        <h5><i class="bi bi-shield-check"></i> Security & Privacy</h5>
+        <ul class="mb-0">
+            <li>All API keys are encrypted and stored securely in the database</li>
+            <li>Only you have access to your API configurations</li>
+            <li>API keys are only used for your account's requests</li>
+            <li>You can remove or update keys at any time</li>
+            <li>Test buttons validate connections without saving</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showResult(elementId, success, message) {
+    const resultDiv = document.getElementById(elementId);
+    const alertClass = success ? 'alert-success' : 'alert-danger';
+    const icon = success ? 'check-circle' : 'x-circle';
+    
+    resultDiv.innerHTML = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            <i class="bi bi-${icon}"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+}
+
+function testAPI(service) {
+    const resultId = service + '-result';
+    let formData = new FormData();
+    
+    if (service === 'immich') {
+        const url = document.getElementById('immich_api_url').value;
+        const key = document.getElementById('immich_api_key').value;
+        
+        if (!url || !key) {
+            showResult(resultId, false, 'Please enter both API URL and Key');
+            return;
+        }
+        
+        formData.append('immich_api_url', url);
+        formData.append('immich_api_key', key);
+    } else if (service === 'google-maps') {
+        const key = document.getElementById('google_maps_api_key').value;
+        
+        if (!key) {
+            showResult(resultId, false, 'Please enter an API key');
+            return;
+        }
+        
+        formData.append('google_maps_api_key', key);
+    }
+    
+    // Show loading
+    showResult(resultId, true, '<i class="spinner-border spinner-border-sm"></i> Testing connection...');
+    
+    fetch(`/api/test/${service}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        showResult(resultId, data.success, data.message);
+    })
+    .catch(error => {
+        showResult(resultId, false, 'Error testing API: ' + error.message);
+    });
+}
+
+function testAirlineAPI(airline) {
+    const resultId = 'airline-result';
+    const key = document.getElementById(airline + '_api_key').value;
+    
+    if (!key) {
+        showResult(resultId, false, `Please enter ${airline} API key first`);
+        return;
+    }
+    
+    let formData = new FormData();
+    formData.append(airline + '_api_key', key);
+    
+    // Show loading
+    showResult(resultId, true, '<i class="spinner-border spinner-border-sm"></i> Testing ' + airline + ' API...');
+    
+    fetch(`/api/test/airline/${airline}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        let message = data.message;
+        if (data.info) {
+            message += '<br><small class="text-muted">' + data.info + '</small>';
+        }
+        showResult(resultId, data.success, message);
+    })
+    .catch(error => {
+        showResult(resultId, false, 'Error testing API: ' + error.message);
+    });
+}
+</script>
+{% endblock %}

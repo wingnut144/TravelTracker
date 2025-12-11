@@ -334,23 +334,23 @@ class SouthwestAPI(AirlineAPI):
 
 
 class AirlineAPIManager:
-    """Manager for all airline APIs"""
+    """Manager for all airline APIs - uses per-user credentials"""
     
-    def __init__(self, app_config):
-        """Initialize with app configuration"""
+    def __init__(self, user_settings):
+        """Initialize with user settings"""
         self.apis = {}
         
-        if app_config.get('UNITED_API_KEY'):
-            self.apis['united'] = UnitedAPI(app_config['UNITED_API_KEY'])
+        if user_settings.united_api_key:
+            self.apis['united'] = UnitedAPI(user_settings.united_api_key)
         
-        if app_config.get('AMERICAN_API_KEY'):
-            self.apis['american'] = AmericanAPI(app_config['AMERICAN_API_KEY'])
+        if user_settings.american_api_key:
+            self.apis['american'] = AmericanAPI(user_settings.american_api_key)
         
-        if app_config.get('DELTA_API_KEY'):
-            self.apis['delta'] = DeltaAPI(app_config['DELTA_API_KEY'])
+        if user_settings.delta_api_key:
+            self.apis['delta'] = DeltaAPI(user_settings.delta_api_key)
         
-        if app_config.get('SOUTHWEST_API_KEY'):
-            self.apis['southwest'] = SouthwestAPI(app_config['SOUTHWEST_API_KEY'])
+        if user_settings.southwest_api_key:
+            self.apis['southwest'] = SouthwestAPI(user_settings.southwest_api_key)
     
     def get_api(self, airline):
         """Get API instance for airline"""

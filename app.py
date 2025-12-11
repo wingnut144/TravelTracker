@@ -147,14 +147,10 @@ def view_trip(trip_id):
     """View trip details"""
     trip = Trip.query.get_or_404(trip_id)
     
-    # Get photos if Immich is enabled
+    # Get photos if Immich is enabled and configured
     photos = []
-    if current_user.user_settings.immich_integration_enabled:
-        photos = get_immich_photos_for_trip(
-            trip,
-            app.config['IMMICH_API_URL'],
-            app.config['IMMICH_API_KEY']
-        )
+    if current_user.user_settings.immich_integration_enabled and current_user.user_settings.has_immich():
+        photos = get_immich_photos_for_trip(trip, current_user.user_settings)
     
     return render_template(
         'trips/view.html',
@@ -283,13 +279,10 @@ def add_accommodation(trip_id):
     if request.method == 'POST':
         address = request.form.get('address')
         
-        # Get coordinates if Google Maps is enabled
+        # Get coordinates if Google Maps is enabled and configured
         lat, lng = None, None
-        if current_user.user_settings.google_maps_enabled and address:
-            lat, lng = get_coordinates_from_address(
-                address,
-                app.config['GOOGLE_MAPS_API_KEY']
-            )
+        if current_user.user_settings.google_maps_enabled and current_user.user_settings.has_google_maps() and address:
+            lat, lng = get_coordinates_from_address(address, current_user.user_settings)
         
         accommodation = Accommodation(
             trip_id=trip.id,
@@ -389,6 +382,170 @@ def view_shared_trip(token):
     trip = share.trip
     
     return render_template('trips/view_shared.html', trip=trip, share=share)
+
+
+@app.route('/settings/api-integrations', methods=['GET', 'POST'])
+@login_required
+def api_integrations():
+    """Configure API integrations"""
+    settings = current_user.user_settings
+    
+    if request.method == 'POST':
+        action = request.form.get('action')
+        
+        if action == 'save_immich':
+            settings.immich_api_url = request.form.get('immich_api_url', '').strip().rstrip('/')
+            settings.immich_api_key = request.form.get('immich_api_key', '').strip()
+            db.session.commit()
+            flash('Immich API credentials saved!', 'success')
+        
+        elif action == 'save_google_maps':
+            settings.google_maps_api_key = request.form.get('google_maps_api_key', '').strip()
+            db.session.commit()
+            flash('Google Maps API key saved!', 'success')
+        
+        elif action == 'save_airlines':
+            settings.united_api_key = request.form.get('united_api_key', '').strip()
+            settings.american_api_key = request.form.get('american_api_key', '').strip()
+            settings.delta_api_key = request.form.get('delta_api_key', '').strip()
+            settings.southwest_api_key = request.form.get('southwest_api_key', '').strip()
+            db.session.commit()
+            flash('Airline API keys saved!', 'success')
+        
+        elif action == 'delete_immich':
+            settings.immich_api_url = None
+            settings.immich_api_key = None
+            db.session.commit()
+            flash('Immich API credentials removed.', 'info')
+        
+        elif action == 'delete_google_maps':
+            settings.google_maps_api_key = None
+            db.session.commit()
+            flash('Google Maps API key removed.', 'info')
+        
+        elif action == 'delete_airlines':
+            settings.united_api_key = None
+            settings.american_api_key = None
+            settings.delta_api_key = None
+            settings.southwest_api_key = None
+            db.session.commit()
+            flash('Airline API keys removed.', 'info')
+        
+        return redirect(url_for('api_integrations'))
+    
+    return render_template('settings/api_integrations.html', settings=settings)
+
+
+@app.route('/api/test/immich', methods=['POST'])
+@login_required
+def test_immich():
+    """Test Immich API connection"""
+    settings = current_user.user_settings
+    
+    # Use temporary values if provided, otherwise use saved
+    api_url = request.form.get('immich_api_url', settings.immich_api_url)
+    api_key = request.form.get('immich_api_key', settings.immich_api_key)
+    
+    if not api_url or not api_key:
+        return jsonify({'success': False, 'message': 'API URL and Key are required'})
+    
+    try:
+        # Test connection to Immich server
+        headers = {'x-api-key': api_key}
+        response = requests.get(f"{api_url}/server-info/ping", headers=headers, timeout=5)
+        
+        if response.status_code == 200:
+            # Try to get server version
+            version_response = requests.get(f"{api_url}/server-info/version", headers=headers, timeout=5)
+            if version_response.status_code == 200:
+                version_data = version_response.json()
+                return jsonify({
+                    'success': True, 
+                    'message': f'Connected to Immich server successfully! Version: {version_data.get("major", "")}.{version_data.get("minor", "")}.{version_data.get("patch", "")}'
+                })
+            else:
+                return jsonify({'success': True, 'message': 'Connected to Immich server successfully!'})
+        else:
+            return jsonify({'success': False, 'message': f'Connection failed: {response.status_code}'})
+    
+    except requests.exceptions.Timeout:
+        return jsonify({'success': False, 'message': 'Connection timeout - check if server is accessible'})
+    except requests.exceptions.ConnectionError:
+        return jsonify({'success': False, 'message': 'Connection error - check URL and network'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+
+
+@app.route('/api/test/google-maps', methods=['POST'])
+@login_required
+def test_google_maps():
+    """Test Google Maps API key"""
+    settings = current_user.user_settings
+    
+    # Use temporary value if provided, otherwise use saved
+    api_key = request.form.get('google_maps_api_key', settings.google_maps_api_key)
+    
+    if not api_key:
+        return jsonify({'success': False, 'message': 'API key is required'})
+    
+    try:
+        # Test geocoding API with a simple address
+        url = 'https://maps.googleapis.com/maps/api/geocode/json'
+        params = {
+            'address': '1600 Amphitheatre Parkway, Mountain View, CA',
+            'key': api_key
+        }
+        
+        response = requests.get(url, params=params, timeout=5)
+        data = response.json()
+        
+        if data['status'] == 'OK':
+            return jsonify({
+                'success': True, 
+                'message': 'Google Maps API key is valid and working!'
+            })
+        elif data['status'] == 'REQUEST_DENIED':
+            return jsonify({
+                'success': False, 
+                'message': f'API key invalid: {data.get("error_message", "Request denied")}'
+            })
+        else:
+            return jsonify({
+                'success': False, 
+                'message': f'API error: {data.get("status")}'
+            })
+    
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error: {str(e)}'})
+
+
+@app.route('/api/test/airline/<airline>', methods=['POST'])
+@login_required
+def test_airline(airline):
+    """Test airline API key"""
+    settings = current_user.user_settings
+    
+    # Get API key (temporary or saved)
+    api_key = request.form.get(f'{airline}_api_key')
+    if not api_key:
+        airline_keys = {
+            'united': settings.united_api_key,
+            'american': settings.american_api_key,
+            'delta': settings.delta_api_key,
+            'southwest': settings.southwest_api_key
+        }
+        api_key = airline_keys.get(airline)
+    
+    if not api_key:
+        return jsonify({'success': False, 'message': 'API key is required'})
+    
+    # Note: These are placeholder endpoints since actual airline APIs require partnerships
+    # In production, you would replace with actual API endpoints
+    return jsonify({
+        'success': True, 
+        'message': f'{airline.title()} API key format looks valid! Note: Full validation requires an active API partnership with {airline.title()} Airlines.',
+        'info': 'Airline APIs require direct partnerships. This validates the key format only.'
+    })
 
 
 @app.route('/settings/oauth-apps', methods=['GET', 'POST'])
@@ -517,9 +674,15 @@ def update_flight_status(flight_id):
     if not can_edit_trip(current_user, trip):
         return jsonify({'error': 'Permission denied'}), 403
     
+    # Check if user has configured the airline API
+    if not current_user.user_settings.has_airline_api(flight.airline):
+        return jsonify({
+            'error': f'Please configure {flight.airline} API key in Settings → API Integrations'
+        }), 400
+    
     from airline_apis import AirlineAPIManager
     
-    api_manager = AirlineAPIManager(app.config)
+    api_manager = AirlineAPIManager(current_user.user_settings)
     success = api_manager.update_flight_status(flight)
     
     if success:

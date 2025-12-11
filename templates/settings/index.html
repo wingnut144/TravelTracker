@@ -25,6 +25,9 @@
             <a href="{{ url_for('email_accounts') }}" class="list-group-item list-group-item-action">
                 <i class="bi bi-envelope"></i> Email Accounts
             </a>
+            <a href="{{ url_for('api_integrations') }}" class="list-group-item list-group-item-action">
+                <i class="bi bi-plug"></i> API Integrations
+            </a>
         </div>
     </div>
     
@@ -91,8 +94,10 @@
                         <p class="mb-0 text-muted small">Link photos from Immich to your trips</p>
                     </div>
                     <div>
-                        {% if current_user.user_settings.immich_integration_enabled %}
-                            <span class="badge bg-success">Enabled</span>
+                        {% if current_user.user_settings.immich_integration_enabled and current_user.user_settings.has_immich() %}
+                            <span class="badge bg-success">Active</span>
+                        {% elif current_user.user_settings.immich_integration_enabled %}
+                            <span class="badge bg-warning text-dark">Enabled - Not Configured</span>
                         {% else %}
                             <span class="badge bg-secondary">Disabled</span>
                         {% endif %}
@@ -105,8 +110,10 @@
                         <p class="mb-0 text-muted small">Geocoding and maps for accommodations</p>
                     </div>
                     <div>
-                        {% if current_user.user_settings.google_maps_enabled %}
-                            <span class="badge bg-success">Enabled</span>
+                        {% if current_user.user_settings.google_maps_enabled and current_user.user_settings.has_google_maps() %}
+                            <span class="badge bg-success">Active</span>
+                        {% elif current_user.user_settings.google_maps_enabled %}
+                            <span class="badge bg-warning text-dark">Enabled - Not Configured</span>
                         {% else %}
                             <span class="badge bg-secondary">Disabled</span>
                         {% endif %}
@@ -115,9 +122,65 @@
                 
                 <hr>
                 
+                <h6 class="mt-3"><i class="bi bi-plug"></i> Your API Integrations</h6>
+                <div class="row text-center mt-3">
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="p-2 border rounded">
+                            <i class="bi bi-camera text-primary" style="font-size: 1.5rem;"></i>
+                            <p class="mb-0 small mt-1">Immich</p>
+                            {% if current_user.user_settings.has_immich() %}
+                                <small class="text-success">✓</small>
+                            {% else %}
+                                <small class="text-muted">-</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="p-2 border rounded">
+                            <i class="bi bi-map text-danger" style="font-size: 1.5rem;"></i>
+                            <p class="mb-0 small mt-1">Maps</p>
+                            {% if current_user.user_settings.has_google_maps() %}
+                                <small class="text-success">✓</small>
+                            {% else %}
+                                <small class="text-muted">-</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="p-2 border rounded">
+                            <i class="bi bi-google text-danger" style="font-size: 1.5rem;"></i>
+                            <p class="mb-0 small mt-1">Gmail</p>
+                            {% if current_user.user_settings.has_google_oauth() %}
+                                <small class="text-success">✓</small>
+                            {% else %}
+                                <small class="text-muted">-</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 mb-2">
+                        <div class="p-2 border rounded">
+                            <i class="bi bi-microsoft text-primary" style="font-size: 1.5rem;"></i>
+                            <p class="mb-0 small mt-1">Outlook</p>
+                            {% if current_user.user_settings.has_microsoft_oauth() %}
+                                <small class="text-success">✓</small>
+                            {% else %}
+                                <small class="text-muted">-</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <a href="{{ url_for('api_integrations') }}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-gear"></i> Configure APIs
+                    </a>
+                </div>
+                
+                <hr>
+                
                 <p class="text-muted small mb-0">
-                    <i class="bi bi-info-circle"></i> Features are controlled by administrators. 
-                    Contact your admin to enable additional features.
+                    <i class="bi bi-info-circle"></i> Admin-controlled features can be managed by your administrator. 
+                    Configure your own API integrations in <a href="{{ url_for('api_integrations') }}">API Integrations</a>.
                 </p>
             </div>
         </div>

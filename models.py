@@ -77,6 +77,20 @@ class UserSettings(db.Model):
     microsoft_client_id = db.Column(db.String(255))
     microsoft_client_secret = db.Column(db.String(255))
     
+    # Per-user API credentials
+    # Immich integration
+    immich_api_url = db.Column(db.String(255))
+    immich_api_key = db.Column(db.String(255))
+    
+    # Google Maps API
+    google_maps_api_key = db.Column(db.String(255))
+    
+    # Airline APIs
+    united_api_key = db.Column(db.String(255))
+    american_api_key = db.Column(db.String(255))
+    delta_api_key = db.Column(db.String(255))
+    southwest_api_key = db.Column(db.String(255))
+    
     # Relationships
     user = db.relationship('User', back_populates='user_settings')
     
@@ -87,6 +101,24 @@ class UserSettings(db.Model):
     def has_microsoft_oauth(self):
         """Check if user has configured Microsoft OAuth"""
         return bool(self.microsoft_client_id and self.microsoft_client_secret)
+    
+    def has_immich(self):
+        """Check if user has configured Immich"""
+        return bool(self.immich_api_url and self.immich_api_key)
+    
+    def has_google_maps(self):
+        """Check if user has configured Google Maps"""
+        return bool(self.google_maps_api_key)
+    
+    def has_airline_api(self, airline):
+        """Check if user has configured specific airline API"""
+        airline_map = {
+            'united': self.united_api_key,
+            'american': self.american_api_key,
+            'delta': self.delta_api_key,
+            'southwest': self.southwest_api_key
+        }
+        return bool(airline_map.get(airline.lower()))
     
     def __repr__(self):
         return f'<UserSettings for User {self.user_id}>'

@@ -153,17 +153,17 @@ def requires_trip_access(edit=False):
     return decorator
 
 
-def get_coordinates_from_address(address, google_maps_api_key):
-    """Get latitude and longitude from address using Google Maps API"""
-    if not google_maps_api_key:
-        logger.warning("Google Maps API key not configured")
+def get_coordinates_from_address(address, user_settings):
+    """Get latitude and longitude from address using user's Google Maps API key"""
+    if not user_settings or not user_settings.has_google_maps():
+        logger.warning("User does not have Google Maps API configured")
         return None, None
     
     try:
         url = 'https://maps.googleapis.com/maps/api/geocode/json'
         params = {
             'address': address,
-            'key': google_maps_api_key
+            'key': user_settings.google_maps_api_key
         }
         
         response = requests.get(url, params=params, timeout=10)
@@ -243,16 +243,16 @@ def refresh_oauth_token(email_account):
         return False
 
 
-def get_immich_photos_for_trip(trip, immich_api_url, immich_api_key):
-    """Get photos from Immich for a trip based on dates and location"""
-    if not immich_api_url or not immich_api_key:
-        logger.warning("Immich API not configured")
+def get_immich_photos_for_trip(trip, user_settings):
+    """Get photos from Immich for a trip based on dates and location using user's credentials"""
+    if not user_settings or not user_settings.has_immich():
+        logger.warning("User does not have Immich configured")
         return []
     
     try:
         # Query Immich for photos in date range
         headers = {
-            'x-api-key': immich_api_key,
+            'x-api-key': user_settings.immich_api_key,
             'Content-Type': 'application/json'
         }
         
@@ -260,7 +260,7 @@ def get_immich_photos_for_trip(trip, immich_api_url, immich_api_key):
         start_date = trip.start_date.isoformat()
         end_date = trip.end_date.isoformat()
         
-        search_url = f"{immich_api_url}/search/metadata"
+        search_url = f"{user_settings.immich_api_url}/search/metadata"
         params = {
             'takenAfter': start_date,
             'takenBefore': end_date
@@ -275,8 +275,8 @@ def get_immich_photos_for_trip(trip, immich_api_url, immich_api_key):
             for asset in assets:
                 photos.append({
                     'id': asset['id'],
-                    'thumbnail_url': f"{immich_api_url}/asset/thumbnail/{asset['id']}",
-                    'full_url': f"{immich_api_url}/asset/file/{asset['id']}",
+                    'thumbnail_url': f"{user_settings.immich_api_url}/asset/thumbnail/{asset['id']}",
+                    'full_url': f"{user_settings.immich_api_url}/asset/file/{asset['id']}",
                     'taken_at': asset.get('fileCreatedAt'),
                     'latitude': asset.get('exifInfo', {}).get('latitude'),
                     'longitude': asset.get('exifInfo', {}).get('longitude')
