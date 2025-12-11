@@ -320,6 +320,106 @@ def validate_email(email):
     return re.match(pattern, email) is not None
 
 
+def search_locations(query):
+    """
+    Search for locations worldwide using OpenStreetMap Photon
+    Returns list of location suggestions for autocomplete
+    
+    Args:
+        query: Search query string
+    
+    Returns:
+        list: List of dicts with location data
+    """
+    try:
+        # Use Photon for fast autocomplete-friendly search
+        url = 'https://photon.komoot.io/api/'
+        params = {
+            'q': query,
+            'limit': 10,
+            'lang': 'en'
+        }
+        
+        response = requests.get(url, params=params, timeout=5)
+        
+        if response.status_code == 200:
+            data = response.json()
+            locations = []
+            
+            for feature in data.get('features', []):
+                props = feature.get('properties', {})
+                coords = feature.get('geometry', {}).get('coordinates', [])
+                
+                # Build display name
+                name_parts = []
+                if props.get('name'):
+                    name_parts.append(props['name'])
+                if props.get('city'):
+                    name_parts.append(props['city'])
+                elif props.get('county'):
+                    name_parts.append(props['county'])
+                if props.get('state'):
+                    name_parts.append(props['state'])
+                if props.get('country'):
+                    name_parts.append(props['country'])
+                
+                display_name = ', '.join(name_parts) if name_parts else 'Unknown Location'
+                
+                locations.append({
+                    'display_name': display_name,
+                    'name': props.get('name', ''),
+                    'city': props.get('city', ''),
+                    'state': props.get('state', ''),
+                    'country': props.get('country', ''),
+                    'latitude': coords[1] if len(coords) > 1 else None,
+                    'longitude': coords[0] if len(coords) > 0 else None
+                })
+            
+            return locations
+        
+        return []
+    
+    except Exception as e:
+        logger.error(f"Error searching locations: {str(e)}")
+        return []
+
+
+def get_destination_background_image(destination):
+    """
+    Get a background image URL for a destination using Unsplash
+    Free service, no API key required for basic usage
+    
+    Args:
+        destination: Destination name (e.g., "Paris, France")
+    
+    Returns:
+        str: Image URL or None
+    """
+    try:
+        # Use Unsplash Source for simple, free image access
+        # Format: https://source.unsplash.com/1600x900/?{query}
+        # This automatically returns a random relevant image
+        
+        # Clean up destination for search
+        search_term = destination.replace(',', ' ').strip()
+        
+        # For cities/landmarks, add "landmark" or "cityscape" to get better images
+        if search_term:
+            # Use Unsplash API (no auth needed for basic usage)
+            url = f"https://source.unsplash.com/1600x900/?{search_term},travel,landmark"
+            
+            # Test if URL is accessible
+            response = requests.head(url, timeout=5, allow_redirects=True)
+            if response.status_code == 200:
+                return response.url  # Return the final URL after redirects
+        
+        return None
+    
+    except Exception as e:
+        logger.error(f"Error fetching background image: {str(e)}")
+        return None
+
+
 def sanitize_filename(filename):
     """Sanitize filename for safe storage"""
     import re

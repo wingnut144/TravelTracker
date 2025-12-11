@@ -168,6 +168,8 @@ def new_trip():
         title = request.form.get('title')
         description = request.form.get('description')
         destination = request.form.get('destination')
+        destination_lat = request.form.get('destination_latitude')
+        destination_lng = request.form.get('destination_longitude')
         start_date = datetime.fromisoformat(request.form.get('start_date'))
         end_date = datetime.fromisoformat(request.form.get('end_date'))
         visibility = request.form.get('visibility', 'private')
@@ -181,12 +183,21 @@ def new_trip():
             flash('Start date must be before end date.', 'danger')
             return render_template('trips/new.html')
         
+        # Get background image for destination
+        background_url = None
+        if destination:
+            from utils import get_destination_background_image
+            background_url = get_destination_background_image(destination)
+        
         # Create trip
         trip = Trip(
             user_id=current_user.id,
             title=title,
             description=description,
             destination=destination,
+            destination_latitude=float(destination_lat) if destination_lat else None,
+            destination_longitude=float(destination_lng) if destination_lng else None,
+            background_image_url=background_url,
             start_date=start_date,
             end_date=end_date,
             visibility=TripVisibility[visibility.upper()]
@@ -209,13 +220,30 @@ def edit_trip(trip_id):
     trip = Trip.query.get_or_404(trip_id)
     
     if request.method == 'POST':
+        old_destination = trip.destination
+        
         trip.title = request.form.get('title', trip.title)
         trip.description = request.form.get('description', trip.description)
         trip.destination = request.form.get('destination', trip.destination)
+        
+        # Update coordinates if provided
+        dest_lat = request.form.get('destination_latitude')
+        dest_lng = request.form.get('destination_longitude')
+        if dest_lat and dest_lng:
+            trip.destination_latitude = float(dest_lat)
+            trip.destination_longitude = float(dest_lng)
+        
         trip.start_date = datetime.fromisoformat(request.form.get('start_date'))
         trip.end_date = datetime.fromisoformat(request.form.get('end_date'))
         trip.visibility = TripVisibility[request.form.get('visibility', 'private').upper()]
         trip.notes = request.form.get('notes', trip.notes)
+        
+        # Update background image if destination changed
+        if trip.destination and trip.destination != old_destination:
+            from utils import get_destination_background_image
+            background_url = get_destination_background_image(trip.destination)
+            if background_url:
+                trip.background_image_url = background_url
         
         db.session.commit()
         
@@ -434,6 +462,21 @@ def api_integrations():
         return redirect(url_for('api_integrations'))
     
     return render_template('settings/api_integrations.html', settings=settings)
+
+
+@app.route('/api/search/locations', methods=['GET'])
+@login_required
+def search_locations_api():
+    """Search for locations worldwide for autocomplete"""
+    query = request.args.get('q', '')
+    
+    if not query or len(query) < 2:
+        return jsonify({'locations': []})
+    
+    from utils import search_locations
+    locations = search_locations(query)
+    
+    return jsonify({'locations': locations})
 
 
 @app.route('/api/test/immich', methods=['POST'])

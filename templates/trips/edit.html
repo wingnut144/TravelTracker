@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}New Trip - Travel Tracker{% endblock %}
+{% block title %}Edit Trip - Travel Tracker{% endblock %}
 
 {% block content %}
 <div class="row mb-4">
@@ -9,7 +9,8 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('trips') }}">Trips</a></li>
-                <li class="breadcrumb-item active">New Trip</li>
+                <li class="breadcrumb-item"><a href="{{ url_for('view_trip', trip_id=trip.id) }}">{{ trip.title }}</a></li>
+                <li class="breadcrumb-item active">Edit</li>
             </ol>
         </nav>
     </div>
@@ -19,13 +20,14 @@
     <div class="col-lg-8">
         <div class="card">
             <div class="card-header">
-                <h3 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Trip</h3>
+                <h3 class="mb-0"><i class="bi bi-pencil"></i> Edit Trip</h3>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('new_trip') }}">
+                <form method="POST" action="{{ url_for('edit_trip', trip_id=trip.id) }}">
                     <div class="mb-3">
                         <label for="title" class="form-label">Trip Title *</label>
                         <input type="text" class="form-control" id="title" name="title" required
+                               value="{{ trip.title }}"
                                placeholder="e.g., Summer Vacation 2024">
                         <div class="form-text">Give your trip a memorable name</div>
                     </div>
@@ -33,10 +35,13 @@
                     <div class="mb-3 position-relative">
                         <label for="destination" class="form-label">Destination</label>
                         <input type="text" class="form-control" id="destination" name="destination"
+                               value="{{ trip.destination or '' }}"
                                placeholder="Start typing to search locations worldwide..."
                                autocomplete="off">
-                        <input type="hidden" id="destination_latitude" name="destination_latitude">
-                        <input type="hidden" id="destination_longitude" name="destination_longitude">
+                        <input type="hidden" id="destination_latitude" name="destination_latitude" 
+                               value="{{ trip.destination_latitude or '' }}">
+                        <input type="hidden" id="destination_longitude" name="destination_longitude"
+                               value="{{ trip.destination_longitude or '' }}">
                         <div id="location-suggestions" class="list-group position-absolute w-100" style="z-index: 1000; display: none; max-height: 300px; overflow-y: auto;"></div>
                         <div class="form-text">
                             <i class="bi bi-globe"></i> Search for cities, landmarks, or regions worldwide
@@ -46,52 +51,49 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="start_date" class="form-label">Start Date *</label>
-                            <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+                            <input type="datetime-local" class="form-control" id="start_date" name="start_date" 
+                                   value="{{ trip.start_date.strftime('%Y-%m-%dT%H:%M') }}" required>
                         </div>
                         
                         <div class="col-md-6 mb-3">
                             <label for="end_date" class="form-label">End Date *</label>
-                            <input type="datetime-local" class="form-control" id="end_date" name="end_date" required>
+                            <input type="datetime-local" class="form-control" id="end_date" name="end_date" 
+                                   value="{{ trip.end_date.strftime('%Y-%m-%dT%H:%M') }}" required>
                         </div>
                     </div>
                     
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
                         <textarea class="form-control" id="description" name="description" rows="3"
-                                  placeholder="Optional trip description"></textarea>
+                                  placeholder="Optional trip description">{{ trip.description or '' }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"
+                                  placeholder="Private notes about this trip">{{ trip.notes or '' }}</textarea>
                     </div>
                     
                     <div class="mb-3">
                         <label for="visibility" class="form-label">Privacy Setting</label>
                         <select class="form-select" id="visibility" name="visibility">
-                            <option value="private" selected>Private - Only you can see this trip</option>
-                            <option value="shared">Shared - Share with specific people</option>
-                            <option value="public">Public - Anyone can view this trip</option>
+                            <option value="private" {% if trip.visibility.value == 'private' %}selected{% endif %}>Private - Only you can see this trip</option>
+                            <option value="shared" {% if trip.visibility.value == 'shared' %}selected{% endif %}>Shared - Share with specific people</option>
+                            <option value="public" {% if trip.visibility.value == 'public' %}selected{% endif %}>Public - Anyone can view this trip</option>
                         </select>
                         <div class="form-text">You can change this later or share with specific people</div>
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{{ url_for('trips') }}" class="btn btn-secondary">
+                        <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancel
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Create Trip
+                            <i class="bi bi-check-circle"></i> Save Changes
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
-        
-        <div class="alert alert-info mt-4">
-            <h5><i class="bi bi-info-circle"></i> Next Steps</h5>
-            <p class="mb-0">After creating your trip, you can:</p>
-            <ul class="mb-0">
-                <li>Add flights with confirmation numbers</li>
-                <li>Add hotel reservations</li>
-                <li>Share with travel companions</li>
-                <li>Link photos from your Immich server</li>
-            </ul>
         </div>
     </div>
 </div>
@@ -100,7 +102,7 @@
 
 {% block extra_js %}
 <script>
-// Location autocomplete functionality
+// Location autocomplete functionality (same as new trip)
 let debounceTimer;
 const destinationInput = document.getElementById('destination');
 const suggestionsDiv = document.getElementById('location-suggestions');
@@ -110,7 +112,6 @@ const lngInput = document.getElementById('destination_longitude');
 destinationInput.addEventListener('input', function() {
     const query = this.value.trim();
     
-    // Clear previous timer
     clearTimeout(debounceTimer);
     
     if (query.length < 2) {
@@ -118,7 +119,6 @@ destinationInput.addEventListener('input', function() {
         return;
     }
     
-    // Debounce search (wait 300ms after user stops typing)
     debounceTimer = setTimeout(() => {
         searchLocations(query);
     }, 300);
@@ -173,7 +173,6 @@ function selectLocation(location) {
     lngInput.value = location.longitude || '';
     suggestionsDiv.style.display = 'none';
     
-    // Visual feedback
     destinationInput.classList.add('is-valid');
     setTimeout(() => {
         destinationInput.classList.remove('is-valid');
@@ -186,7 +185,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Close suggestions when clicking outside
 document.addEventListener('click', function(event) {
     if (!destinationInput.contains(event.target) && !suggestionsDiv.contains(event.target)) {
         suggestionsDiv.style.display = 'none';
@@ -195,19 +193,6 @@ document.addEventListener('click', function(event) {
 
 // Date validation
 document.addEventListener('DOMContentLoaded', function() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    
-    const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-    
-    document.getElementById('start_date').min = minDateTime;
-    document.getElementById('end_date').min = minDateTime;
-    
-    // Update end date minimum when start date changes
     document.getElementById('start_date').addEventListener('change', function() {
         document.getElementById('end_date').min = this.value;
     });

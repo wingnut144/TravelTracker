@@ -158,6 +158,9 @@ class Trip(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
     destination = db.Column(db.String(200))
+    destination_latitude = db.Column(db.Float)
+    destination_longitude = db.Column(db.Float)
+    background_image_url = db.Column(db.String(500))
     start_date = db.Column(db.DateTime, nullable=False, index=True)
     end_date = db.Column(db.DateTime, nullable=False)
     
