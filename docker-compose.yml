@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: traveltracker-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: traveluser
+      POSTGRES_PASSWORD: travelpass
+      POSTGRES_DB: traveltracker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - traveltracker-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U traveluser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: traveltracker:latest
+    container_name: traveltracker-web
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://traveluser:travelpass@db:5432/traveltracker
+      - SECRET_KEY=${SECRET_KEY:-change-this-secret-key-in-production}
+      
+      # Google OAuth
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI:-http://localhost:5000/auth/google/callback}
+      
+      # Microsoft OAuth
+      - MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
+      - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
+      - MICROSOFT_REDIRECT_URI=${MICROSOFT_REDIRECT_URI:-http://localhost:5000/auth/microsoft/callback}
+      
+      # Airline APIs
+      - UNITED_API_KEY=${UNITED_API_KEY}
+      - AMERICAN_API_KEY=${AMERICAN_API_KEY}
+      - DELTA_API_KEY=${DELTA_API_KEY}
+      - SOUTHWEST_API_KEY=${SOUTHWEST_API_KEY}
+      
+      # Immich Integration
+      - IMMICH_API_URL=${IMMICH_API_URL}
+      - IMMICH_API_KEY=${IMMICH_API_KEY}
+      
+      # Google Maps API
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      
+      # Email scanning
+      - EMAIL_SCAN_INTERVAL=300
+      
+      # Timezone
+      - TIMEZONE=${TIMEZONE:-America/New_York}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - traveltracker-network
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        flask db upgrade &&
+        gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 120 app:app
+      "
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: traveltracker:latest
+    container_name: traveltracker-scheduler
+    restart: unless-stopped
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://traveluser:travelpass@db:5432/traveltracker
+      - SECRET_KEY=${SECRET_KEY:-change-this-secret-key-in-production}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
+      - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
+      - EMAIL_SCAN_INTERVAL=300
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - traveltracker-network
+    command: python scheduler.py
+
+volumes:
+  postgres_data:
+
+networks:
+  traveltracker-network:
+    driver: bridge

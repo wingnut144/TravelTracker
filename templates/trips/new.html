@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}New Trip - Travel Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('trips') }}">Trips</a></li>
+                <li class="breadcrumb-item active">New Trip</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Trip</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('new_trip') }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Trip Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" required
+                               placeholder="e.g., Summer Vacation 2024">
+                        <div class="form-text">Give your trip a memorable name</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="destination" class="form-label">Destination</label>
+                        <input type="text" class="form-control" id="destination" name="destination"
+                               placeholder="e.g., Paris, France">
+                        <div class="form-text">Where are you going?</div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="start_date" class="form-label">Start Date *</label>
+                            <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="end_date" class="form-label">End Date *</label>
+                            <input type="datetime-local" class="form-control" id="end_date" name="end_date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  placeholder="Optional trip description"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="visibility" class="form-label">Privacy Setting</label>
+                        <select class="form-select" id="visibility" name="visibility">
+                            <option value="private" selected>Private - Only you can see this trip</option>
+                            <option value="shared">Shared - Share with specific people</option>
+                            <option value="public">Public - Anyone can view this trip</option>
+                        </select>
+                        <div class="form-text">You can change this later or share with specific people</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('trips') }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Create Trip
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-4">
+            <h5><i class="bi bi-info-circle"></i> Next Steps</h5>
+            <p class="mb-0">After creating your trip, you can:</p>
+            <ul class="mb-0">
+                <li>Add flights with confirmation numbers</li>
+                <li>Add hotel reservations</li>
+                <li>Share with travel companions</li>
+                <li>Link photos from your Immich server</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Set minimum date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    
+    document.getElementById('start_date').min = minDateTime;
+    document.getElementById('end_date').min = minDateTime;
+    
+    // Update end date minimum when start date changes
+    document.getElementById('start_date').addEventListener('change', function() {
+        document.getElementById('end_date').min = this.value;
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Travel Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-gear"></i> Settings</h1>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Settings Navigation -->
+    <div class="col-md-3 mb-4">
+        <div class="list-group">
+            <a href="{{ url_for('profile_settings') }}" class="list-group-item list-group-item-action">
+                <i class="bi bi-person"></i> Profile
+            </a>
+            <a href="{{ url_for('preferences_settings') }}" class="list-group-item list-group-item-action">
+                <i class="bi bi-sliders"></i> Preferences
+            </a>
+            <a href="#" class="list-group-item list-group-item-action disabled">
+                <i class="bi bi-envelope"></i> Email Accounts
+            </a>
+            <a href="#" class="list-group-item list-group-item-action disabled">
+                <i class="bi bi-shield-lock"></i> Privacy & Security
+            </a>
+        </div>
+    </div>
+    
+    <!-- Settings Content -->
+    <div class="col-md-9">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-person-circle"></i> Account Overview</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Username:</dt>
+                    <dd class="col-sm-9">{{ current_user.username }}</dd>
+                    
+                    <dt class="col-sm-3">Email:</dt>
+                    <dd class="col-sm-9">{{ current_user.email }}</dd>
+                    
+                    <dt class="col-sm-3">Account Type:</dt>
+                    <dd class="col-sm-9">
+                        {% if current_user.is_admin() %}
+                            <span class="badge bg-danger">Administrator</span>
+                        {% else %}
+                            <span class="badge bg-primary">User</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt class="col-sm-3">Member Since:</dt>
+                    <dd class="col-sm-9">{{ current_user.created_at.strftime('%B %d, %Y') }}</dd>
+                    
+                    <dt class="col-sm-3">Last Login:</dt>
+                    <dd class="col-sm-9">
+                        {% if current_user.last_login %}
+                            {{ current_user.last_login.strftime('%B %d, %Y at %I:%M %p') }}
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-toggles"></i> Feature Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <strong><i class="bi bi-envelope"></i> Email Integration</strong>
+                        <p class="mb-0 text-muted small">Automatically scan emails for flight confirmations</p>
+                    </div>
+                    <div>
+                        {% if current_user.user_settings.email_integration_enabled %}
+                            <span class="badge bg-success">Enabled</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Disabled</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <strong><i class="bi bi-camera"></i> Immich Integration</strong>
+                        <p class="mb-0 text-muted small">Link photos from Immich to your trips</p>
+                    </div>
+                    <div>
+                        {% if current_user.user_settings.immich_integration_enabled %}
+                            <span class="badge bg-success">Enabled</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Disabled</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong><i class="bi bi-map"></i> Google Maps</strong>
+                        <p class="mb-0 text-muted small">Geocoding and maps for accommodations</p>
+                    </div>
+                    <div>
+                        {% if current_user.user_settings.google_maps_enabled %}
+                            <span class="badge bg-success">Enabled</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Disabled</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-info-circle"></i> Features are controlled by administrators. 
+                    Contact your admin to enable additional features.
+                </p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Quick Stats</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h3 class="text-primary">{{ current_user.trips|length }}</h3>
+                        <p class="text-muted">Total Trips</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="text-success">
+                            {{ current_user.trips|selectattr('start_date', 'gt', now())|list|length }}
+                        </h3>
+                        <p class="text-muted">Upcoming Trips</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 class="text-info">{{ current_user.email_accounts|length }}</h3>
+                        <p class="text-muted">Email Accounts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

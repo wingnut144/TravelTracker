@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}My Trips - Travel Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1><i class="bi bi-luggage"></i> My Trips</h1>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('new_trip') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Trip
+        </a>
+    </div>
+</div>
+
+<!-- Filter Tabs -->
+<ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+        <a class="nav-link {% if filter_type == 'all' %}active{% endif %}" 
+           href="{{ url_for('trips', filter='all') }}">
+            All Trips
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if filter_type == 'upcoming' %}active{% endif %}" 
+           href="{{ url_for('trips', filter='upcoming') }}">
+            Upcoming
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if filter_type == 'current' %}active{% endif %}" 
+           href="{{ url_for('trips', filter='current') }}">
+            Current
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if filter_type == 'past' %}active{% endif %}" 
+           href="{{ url_for('trips', filter='past') }}">
+            Past
+        </a>
+    </li>
+</ul>
+
+<!-- Trips List -->
+{% if trips.items %}
+<div class="row">
+    {% for trip in trips.items %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card trip-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
+                        {{ trip.title }}
+                    </a>
+                </h5>
+                
+                <p class="card-text text-muted">
+                    <i class="bi bi-geo-alt"></i> {{ trip.destination }}
+                </p>
+                
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="bi bi-calendar3"></i>
+                        {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
+                    </small>
+                </p>
+                
+                <div class="mb-2">
+                    {% if trip|trip_status == 'upcoming' %}
+                        <span class="badge badge-upcoming">Upcoming</span>
+                    {% elif trip|trip_status == 'current' %}
+                        <span class="badge badge-current">In Progress</span>
+                    {% else %}
+                        <span class="badge badge-past">Completed</span>
+                    {% endif %}
+                    
+                    {% if trip.flights %}
+                        <span class="badge bg-info">
+                            <i class="bi bi-airplane"></i> {{ trip.flights|length }}
+                        </span>
+                    {% endif %}
+                    
+                    {% if trip.accommodations %}
+                        <span class="badge bg-secondary">
+                            <i class="bi bi-building"></i> {{ trip.accommodations|length }}
+                        </span>
+                    {% endif %}
+                    
+                    {% if trip.auto_detected %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="bi bi-robot"></i> Auto
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        {% if trip.visibility.value == 'private' %}
+                            <i class="bi bi-lock"></i> Private
+                        {% elif trip.visibility.value == 'shared' %}
+                            <i class="bi bi-people"></i> Shared
+                        {% else %}
+                            <i class="bi bi-globe"></i> Public
+                        {% endif %}
+                    </small>
+                    
+                    <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="btn btn-sm btn-outline-primary">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if trips.pages > 1 %}
+<nav aria-label="Trip pagination">
+    <ul class="pagination justify-content-center">
+        {% if trips.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('trips', page=trips.prev_num, filter=filter_type) }}">
+                Previous
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in trips.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if page_num == trips.page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('trips', page=page_num, filter=filter_type) }}">
+                        {{ page_num }}
+                    </a>
+                </li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if trips.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('trips', page=trips.next_num, filter=filter_type) }}">
+                Next
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<!-- Empty State -->
+<div class="text-center py-5">
+    <i class="bi bi-suitcase-lg" style="font-size: 4rem; color: #6c757d;"></i>
+    <h3 class="mt-3">No trips found</h3>
+    <p class="text-muted">
+        {% if filter_type == 'upcoming' %}
+            You don't have any upcoming trips.
+        {% elif filter_type == 'current' %}
+            You don't have any trips in progress.
+        {% elif filter_type == 'past' %}
+            You don't have any past trips.
+        {% else %}
+            Start planning your next adventure!
+        {% endif %}
+    </p>
+    <a href="{{ url_for('new_trip') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create Trip
+    </a>
+</div>
+{% endif %}
+{% endblock %}

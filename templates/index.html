@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - Travel Tracker{% endblock %}
+
+{% block content %}
+<div class="row align-items-center min-vh-75">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">
+            Track Your Travels,<br>
+            Effortlessly
+        </h1>
+        <p class="lead mb-4">
+            Travel Tracker is your all-in-one solution for organizing trips, tracking flights, 
+            and sharing itineraries. Automatically import travel details from your email and 
+            keep all your travel plans in one place.
+        </p>
+        <div class="d-grid gap-2 d-md-flex">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-person-plus"></i> Get Started
+            </a>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg px-4">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6 text-center">
+        <i class="bi bi-globe2" style="font-size: 15rem; color: var(--primary-color); opacity: 0.1;"></i>
+    </div>
+</div>
+
+<div class="row mt-5 mb-5">
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="bi bi-envelope-open text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Email Integration</h5>
+                <p class="card-text">
+                    Automatically import flight confirmations from Gmail and Outlook. 
+                    No manual data entry required.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="bi bi-airplane text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Flight Tracking</h5>
+                <p class="card-text">
+                    Real-time flight status updates from major US airlines. 
+                    Track gates, delays, and cancellations.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="bi bi-share text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Easy Sharing</h5>
+                <p class="card-text">
+                    Share trips with friends, family, or colleagues. 
+                    Internal and external sharing with privacy controls.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 mb-5">
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="bi bi-building text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Accommodations</h5>
+                <p class="card-text">
+                    Track hotels and rentals with maps integration. 
+                    Store confirmation numbers and contact details.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="bi bi-camera text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Photo Integration</h5>
+                <p class="card-text">
+                    Link photos from your Immich server to trips. 
+                    Automatic date-based photo association.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="bi bi-shield-check text-primary" style="font-size: 3rem;"></i>
+                <h5 class="card-title mt-3">Privacy First</h5>
+                <p class="card-text">
+                    Your trips are private by default. 
+                    Full control over what you share and with whom.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 mb-5 bg-light rounded p-5">
+    <div class="col text-center">
+        <h2 class="mb-4">Ready to organize your travels?</h2>
+        <p class="lead mb-4">
+            Join thousands of travelers who trust Travel Tracker to keep their trips organized.
+        </p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+            <i class="bi bi-person-plus"></i> Create Free Account
+        </a>
+    </div>
+</div>
+{% endblock %}
