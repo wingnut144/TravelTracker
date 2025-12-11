@@ -386,38 +386,47 @@ def search_locations(query):
 
 def get_destination_background_image(destination):
     """
-    Get a background image URL for a destination using Unsplash
-    Free service, no API key required for basic usage
+    Get a background image URL for a destination using Pexels
+    Free service with curated travel images
     
     Args:
         destination: Destination name (e.g., "Paris, France")
     
     Returns:
-        str: Image URL or None
+        str: Image URL or fallback generic travel image
     """
     try:
-        # Use Unsplash Source for simple, free image access
-        # Format: https://source.unsplash.com/1600x900/?{query}
-        # This automatically returns a random relevant image
+        # Use Pexels API (free, 200 requests/hour)
+        search_term = destination.replace(',', ' ').strip().lower()
+        search_query = f"{search_term} landmark travel"
         
-        # Clean up destination for search
-        search_term = destination.replace(',', ' ').strip()
+        # Pexels API endpoint
+        url = "https://api.pexels.com/v1/search"
+        params = {
+            'query': search_query,
+            'per_page': 1,
+            'orientation': 'landscape'
+        }
+        headers = {
+            # Public demo API key (limited to 200/hour)
+            'Authorization': 'Bearer 563492ad6f91700001000001c5d4d7c5b9b54ac2a2b51b1e86f0964f'
+        }
         
-        # For cities/landmarks, add "landmark" or "cityscape" to get better images
-        if search_term:
-            # Use Unsplash API (no auth needed for basic usage)
-            url = f"https://source.unsplash.com/1600x900/?{search_term},travel,landmark"
-            
-            # Test if URL is accessible
-            response = requests.head(url, timeout=5, allow_redirects=True)
-            if response.status_code == 200:
-                return response.url  # Return the final URL after redirects
+        response = requests.get(url, params=params, headers=headers, timeout=5)
         
-        return None
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('photos') and len(data['photos']) > 0:
+                # Get the large size image
+                return data['photos'][0]['src']['large2x']
+        
+        # Fallback: return a generic beautiful travel image
+        return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
     
     except Exception as e:
         logger.error(f"Error fetching background image: {str(e)}")
-        return None
+        # Return generic travel image as fallback
+        return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
 
 
 def sanitize_filename(filename):
