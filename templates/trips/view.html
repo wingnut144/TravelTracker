@@ -292,6 +292,82 @@
 </div>
 {% endif %}
 
+<!-- Foursquare Check-ins -->
+{% if trip.checkins %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-geo-fill text-danger"></i> Check-ins
+                    <span class="badge bg-secondary">{{ trip.checkins|length }}</span>
+                </h5>
+                {% if can_edit and current_user.user_settings and current_user.user_settings.foursquare_enabled %}
+                <form method="POST" action="{{ url_for('manual_sync_checkins', trip_id=trip.id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-arrow-repeat"></i> Sync Now
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    {% for checkin in trip.checkins|sort(attribute='checkin_time', reverse=True) %}
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            {% if checkin.photo_url %}
+                            <div class="col-auto">
+                                <img src="{{ checkin.photo_url }}" 
+                                     class="rounded" 
+                                     style="width: 80px; height: 80px; object-fit: cover;"
+                                     alt="{{ checkin.venue_name }}">
+                            </div>
+                            {% endif %}
+                            <div class="col">
+                                <h6 class="mb-1">
+                                    <i class="bi bi-pin-map"></i> {{ checkin.venue_name }}
+                                </h6>
+                                {% if checkin.venue_category %}
+                                <p class="mb-1 text-muted small">
+                                    <i class="bi bi-tag"></i> {{ checkin.venue_category }}
+                                </p>
+                                {% endif %}
+                                {% if checkin.venue_address %}
+                                <p class="mb-1 text-muted small">
+                                    <i class="bi bi-geo-alt"></i> {{ checkin.venue_address }}
+                                </p>
+                                {% endif %}
+                                <p class="mb-1 text-muted small">
+                                    <i class="bi bi-clock"></i> {{ checkin.checkin_time.strftime('%b %d, %Y at %I:%M %p') }}
+                                </p>
+                                {% if checkin.shout %}
+                                <p class="mb-0 mt-2">
+                                    <em>"{{ checkin.shout }}"</em>
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% elif can_edit and current_user.user_settings and current_user.user_settings.foursquare_enabled %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> 
+            No check-ins found for this trip. Check-ins are synced automatically every hour, or you can 
+            <form method="POST" action="{{ url_for('manual_sync_checkins', trip_id=trip.id) }}" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-link p-0">sync now</button>
+            </form>.
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Notes -->
 {% if trip.notes %}
 <div class="row mb-4">

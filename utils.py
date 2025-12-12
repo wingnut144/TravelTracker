@@ -449,3 +449,120 @@ def get_file_extension(filename):
 def allowed_file(filename, allowed_extensions):
     """Check if file extension is allowed"""
     return '.' in filename and get_file_extension(filename) in allowed_extensions
+
+
+def fetch_foursquare_checkins(access_token, start_date, end_date):
+    """
+    Fetch check-ins from Foursquare Swarm API
+    
+    Args:
+        access_token: Foursquare OAuth access token
+        start_date: Start datetime for check-ins
+        end_date: End datetime for check-ins
+    
+    Returns:
+        list: Check-in data
+    """
+    if not access_token:
+        return []
+    
+    try:
+        url = 'https://api.foursquare.com/v2/users/self/checkins'
+        params = {
+            'oauth_token': access_token,
+            'v': '20231212',  # API version date
+            'afterTimestamp': int(start_date.timestamp()),
+            'beforeTimestamp': int(end_date.timestamp()),
+            'limit': 250
+        }
+        
+        response = requests.get(url, params=params, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            return data.get('response', {}).get('checkins', {}).get('items', [])
+        else:
+            logger.error(f"Foursquare API error: {response.status_code} - {response.text}")
+        
+        return []
+    
+    except Exception as e:
+        logger.error(f"Error fetching Foursquare check-ins: {str(e)}")
+        return []
+
+
+def sync_trip_checkins(trip):
+    """
+    Sync check-ins for a specific trip from Foursquare
+    
+    Args:
+        trip: Trip object
+    
+    Returns:
+        int: Number of new check-ins added
+    """
+    from models import CheckIn, db
+    
+    user_settings = trip.user.user_settings
+    
+    if not user_settings or not user_settings.foursquare_enabled or not user_settings.foursquare_access_token:
+        return 0
+    
+    checkins_data = fetch_foursquare_checkins(
+        user_settings.foursquare_access_token,
+        trip.start_date,
+        trip.end_date
+    )
+    
+    new_checkins = 0
+    
+    for checkin_data in checkins_data:
+        foursquare_id = checkin_data.get('id')
+        
+        # Skip if already exists
+        existing = CheckIn.query.filter_by(
+            foursquare_checkin_id=foursquare_id
+        ).first()
+        
+        if existing:
+            continue
+        
+        venue = checkin_data.get('venue', {})
+        location = venue.get('location', {})
+        categories = venue.get('categories', [])
+        photos = checkin_data.get('photos', {})
+        
+        # Get photo URL if available
+        photo_url = None
+        if photos.get('count', 0) > 0:
+            items = photos.get('items', [])
+            if items:
+                photo = items[0]
+                prefix = photo.get('prefix', '')
+                suffix = photo.get('suffix', '')
+                if prefix and suffix:
+                    photo_url = f"{prefix}300x300{suffix}"
+        
+        checkin = CheckIn(
+            trip_id=trip.id,
+            user_id=trip.user_id,
+            foursquare_checkin_id=foursquare_id,
+            venue_name=venue.get('name'),
+            venue_category=categories[0].get('name') if categories else None,
+            venue_address=location.get('address', ''),
+            latitude=location.get('lat'),
+            longitude=location.get('lng'),
+            checkin_time=datetime.fromtimestamp(checkin_data.get('createdAt')),
+            shout=checkin_data.get('shout'),
+            photo_url=photo_url
+        )
+        
+        db.session.add(checkin)
+        new_checkins += 1
+    
+    if new_checkins > 0:
+        db.session.commit()
+        logger.info(f"Added {new_checkins} check-ins to trip {trip.id}")
+    
+    return new_checkins
+

@@ -6,6 +6,7 @@ from flask_login import login_required, current_user
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
 import os
+import requests
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -711,6 +712,110 @@ def update_flight_status(flight_id):
         })
     else:
         return jsonify({'error': 'Failed to update flight status'}), 500
+
+
+# Foursquare/Swarm Integration
+@app.route('/foursquare/connect')
+@login_required
+def connect_foursquare():
+    """Initiate Foursquare OAuth flow"""
+    # Foursquare OAuth configuration
+    client_id = os.getenv('FOURSQUARE_CLIENT_ID')
+    
+    if not client_id:
+        flash('Foursquare integration is not configured. Please contact your administrator.', 'danger')
+        return redirect(url_for('api_integrations'))
+    
+    redirect_uri = url_for('foursquare_callback', _external=True)
+    auth_url = f"https://foursquare.com/oauth2/authenticate?client_id={client_id}&response_type=code&redirect_uri={redirect_uri}"
+    
+    return redirect(auth_url)
+
+
+@app.route('/foursquare/callback')
+@login_required
+def foursquare_callback():
+    """Handle Foursquare OAuth callback"""
+    code = request.args.get('code')
+    
+    if not code:
+        flash('Foursquare authentication failed.', 'danger')
+        return redirect(url_for('api_integrations'))
+    
+    # Exchange code for access token
+    client_id = os.getenv('FOURSQUARE_CLIENT_ID')
+    client_secret = os.getenv('FOURSQUARE_CLIENT_SECRET')
+    redirect_uri = url_for('foursquare_callback', _external=True)
+    
+    token_url = 'https://foursquare.com/oauth2/access_token'
+    params = {
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'grant_type': 'authorization_code',
+        'redirect_uri': redirect_uri,
+        'code': code
+    }
+    
+    try:
+        response = requests.get(token_url, params=params, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            access_token = data.get('access_token')
+            
+            # Save token to user settings
+            settings = current_user.user_settings
+            if not settings:
+                settings = UserSettings(user_id=current_user.id)
+                db.session.add(settings)
+            
+            settings.foursquare_access_token = access_token
+            settings.foursquare_enabled = True
+            db.session.commit()
+            
+            flash('Foursquare connected successfully! Your check-ins will sync automatically.', 'success')
+        else:
+            flash('Failed to connect to Foursquare. Please try again.', 'danger')
+    
+    except Exception as e:
+        logger.error(f"Foursquare OAuth error: {str(e)}")
+        flash('An error occurred while connecting to Foursquare.', 'danger')
+    
+    return redirect(url_for('api_integrations'))
+
+
+@app.route('/foursquare/disconnect', methods=['POST'])
+@login_required
+def disconnect_foursquare():
+    """Disconnect Foursquare integration"""
+    settings = current_user.user_settings
+    
+    if settings:
+        settings.foursquare_access_token = None
+        settings.foursquare_enabled = False
+        db.session.commit()
+        
+        flash('Foursquare disconnected successfully.', 'info')
+    
+    return redirect(url_for('api_integrations'))
+
+
+@app.route('/trips/<int:trip_id>/sync-checkins', methods=['POST'])
+@login_required
+@requires_trip_access(edit=True)
+def manual_sync_checkins(trip_id):
+    """Manually trigger check-in sync for a trip"""
+    trip = Trip.query.get_or_404(trip_id)
+    
+    from utils import sync_trip_checkins
+    new_checkins = sync_trip_checkins(trip)
+    
+    if new_checkins > 0:
+        flash(f'Added {new_checkins} new check-ins to your trip!', 'success')
+    else:
+        flash('No new check-ins found for this trip.', 'info')
+    
+    return redirect(url_for('view_trip', trip_id=trip_id))
 
 
 # Error handlers

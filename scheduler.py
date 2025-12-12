@@ -103,6 +103,42 @@ def cleanup_expired_shares_job():
         logger.error(f'Error during share cleanup: {str(e)}', exc_info=True)
 
 
+def sync_foursquare_checkins_job():
+    """Job to sync Foursquare check-ins for active trips"""
+    from app import app, db
+    from models import Trip, User, UserSettings
+    from utils import sync_trip_checkins
+    from datetime import datetime, timedelta
+    
+    logger.info('Starting Foursquare check-in sync...')
+    
+    try:
+        with app.app_context():
+            # Get all current and upcoming trips with Foursquare enabled
+            now = datetime.utcnow()
+            seven_days_ago = now - timedelta(days=7)
+            
+            trips = Trip.query.join(User).join(UserSettings).filter(
+                UserSettings.foursquare_enabled == True,
+                Trip.end_date >= seven_days_ago  # Include recent past trips
+            ).all()
+            
+            total_new = 0
+            for trip in trips:
+                try:
+                    new_checkins = sync_trip_checkins(trip)
+                    total_new += new_checkins
+                    if new_checkins > 0:
+                        logger.info(f'Added {new_checkins} check-ins to trip {trip.id}: {trip.title}')
+                except Exception as e:
+                    logger.error(f'Error syncing trip {trip.id}: {str(e)}')
+            
+            logger.info(f'Foursquare sync completed. Added {total_new} total check-ins.')
+    
+    except Exception as e:
+        logger.error(f'Error during Foursquare sync: {str(e)}', exc_info=True)
+
+
 def main():
     """Main scheduler"""
     from app import app
@@ -141,6 +177,15 @@ def main():
         minute=0,
         id='cleanup_shares',
         name='Cleanup expired shares',
+        replace_existing=True
+    )
+    
+    # Add Foursquare check-in sync job (every hour)
+    scheduler.add_job(
+        sync_foursquare_checkins_job,
+        trigger=IntervalTrigger(hours=1),
+        id='sync_foursquare',
+        name='Sync Foursquare check-ins',
         replace_existing=True
     )
     

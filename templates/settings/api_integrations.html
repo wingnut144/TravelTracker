@@ -213,6 +213,63 @@
     </div>
 </div>
 
+<!-- Foursquare/Swarm Integration -->
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0"><i class="bi bi-geo-fill"></i> Foursquare / Swarm Integration</h4>
+    </div>
+    <div class="card-body">
+        {% if settings and settings.foursquare_enabled %}
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle"></i> <strong>Connected!</strong> Your Foursquare check-ins are syncing automatically.
+            <div class="mt-2">
+                <small class="text-muted">
+                    Check-ins from your trips are synced every hour automatically.
+                </small>
+            </div>
+        </div>
+        {% endif %}
+        
+        <p>
+            Automatically import your check-ins from Foursquare Swarm and display them on your trips.
+            This shows where you went during your travels with photos, comments, and venue details.
+        </p>
+        
+        <h5>How it works:</h5>
+        <ol>
+            <li>Connect your Foursquare account below</li>
+            <li>Your check-ins are synced automatically every hour</li>
+            <li>Check-ins appear on trips matching their dates</li>
+            <li>View your complete travel timeline with venues and photos</li>
+        </ol>
+        
+        {% if settings and settings.foursquare_enabled %}
+        <form method="POST" action="{{ url_for('disconnect_foursquare') }}" class="mt-3">
+            <button type="submit" class="btn btn-outline-danger" 
+                    onclick="return confirm('Disconnect Foursquare? Your existing check-ins will remain, but new ones will not be synced.');">
+                <i class="bi bi-x-circle"></i> Disconnect Foursquare
+            </button>
+        </form>
+        {% else %}
+        <div class="mt-3">
+            <a href="{{ url_for('connect_foursquare') }}" class="btn btn-danger">
+                <i class="bi bi-box-arrow-in-right"></i> Connect Foursquare Account
+            </a>
+        </div>
+        
+        <div class="alert alert-info mt-3">
+            <h6><i class="bi bi-info-circle"></i> Setup Instructions:</h6>
+            <ol class="mb-0">
+                <li>This feature requires Foursquare OAuth credentials to be configured</li>
+                <li>Contact your administrator if the "Connect" button shows an error</li>
+                <li>You'll be redirected to Foursquare to authorize access</li>
+                <li>Only your check-in data is accessed (read-only)</li>
+            </ol>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
 <!-- Security Notice -->
 <div class="card bg-light">
     <div class="card-body">
