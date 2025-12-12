@@ -626,18 +626,33 @@ def settings():
 def profile_settings():
     """Update user profile"""
     if request.method == 'POST':
+        # Update basic info
+        current_user.first_name = request.form.get('first_name', '').strip() or None
+        current_user.last_name = request.form.get('last_name', '').strip() or None
+        current_user.username = request.form.get('username', current_user.username)
         current_user.email = request.form.get('email', current_user.email)
         
         # Change password if provided
         new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
         if new_password:
             current_password = request.form.get('current_password')
-            if current_user.check_password(current_password):
-                current_user.set_password(new_password)
-                flash('Password updated successfully.', 'success')
-            else:
+            
+            if not current_password:
+                flash('Please enter your current password to change it.', 'danger')
+                return render_template('settings/profile.html')
+            
+            if not current_user.check_password(current_password):
                 flash('Current password is incorrect.', 'danger')
                 return render_template('settings/profile.html')
+            
+            if new_password != confirm_password:
+                flash('New passwords do not match.', 'danger')
+                return render_template('settings/profile.html')
+            
+            current_user.set_password(new_password)
+            flash('Password updated successfully.', 'success')
         
         db.session.commit()
         flash('Profile updated successfully.', 'success')
