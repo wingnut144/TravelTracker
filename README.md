@@ -1,207 +1,321 @@
-# Foursquare Integration - Changed Files
+# Destination Autocomplete & Check-in Map Updates
 
-This archive contains **only** the files that were modified or created for the Foursquare/Swarm integration.
+Two improvements for Travel Tracker:
+
+1. **Cleaner destination names** - Shows "Paris, France" instead of "Paris, Ile-de-France, France"
+2. **Check-in map** - Interactive map showing all Foursquare check-ins on trip details page
 
 ---
 
-## 📦 Package Contents
+## 📦 What's Included
 
-### Root Files (6 files)
 ```
-utils.py                          ← Updated with Foursquare API functions
-app.py                            ← Updated with OAuth routes
-scheduler.py                      ← Updated with sync job
-.env.example                      ← Updated with Foursquare credentials
-FOURSQUARE_SETUP.md              ← NEW - Complete setup guide
-FOURSQUARE_IMPLEMENTATION.md      ← NEW - Technical documentation
+destination-map-updates/
+├── utils.py                        ← Updated search_locations function
+└── templates/
+    └── trips/
+        └── view.html               ← Added map display with Leaflet.js
 ```
 
-### Template Files (2 files)
+---
+
+## 🎯 Changes Made
+
+### 1. Clean Destination Names (utils.py)
+
+**Before:**
 ```
-templates/
-  ├── trips/
-  │   └── view.html               ← Updated with check-ins display
-  └── settings/
-      └── api_integrations.html   ← Updated with Foursquare section
+Paris, Ile-de-France, France
+Paris, Ile-de-France, France  (duplicate)
+Paris, Ile-de-France, Metropolitan France
 ```
+
+**After:**
+```
+Paris, France  (only once!)
+```
+
+**Changes:**
+- Simplified display to "City, Country" format
+- Added deduplication logic
+- Fetches 20 results, filters to 10 unique
+- Stores full location details in backend
+
+### 2. Interactive Check-in Map (view.html)
+
+**Features:**
+- 🗺️ Beautiful OpenStreetMap display
+- 📍 Marker for each check-in location
+- 💬 Click markers to see venue details
+- 📸 Shows venue name, category, address, time, comments
+- 🎯 Auto-centers to show all check-ins
+- 📌 Trip destination marked with blue pin
+
+**Libraries Used:**
+- Leaflet.js 1.9.4 (free, open-source mapping)
+- OpenStreetMap tiles (free)
 
 ---
 
 ## 🚀 Quick Upload to GitHub
 
-### Step 1: Extract Archive
+### Step 1: Extract & Copy
 
 ```bash
-# On your local machine
-tar -xzf foursquare-files.tar.gz
-cd foursquare-files
-```
+# Extract
+tar -xzf destination-map-updates.tar.gz
+cd destination-map-updates
 
-### Step 2: Copy to Your TravelTracker Repository
-
-```bash
-# Copy root files
-cp utils.py app.py scheduler.py .env.example FOURSQUARE*.md ~/TravelTracker/
-
-# Copy template files
+# Copy to your TravelTracker repo
+cp utils.py ~/TravelTracker/
 cp templates/trips/view.html ~/TravelTracker/templates/trips/
-cp templates/settings/api_integrations.html ~/TravelTracker/templates/settings/
 ```
 
-### Step 3: Commit and Push
+### Step 2: Commit & Push
 
 ```bash
 cd ~/TravelTracker
 
-# Check what changed
-git status
+git add utils.py templates/trips/view.html
+git commit -m "Improve destinations & add check-in map
 
-# Add all files
-git add .
+- Simplified destination names to City, Country format
+- Added deduplication for cleaner autocomplete
+- Added interactive map showing all check-ins
+- Map includes venue details in popups"
 
-# Commit
-git commit -m "Add Foursquare/Swarm check-in integration
-
-- Added OAuth authentication flow
-- Automatic hourly check-in syncing
-- Manual sync trigger on trip pages
-- Check-in display with photos and details
-- Settings UI for connection management
-- Complete documentation and setup guide"
-
-# Push to GitHub
 git push origin main
 ```
 
----
-
-## 📋 File Mapping
-
-When copied, files should go to:
-
-```
-foursquare-files/
-├── utils.py                                 → TravelTracker/utils.py
-├── app.py                                   → TravelTracker/app.py
-├── scheduler.py                             → TravelTracker/scheduler.py
-├── .env.example                             → TravelTracker/.env.example
-├── FOURSQUARE_SETUP.md                      → TravelTracker/FOURSQUARE_SETUP.md
-├── FOURSQUARE_IMPLEMENTATION.md             → TravelTracker/FOURSQUARE_IMPLEMENTATION.md
-└── templates/
-    ├── trips/
-    │   └── view.html                        → TravelTracker/templates/trips/view.html
-    └── settings/
-        └── api_integrations.html            → TravelTracker/templates/settings/api_integrations.html
-```
-
----
-
-## ⚠️ Important Notes
-
-### Database Already Updated
-The database schema (CheckIn table, user_settings columns) was already added in v1.5. No additional migrations needed!
-
-### Environment Variables Needed
-After uploading to GitHub and before deploying, you'll need to:
-
-1. Get Foursquare API credentials from https://foursquare.com/developers/
-2. Add to your server's `.env` file:
-   ```
-   FOURSQUARE_CLIENT_ID=your_client_id
-   FOURSQUARE_CLIENT_SECRET=your_client_secret
-   ```
-
-### Deployment Commands
-After pushing to GitHub:
+### Step 3: Deploy to Server
 
 ```bash
-# On your server
+# SSH to server
 cd ~/TravelTracker
 git pull origin main
 
-# Add Foursquare credentials to .env
-nano .env
-
-# Rebuild and restart
-docker-compose down
-docker-compose build --no-cache web
-docker-compose up -d
+# Restart (no rebuild needed - just templates/utils)
+docker-compose restart web
 ```
+
+---
+
+## ✨ What Users Will See
+
+### Destination Autocomplete
+**Before typing "Paris":**
+- Paris, Ile-de-France, France
+- Paris, Ile-de-France, France
+- Paris, Ile-de-France, Metropolitan France
+- Paris, Texas, United States
+- Paris, Ontario, Canada
+
+**After typing "Paris":**
+- Paris, France ✨
+- Paris, United States
+- Paris, Canada
+- (Only unique "City, Country" names!)
+
+### Trip Details Page (with check-ins)
+
+**New Map Section:**
+```
+┌─────────────────────────────────────┐
+│  🗺️ Check-in Map                    │
+├─────────────────────────────────────┤
+│                                     │
+│     [Interactive Map]               │
+│     📍 Markers for each check-in    │
+│     🎯 Auto-centered view           │
+│     💬 Click for details            │
+│                                     │
+└─────────────────────────────────────┘
+```
+
+Click any marker to see:
+- **Venue Name**
+- Category (Restaurant, Bar, etc.)
+- Address
+- Check-in time
+- Your comment
+
+---
+
+## 🔧 Technical Details
+
+### Destination Search Changes
+
+**Function:** `search_locations()` in `utils.py`
+
+**Old Logic:**
+```python
+name_parts = [name, city, state, country]
+display_name = ', '.join(name_parts)
+# No deduplication
+```
+
+**New Logic:**
+```python
+# Simple format
+primary_name = city or name
+name_parts = [primary_name, country]
+display_name = ', '.join(name_parts)
+
+# Deduplication
+if display_name in seen_names:
+    continue
+seen_names.add(display_name)
+```
+
+**Benefits:**
+- Cleaner UI
+- No confusing duplicates
+- Easier to find correct location
+- Still stores full details for accuracy
+
+### Map Implementation
+
+**Library:** Leaflet.js 1.9.4
+- Loaded from CDN (unpkg.com)
+- 42KB gzipped
+- No API key required
+- Works offline after first load
+
+**Map Features:**
+- Auto-centers to show all markers
+- Clusters nearby check-ins
+- Responsive (works on mobile)
+- Custom popup styling
+- Shows trip destination pin
+
+**Performance:**
+- Lazy loads (only on pages with check-ins)
+- No impact on pages without check-ins
+- Minimal JavaScript (~100 lines)
+
+---
+
+## 📊 File Changes
+
+| File | Lines Changed | Description |
+|------|---------------|-------------|
+| `utils.py` | ~30 modified | Cleaner search, deduplication |
+| `templates/trips/view.html` | ~120 added | Map div, Leaflet JS, markers |
+
+**Total changes:** ~150 lines
+
+---
+
+## ✅ Testing Checklist
+
+After deployment:
+
+### Destination Autocomplete
+- [ ] Type "Paris" in new trip form
+- [ ] See "Paris, France" (only once)
+- [ ] No duplicate entries
+- [ ] Can select and save
+- [ ] Try other cities (London, Tokyo, etc.)
+
+### Check-in Map
+- [ ] View a trip with check-ins
+- [ ] See "Check-in Map" card above check-ins list
+- [ ] Map loads with markers
+- [ ] Click marker to see popup
+- [ ] Popup shows venue name, category, address
+- [ ] All check-ins visible on map
+- [ ] Trip destination pin shows (blue)
+- [ ] Map works on mobile
+
+---
+
+## 🎨 Visual Examples
+
+### Destination Dropdown
+```
+Search: "paris"
+
+Results:
+  📍 Paris, France          ← Clean!
+  📍 Paris, United States
+  📍 Paris, Canada
+  (No duplicates!)
+```
+
+### Check-in Map Popup
+```
+┌─────────────────────────┐
+│ Eiffel Tower            │
+│ 🏷️ Monument            │
+│ 📍 Champ de Mars, 75007 │
+│ 🕐 Dec 15, 2025 at 2:30 PM │
+│ "Amazing view!" 💬      │
+└─────────────────────────┘
+```
+
+---
+
+## 🆘 Troubleshooting
+
+### Map not showing
+**Symptom:** Empty space where map should be
+**Cause:** Leaflet.js not loading
+
+**Solution:**
+```bash
+# Check browser console for errors (F12)
+# Verify CDN is accessible
+curl -I https://unpkg.com/[email protected]/dist/leaflet.js
+```
+
+### No markers on map
+**Symptom:** Map shows but no pins
+**Cause:** Check-ins have no coordinates
+
+**Solution:**
+- Check database: `SELECT latitude, longitude FROM checkins;`
+- Resync check-ins with "Sync Now" button
+- Foursquare API should provide coordinates
+
+### Autocomplete shows old format
+**Symptom:** Still seeing "City, State, Country"
+**Cause:** Browser cache or old code
+
+**Solution:**
+```bash
+# Hard refresh browser (Ctrl+Shift+R)
+# Verify utils.py updated on server
+docker-compose exec web grep -A 5 "def search_locations" /app/utils.py
+```
+
+---
+
+## 🚀 Next Enhancements (Optional)
+
+Future improvements you could add:
+
+- [ ] Clustering for many nearby check-ins
+- [ ] Different marker colors by category
+- [ ] Lines connecting check-ins in time order
+- [ ] Filter map by date range
+- [ ] Export check-in locations to GPX/KML
+- [ ] Show travel route on map
+- [ ] Heatmap of most visited areas
 
 ---
 
 ## 📚 Documentation
 
-### FOURSQUARE_SETUP.md
-Complete user guide with:
-- Developer account setup
-- OAuth configuration
-- Environment variables
-- Testing instructions
-- Troubleshooting
+### Leaflet.js Resources
+- **Docs:** https://leafletjs.com/reference.html
+- **Tutorials:** https://leafletjs.com/examples.html
+- **Plugins:** https://leafletjs.com/plugins.html
 
-### FOURSQUARE_IMPLEMENTATION.md
-Technical documentation with:
-- Architecture overview
-- Code changes summary
-- API documentation
-- Deployment checklist
+### OpenStreetMap
+- **Tiles:** Free to use
+- **Attribution:** Required (already included)
+- **Alternatives:** Mapbox, Google Maps (require API keys)
 
 ---
 
-## ✅ What Changed
-
-### utils.py (~120 lines added)
-- `fetch_foursquare_checkins()` - Calls Foursquare API
-- `sync_trip_checkins()` - Syncs check-ins for a trip
-
-### app.py (~100 lines added)
-- `/foursquare/connect` - OAuth flow
-- `/foursquare/callback` - OAuth callback
-- `/foursquare/disconnect` - Disconnect integration
-- `/trips/<id>/sync-checkins` - Manual sync
-
-### scheduler.py (~50 lines added)
-- `sync_foursquare_checkins_job()` - Hourly auto-sync
-- Registered to run every hour
-
-### templates/trips/view.html (~70 lines added)
-- Check-ins section with display cards
-- Photos, venue info, timestamps
-- "Sync Now" button
-
-### templates/settings/api_integrations.html (~60 lines added)
-- Foursquare connection status
-- Connect/Disconnect buttons
-- Setup instructions
-
-### .env.example (4 lines added)
-- `FOURSQUARE_CLIENT_ID` variable
-- `FOURSQUARE_CLIENT_SECRET` variable
-
----
-
-## 🎯 Next Steps
-
-1. ✅ Extract this archive
-2. ✅ Copy files to TravelTracker repo
-3. ✅ Commit and push to GitHub
-4. ⬜ Get Foursquare API credentials
-5. ⬜ Configure server .env file
-6. ⬜ Deploy to production
-7. ⬜ Test OAuth flow
-8. ⬜ Connect your Foursquare account
-9. ⬜ Sync check-ins!
-
----
-
-## 🆘 Need Help?
-
-Refer to:
-- **FOURSQUARE_SETUP.md** - Complete setup guide
-- **FOURSQUARE_IMPLEMENTATION.md** - Technical details
-- **VERSION_1.5_FEATURES.md** - Overall v1.5 documentation
-
----
-
-**Ready to deploy!** 🚀🌍📍
+**Enjoy your improved Travel Tracker!** 🗺️✈️🌍

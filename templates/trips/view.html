@@ -292,6 +292,24 @@
 </div>
 {% endif %}
 
+<!-- Foursquare Check-ins Map -->
+{% if trip.checkins %}
+<div class="row mb-4">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-map"></i> Check-in Map
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div id="checkin-map" style="height: 400px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Foursquare Check-ins -->
 {% if trip.checkins %}
 <div class="row mb-4">
@@ -398,4 +416,116 @@
 </div>
 {% endif %}
 
+{% endblock %}
+
+{% block extra_css %}
+<!-- Leaflet CSS for maps -->
+{% if trip.checkins %}
+<link rel="stylesheet" href="https://unpkg.com/[email protected]/dist/leaflet.css" 
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+      crossorigin=""/>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<!-- Leaflet JS for maps -->
+{% if trip.checkins %}
+<script src="https://unpkg.com/[email protected]/dist/leaflet.js" 
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+        crossorigin=""></script>
+
+<script>
+// Initialize map when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if map element exists
+    const mapElement = document.getElementById('checkin-map');
+    if (!mapElement) return;
+    
+    // Create checkins data array
+    const checkins = [
+        {% for checkin in trip.checkins %}
+        {% if checkin.latitude and checkin.longitude %}
+        {
+            lat: {{ checkin.latitude }},
+            lng: {{ checkin.longitude }},
+            name: "{{ checkin.venue_name|replace('"', '\\"') }}",
+            category: "{{ checkin.venue_category|replace('"', '\\"') if checkin.venue_category else '' }}",
+            address: "{{ checkin.venue_address|replace('"', '\\"') if checkin.venue_address else '' }}",
+            time: "{{ checkin.checkin_time.strftime('%b %d, %Y at %I:%M %p') }}",
+            shout: "{{ checkin.shout|replace('"', '\\"') if checkin.shout else '' }}"
+        },
+        {% endif %}
+        {% endfor %}
+    ];
+    
+    if (checkins.length === 0) {
+        mapElement.innerHTML = '<div class="p-4 text-center text-muted">No check-ins with location data</div>';
+        return;
+    }
+    
+    // Calculate center and bounds
+    const lats = checkins.map(c => c.lat);
+    const lngs = checkins.map(c => c.lng);
+    const centerLat = (Math.max(...lats) + Math.min(...lats)) / 2;
+    const centerLng = (Math.max(...lngs) + Math.min(...lngs)) / 2;
+    
+    // Initialize map
+    const map = L.map('checkin-map').setView([centerLat, centerLng], 13);
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    }).addTo(map);
+    
+    // Add markers for each check-in
+    const markers = [];
+    checkins.forEach(function(checkin) {
+        const marker = L.marker([checkin.lat, checkin.lng]).addTo(map);
+        
+        // Create popup content
+        let popupContent = '<div style="min-width: 200px;">';
+        popupContent += '<h6 class="mb-1"><strong>' + checkin.name + '</strong></h6>';
+        
+        if (checkin.category) {
+            popupContent += '<p class="mb-1 small text-muted"><i class="bi bi-tag"></i> ' + checkin.category + '</p>';
+        }
+        
+        if (checkin.address) {
+            popupContent += '<p class="mb-1 small text-muted"><i class="bi bi-geo-alt"></i> ' + checkin.address + '</p>';
+        }
+        
+        popupContent += '<p class="mb-1 small text-muted"><i class="bi bi-clock"></i> ' + checkin.time + '</p>';
+        
+        if (checkin.shout) {
+            popupContent += '<p class="mb-0 small fst-italic">"' + checkin.shout + '"</p>';
+        }
+        
+        popupContent += '</div>';
+        
+        marker.bindPopup(popupContent);
+        markers.push(marker);
+    });
+    
+    // Fit map to show all markers
+    if (markers.length > 1) {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.1));
+    }
+    
+    // Add trip start location if available
+    {% if trip.destination_latitude and trip.destination_longitude %}
+    const tripIcon = L.divIcon({
+        html: '<i class="bi bi-pin-map-fill text-primary" style="font-size: 24px;"></i>',
+        iconSize: [24, 24],
+        className: 'trip-marker'
+    });
+    
+    L.marker([{{ trip.destination_latitude }}, {{ trip.destination_longitude }}], {icon: tripIcon})
+        .addTo(map)
+        .bindPopup('<div><h6><strong>{{ trip.destination|replace("'", "\\'") }}</strong></h6><p class="mb-0 small">Trip Destination</p></div>');
+    {% endif %}
+});
+</script>
+{% endif %}
 {% endblock %}

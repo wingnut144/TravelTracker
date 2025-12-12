@@ -336,7 +336,7 @@ def search_locations(query):
         url = 'https://photon.komoot.io/api/'
         params = {
             'q': query,
-            'limit': 10,
+            'limit': 20,  # Get more results for better deduplication
             'lang': 'en'
         }
         
@@ -345,28 +345,48 @@ def search_locations(query):
         if response.status_code == 200:
             data = response.json()
             locations = []
+            seen_names = set()  # Track unique display names
             
             for feature in data.get('features', []):
                 props = feature.get('properties', {})
                 coords = feature.get('geometry', {}).get('coordinates', [])
                 
-                # Build display name
+                # Build clean display name: "City, Country" format
                 name_parts = []
-                if props.get('name'):
-                    name_parts.append(props['name'])
-                if props.get('city'):
-                    name_parts.append(props['city'])
-                elif props.get('county'):
-                    name_parts.append(props['county'])
-                if props.get('state'):
-                    name_parts.append(props['state'])
+                
+                # Get the primary place name (city or name)
+                primary_name = props.get('city') or props.get('name')
+                if primary_name:
+                    name_parts.append(primary_name)
+                
+                # Add country
                 if props.get('country'):
                     name_parts.append(props['country'])
                 
                 display_name = ', '.join(name_parts) if name_parts else 'Unknown Location'
                 
+                # Skip duplicates - only show each "City, Country" once
+                if display_name in seen_names:
+                    continue
+                
+                seen_names.add(display_name)
+                
+                # Store full details for backend use
+                full_name_parts = []
+                if props.get('name'):
+                    full_name_parts.append(props['name'])
+                if props.get('city'):
+                    full_name_parts.append(props['city'])
+                if props.get('state'):
+                    full_name_parts.append(props['state'])
+                if props.get('country'):
+                    full_name_parts.append(props['country'])
+                
+                full_name = ', '.join(full_name_parts) if full_name_parts else display_name
+                
                 locations.append({
-                    'display_name': display_name,
+                    'display_name': display_name,  # Clean name shown to user
+                    'full_name': full_name,  # Complete name for storage
                     'name': props.get('name', ''),
                     'city': props.get('city', ''),
                     'state': props.get('state', ''),
@@ -374,6 +394,10 @@ def search_locations(query):
                     'latitude': coords[1] if len(coords) > 1 else None,
                     'longitude': coords[0] if len(coords) > 0 else None
                 })
+                
+                # Stop after 10 unique results
+                if len(locations) >= 10:
+                    break
             
             return locations
         
