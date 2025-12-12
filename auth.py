@@ -37,7 +37,7 @@ def admin_required(f):
 def login():
     """User login"""
     if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('dashboard'))
     
     if request.method == 'POST':
         username = request.form.get('username')
@@ -53,7 +53,7 @@ def login():
             
             next_page = request.args.get('next')
             if not next_page or not next_page.startswith('/'):
-                next_page = url_for('main.dashboard')
+                next_page = url_for('dashboard')
             
             flash(f'Welcome back, {user.username}!', 'success')
             return redirect(next_page)
@@ -66,7 +66,7 @@ def login():
 def register():
     """User registration"""
     if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('dashboard'))
     
     if request.method == 'POST':
         username = request.form.get('username')

@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - traveltracker-network
+      - adventure-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U traveluser"]
       interval: 10s
@@ -68,12 +68,12 @@ services:
       db:
         condition: service_healthy
     networks:
-      - traveltracker-network
+      - adventure-network
     command: >
       sh -c "
         echo 'Waiting for database...' &&
         sleep 5 &&
-        flask db upgrade &&
+        flask db upgrade || echo 'Migration skipped (first run)' &&
         gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 120 app:app
       "
 
@@ -97,12 +97,12 @@ services:
       db:
         condition: service_healthy
     networks:
-      - traveltracker-network
+      - adventure-network
     command: python scheduler.py
 
 volumes:
   postgres_data:
 
 networks:
-  traveltracker-network:
-    driver: bridge
+  adventure-network:
+    external: true

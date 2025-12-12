@@ -1,0 +1,654 @@
+2025-12-11 20:00:10,756 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:00:18,461 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:00:25,552 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:00:32,840 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:00:40,157 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:00:48,268 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:00:58,094 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:01:10,984 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:01:30,097 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:02:02,225 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:02:59,952 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:06:16,836 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:06:22,366 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:06:23,360 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:06:29,912 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:06:36,510 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:06:43,587 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:06:51,420 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:07:00,779 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:07:13,685 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:07:32,730 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:08:04,551 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:09:02,307 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:10:09,877 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:11:16,491 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:12:22,747 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:13:28,957 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:14:35,373 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:15:41,628 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:16:47,773 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:17:53,928 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:19:00,100 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:20:06,649 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:21:13,077 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:22:19,469 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:23:25,789 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:24:32,042 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:25:38,495 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:26:44,961 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:27:51,470 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:28:57,687 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:30:04,651 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:31:11,326 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:32:17,654 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:33:23,940 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:34:30,266 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:35:36,815 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:36:43,006 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:37:49,142 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:38:55,332 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:40:01,983 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:41:08,525 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:42:14,955 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:43:21,425 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:44:27,700 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:45:33,961 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:46:40,439 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:47:46,731 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:48:52,983 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:49:59,297 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:51:05,475 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:52:11,620 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:53:17,769 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:54:23,912 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:55:30,226 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:56:36,577 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:57:43,091 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:58:49,364 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 20:59:55,927 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:01:02,436 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:02:08,992 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:03:15,242 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:04:21,497 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:05:27,854 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:06:37,344 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:06:38,189 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:06:40,762 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:06:41,966 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:06:45,261 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:06:51,644 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:06:58,145 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:07:04,821 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:07:12,009 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:07:19,855 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:10,124 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:10,500 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:11,194 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:11,233 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:11,371 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:11,600 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:12,127 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:13,970 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:10:15,581 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:16:03,067 ERROR: Exception on /auth/login [POST] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/auth.py", line 56, in login
+    next_page = url_for('main.dashboard')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 222, in url_for
+    return current_app.url_for(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1071, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1060, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/routing/map.py", line 919, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'main.dashboard'. Did you mean 'admin.dashboard' instead?
+2025-12-11 21:24:21,025 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:24:22,125 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:24:22,256 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:24:22,304 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:24:22,309 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:24:31,465 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:24:33,047 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:24:34,747 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:26:01,956 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:26:03,574 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:26:04,950 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:27:24,767 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:27:26,248 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:27:27,717 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:27:29,275 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:28:49,893 ERROR: Exception on /auth/login [POST] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/auth.py", line 56, in login
+    next_page = url_for('main.dashboard')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 222, in url_for
+    return current_app.url_for(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1071, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1060, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/routing/map.py", line 919, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'main.dashboard'. Did you mean 'admin.dashboard' instead?
+2025-12-11 21:28:55,163 ERROR: Exception on /auth/login [POST] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/auth.py", line 40, in login
+    return redirect(url_for('main.dashboard'))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/helpers.py", line 222, in url_for
+    return current_app.url_for(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1071, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1060, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/routing/map.py", line 919, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'main.dashboard'. Did you mean 'admin.dashboard' instead?
+2025-12-11 21:29:02,547 ERROR: Exception on /admin/ [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/auth.py", line 33, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/admin.py", line 31, in dashboard
+    return render_template('admin/dashboard.html', stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: admin/dashboard.html
+2025-12-11 21:29:50,485 ERROR: Exception on /admin/ [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/auth.py", line 33, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/admin.py", line 31, in dashboard
+    return render_template('admin/dashboard.html', stats=stats)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: admin/dashboard.html
+2025-12-11 21:34:56,243 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:34:57,105 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:34:57,165 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:34:57,319 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:34:57,400 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:35:24,293 ERROR: Exception on /settings [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 619, in settings
+    return render_template('settings/index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 152, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 133, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/app/templates/settings/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/app/templates/base.html", line 161, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/templates/settings/index.html", line 200, in block 'content'
+    {{ current_user.trips|selectattr('start_date', 'gt', now())|list|length }}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/utils.py", line 92, in from_obj
+    if hasattr(obj, "jinja_pass_arg"):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'now' is undefined
+2025-12-11 21:35:44,430 ERROR: Exception on /settings [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 619, in settings
+    return render_template('settings/index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 152, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 133, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/app/templates/settings/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/app/templates/base.html", line 161, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/templates/settings/index.html", line 200, in block 'content'
+    {{ current_user.trips|selectattr('start_date', 'gt', now())|list|length }}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/utils.py", line 92, in from_obj
+    if hasattr(obj, "jinja_pass_arg"):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'now' is undefined
+2025-12-11 21:43:01,749 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:43:02,885 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:43:02,938 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:43:03,031 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:43:03,177 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 21:56:58,007 ERROR: Exception on /trips/1/flights/add [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/utils.py", line 151, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 269, in add_flight
+    return render_template('trips/add_flight.html', trip=trip)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: trips/add_flight.html
+2025-12-11 22:05:16,019 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:05:17,147 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:05:17,151 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:05:17,220 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:05:17,352 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:05:32,331 ERROR: Exception on /settings [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 577, in settings
+    return render_template('settings/index.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 152, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 133, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/app/templates/settings/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/app/templates/base.html", line 161, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/templates/settings/index.html", line 190, in block 'content'
+    {{ current_user.trips|selectattr('start_date', 'gt', now())|list|length }}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/utils.py", line 92, in from_obj
+    if hasattr(obj, "jinja_pass_arg"):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'now' is undefined
+2025-12-11 22:09:32,863 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:09:33,869 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:09:33,956 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:09:34,017 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:09:34,076 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:22:59,507 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:23:00,940 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:23:17,916 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:23:18,915 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:23:18,931 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:23:18,951 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:23:19,138 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:24:01,047 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:24:02,640 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:24:19,564 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:24:20,539 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:24:20,551 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:24:20,583 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:24:20,612 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:04,657 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:06,877 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:08,887 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:25,958 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:27,065 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:27,107 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:27,154 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:25:27,269 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:26:08,824 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:26:10,646 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:26:27,577 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:26:28,618 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:26:28,677 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:26:28,812 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:26:28,945 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:30:39,984 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:30:40,981 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:30:41,022 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:30:41,108 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:30:41,231 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:34:25,054 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:34:26,110 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:34:26,178 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:34:26,219 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:34:26,327 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:48:33,787 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:48:34,821 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:48:34,890 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:48:35,037 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:48:35,244 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-11 22:50:04,957 ERROR: Exception on /trips/3/flights/add [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/utils.py", line 151, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 297, in add_flight
+    return render_template('trips/add_flight.html', trip=trip)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: trips/add_flight.html
+2025-12-11 22:53:15,270 ERROR: Exception on /trips/1/accommodation/add [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/utils.py", line 151, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 334, in add_accommodation
+    return render_template('trips/add_accommodation.html', trip=trip)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: trips/add_accommodation.html
+2025-12-11 22:53:20,051 ERROR: Exception on /trips/1/share [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/utils.py", line 151, in decorated_function
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 398, in share_trip
+    return render_template('trips/share.html', trip=trip, shares=shares)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: trips/share.html
+2025-12-12 07:38:14,672 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 07:38:24,981 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 07:39:16,254 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 07:39:55,625 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 07:40:16,137 INFO: Travel Tracker startup [in /app/app.py:55]
