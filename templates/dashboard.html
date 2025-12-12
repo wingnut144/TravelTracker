@@ -24,29 +24,45 @@
 </div>
 <div class="row">
     {% for trip in current_trips %}
-    <div class="col-md-6 col-lg-4">
-        <div class="card trip-card border-success">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
-                        {{ trip.title }}
-                    </a>
-                </h5>
-                <p class="card-text text-muted">
-                    <i class="bi bi-geo-alt"></i> {{ trip.destination }}
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        <i class="bi bi-calendar3"></i> 
-                        {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
-                    </small>
-                </p>
-                <span class="badge badge-current">In Progress</span>
-                {% if trip.flights %}
-                    <span class="badge bg-info">
-                        <i class="bi bi-airplane"></i> {{ trip.flights|length }}
-                    </span>
-                {% endif %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card trip-card border-success h-100">
+            <div class="row g-0">
+                <!-- Image Column -->
+                <div class="col-4">
+                    {% if trip.background_image_url %}
+                    <img src="{{ trip.background_image_url }}" 
+                         class="img-fluid h-100 w-100" 
+                         style="object-fit: cover; border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;"
+                         alt="{{ trip.destination }}">
+                    {% else %}
+                    <div class="bg-light h-100 d-flex align-items-center justify-content-center" 
+                         style="border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;">
+                        <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Content Column -->
+                <div class="col-8">
+                    <div class="card-body p-3">
+                        <h5 class="card-title mb-2" style="font-size: 1rem;">
+                            <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
+                                {{ trip.title }}
+                            </a>
+                        </h5>
+                        
+                        <p class="card-text text-muted mb-2" style="font-size: 0.85rem;">
+                            <i class="bi bi-geo-alt"></i> {{ trip.destination }}
+                        </p>
+                        
+                        <p class="card-text mb-0">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar3"></i>
+                                {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -58,39 +74,50 @@
 {% if upcoming_trips %}
 <div class="row mb-4">
     <div class="col">
-        <h3><i class="bi bi-calendar-event text-primary"></i> Upcoming Trips</h3>
+        <h3><i class="bi bi-calendar-event"></i> Upcoming Trips</h3>
     </div>
 </div>
 <div class="row">
     {% for trip in upcoming_trips %}
-    <div class="col-md-6 col-lg-4">
-        <div class="card trip-card">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
-                        {{ trip.title }}
-                    </a>
-                </h5>
-                <p class="card-text text-muted">
-                    <i class="bi bi-geo-alt"></i> {{ trip.destination }}
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        <i class="bi bi-calendar3"></i> 
-                        {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
-                    </small>
-                </p>
-                <span class="badge badge-upcoming">Upcoming</span>
-                {% if trip.flights %}
-                    <span class="badge bg-info">
-                        <i class="bi bi-airplane"></i> {{ trip.flights|length }}
-                    </span>
-                {% endif %}
-                {% if trip.auto_detected %}
-                    <span class="badge bg-warning text-dark">
-                        <i class="bi bi-robot"></i> Auto-detected
-                    </span>
-                {% endif %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card trip-card h-100">
+            <div class="row g-0">
+                <!-- Image Column -->
+                <div class="col-4">
+                    {% if trip.background_image_url %}
+                    <img src="{{ trip.background_image_url }}" 
+                         class="img-fluid h-100 w-100" 
+                         style="object-fit: cover; border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;"
+                         alt="{{ trip.destination }}">
+                    {% else %}
+                    <div class="bg-light h-100 d-flex align-items-center justify-content-center" 
+                         style="border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;">
+                        <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Content Column -->
+                <div class="col-8">
+                    <div class="card-body p-3">
+                        <h5 class="card-title mb-2" style="font-size: 1rem;">
+                            <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
+                                {{ trip.title }}
+                            </a>
+                        </h5>
+                        
+                        <p class="card-text text-muted mb-2" style="font-size: 0.85rem;">
+                            <i class="bi bi-geo-alt"></i> {{ trip.destination }}
+                        </p>
+                        
+                        <p class="card-text mb-0">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar3"></i>
+                                {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -98,99 +125,58 @@
 </div>
 {% endif %}
 
-<!-- Shared Trips -->
-{% if shared_trips %}
+<!-- Recent Past Trips -->
+{% if past_trips %}
 <div class="row mb-4">
     <div class="col">
-        <h3><i class="bi bi-people text-info"></i> Shared with Me</h3>
+        <h3><i class="bi bi-clock-history"></i> Recent Past Trips</h3>
     </div>
 </div>
 <div class="row">
-    {% for trip in shared_trips %}
-    <div class="col-md-6 col-lg-4">
-        <div class="card trip-card border-info">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
-                        {{ trip.title }}
-                    </a>
-                </h5>
-                <p class="card-text text-muted">
-                    <i class="bi bi-geo-alt"></i> {{ trip.destination }}
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        Shared by {{ trip.user.username }}
-                    </small>
-                </p>
+    {% for trip in past_trips %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card trip-card h-100">
+            <div class="row g-0">
+                <!-- Image Column -->
+                <div class="col-4">
+                    {% if trip.background_image_url %}
+                    <img src="{{ trip.background_image_url }}" 
+                         class="img-fluid h-100 w-100" 
+                         style="object-fit: cover; border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;"
+                         alt="{{ trip.destination }}">
+                    {% else %}
+                    <div class="bg-light h-100 d-flex align-items-center justify-content-center" 
+                         style="border-top-left-radius: 0.375rem; border-bottom-left-radius: 0.375rem;">
+                        <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Content Column -->
+                <div class="col-8">
+                    <div class="card-body p-3">
+                        <h5 class="card-title mb-2" style="font-size: 1rem;">
+                            <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
+                                {{ trip.title }}
+                            </a>
+                        </h5>
+                        
+                        <p class="card-text text-muted mb-2" style="font-size: 0.85rem;">
+                            <i class="bi bi-geo-alt"></i> {{ trip.destination }}
+                        </p>
+                        
+                        <p class="card-text mb-0">
+                            <small class="text-muted">
+                                <i class="bi bi-calendar3"></i>
+                                {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     {% endfor %}
-</div>
-{% endif %}
-
-<!-- Recent Trips -->
-{% if recent_trips %}
-<div class="row mb-4">
-    <div class="col">
-        <h3><i class="bi bi-clock-history text-secondary"></i> Recent Trips</h3>
-    </div>
-</div>
-<div class="row">
-    {% for trip in recent_trips %}
-    <div class="col-md-6 col-lg-4">
-        <div class="card trip-card">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="text-decoration-none">
-                        {{ trip.title }}
-                    </a>
-                </h5>
-                <p class="card-text text-muted">
-                    <i class="bi bi-geo-alt"></i> {{ trip.destination }}
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        <i class="bi bi-calendar3"></i> 
-                        {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
-                    </small>
-                </p>
-                <span class="badge badge-past">Completed</span>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<!-- Empty State -->
-{% if not current_trips and not upcoming_trips and not shared_trips and not recent_trips %}
-<div class="row">
-    <div class="col text-center py-5">
-        <i class="bi bi-suitcase-lg" style="font-size: 4rem; color: #6c757d;"></i>
-        <h3 class="mt-3">No trips yet!</h3>
-        <p class="text-muted">Start planning your next adventure.</p>
-        <a href="{{ url_for('new_trip') }}" class="btn btn-primary btn-lg">
-            <i class="bi bi-plus-circle"></i> Create Your First Trip
-        </a>
-        
-        {% if current_user.user_settings.email_integration_enabled %}
-        <div class="mt-4">
-            <p class="text-muted">
-                <i class="bi bi-envelope"></i> 
-                Email scanning is enabled. We'll automatically import your flight confirmations!
-            </p>
-        </div>
-        {% else %}
-        <div class="mt-4">
-            <p class="text-muted">
-                Want automatic trip imports? 
-                <a href="{{ url_for('settings') }}">Enable email integration</a>
-            </p>
-        </div>
-        {% endif %}
-    </div>
 </div>
 {% endif %}
 
@@ -199,34 +185,48 @@
     <div class="col-md-3">
         <div class="card text-center">
             <div class="card-body">
-                <h1 class="text-primary">{{ upcoming_trips|length }}</h1>
-                <p class="mb-0">Upcoming Trips</p>
+                <h2 class="text-primary">{{ upcoming_trips|length }}</h2>
+                <p class="text-muted mb-0">Upcoming Trips</p>
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card text-center">
             <div class="card-body">
-                <h1 class="text-success">{{ current_trips|length }}</h1>
-                <p class="mb-0">Current Trips</p>
+                <h2 class="text-success">{{ current_trips|length }}</h2>
+                <p class="text-muted mb-0">Current Trips</p>
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card text-center">
             <div class="card-body">
-                <h1 class="text-info">{{ shared_trips|length }}</h1>
-                <p class="mb-0">Shared Trips</p>
+                <h2 class="text-secondary">{{ past_trips|length }}</h2>
+                <p class="text-muted mb-0">Past Trips</p>
             </div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="card text-center">
             <div class="card-body">
-                <h1 class="text-secondary">{{ recent_trips|length }}</h1>
-                <p class="mb-0">Past Trips</p>
+                <h2 class="text-info">{{ upcoming_trips|length + current_trips|length + past_trips|length }}</h2>
+                <p class="text-muted mb-0">Total Trips</p>
             </div>
         </div>
     </div>
 </div>
+
+{% if not current_trips and not upcoming_trips and not past_trips %}
+<div class="row">
+    <div class="col text-center py-5">
+        <i class="bi bi-suitcase" style="font-size: 4rem; color: #ddd;"></i>
+        <h3 class="mt-3 text-muted">No trips yet</h3>
+        <p class="text-muted">Start planning your next adventure!</p>
+        <a href="{{ url_for('new_trip') }}" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Create Your First Trip
+        </a>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
