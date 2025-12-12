@@ -141,13 +141,9 @@
     <ul class="pagination justify-content-center">
         {% if trips.has_prev %}
         <li class="page-item">
-            <a class="page-link" href="{{ url_for('trips', filter=filter_type, page=trips.prev_num) }}">
-                <i class="bi bi-chevron-left"></i> Previous
+            <a class="page-link" href="{{ url_for('trips', page=trips.prev_num, filter=filter_type) }}">
+                Previous
             </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link"><i class="bi bi-chevron-left"></i> Previous</span>
         </li>
         {% endif %}
         
@@ -159,27 +155,21 @@
                 </li>
                 {% else %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ url_for('trips', filter=filter_type, page=page_num) }}">
+                    <a class="page-link" href="{{ url_for('trips', page=page_num, filter=filter_type) }}">
                         {{ page_num }}
                     </a>
                 </li>
                 {% endif %}
             {% else %}
-                <li class="page-item disabled">
-                    <span class="page-link">...</span>
-                </li>
+                <li class="page-item disabled"><span class="page-link">...</span></li>
             {% endif %}
         {% endfor %}
         
         {% if trips.has_next %}
         <li class="page-item">
-            <a class="page-link" href="{{ url_for('trips', filter=filter_type, page=trips.next_num) }}">
-                Next <i class="bi bi-chevron-right"></i>
+            <a class="page-link" href="{{ url_for('trips', page=trips.next_num, filter=filter_type) }}">
+                Next
             </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">Next <i class="bi bi-chevron-right"></i></span>
         </li>
         {% endif %}
     </ul>
@@ -187,16 +177,24 @@
 {% endif %}
 
 {% else %}
-<div class="row">
-    <div class="col text-center py-5">
-        <i class="bi bi-suitcase" style="font-size: 4rem; color: #ddd;"></i>
-        <h3 class="mt-3 text-muted">No trips yet</h3>
-        <p class="text-muted">Start planning your next adventure!</p>
-        <a href="{{ url_for('new_trip') }}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Create Your First Trip
-        </a>
-    </div>
+<!-- Empty State -->
+<div class="text-center py-5">
+    <i class="bi bi-suitcase-lg" style="font-size: 4rem; color: #6c757d;"></i>
+    <h3 class="mt-3">No trips found</h3>
+    <p class="text-muted">
+        {% if filter_type == 'upcoming' %}
+            You don't have any upcoming trips.
+        {% elif filter_type == 'current' %}
+            You don't have any trips in progress.
+        {% elif filter_type == 'past' %}
+            You don't have any past trips.
+        {% else %}
+            Start planning your next adventure!
+        {% endif %}
+    </p>
+    <a href="{{ url_for('new_trip') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create Trip
+    </a>
 </div>
 {% endif %}
-
 {% endblock %}

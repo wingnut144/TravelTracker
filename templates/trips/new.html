@@ -46,12 +46,12 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="start_date" class="form-label">Start Date *</label>
-                            <input type="datetime-local" class="form-control" id="start_date" name="start_date" required>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
                         </div>
                         
                         <div class="col-md-6 mb-3">
                             <label for="end_date" class="form-label">End Date *</label>
-                            <input type="datetime-local" class="form-control" id="end_date" name="end_date" required>
+                            <input type="date" class="form-control" id="end_date" name="end_date" required>
                         </div>
                     </div>
                     
@@ -199,13 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
     
-    const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    const minDate = `${year}-${month}-${day}`;
     
-    document.getElementById('start_date').min = minDateTime;
-    document.getElementById('end_date').min = minDateTime;
+    document.getElementById('start_date').min = minDate;
+    document.getElementById('end_date').min = minDate;
     
     // Update end date minimum when start date changes
     document.getElementById('start_date').addEventListener('change', function() {
