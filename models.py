@@ -27,6 +27,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False, index=True)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
     password_hash = db.Column(db.String(255))
     role = db.Column(db.Enum(UserRole), default=UserRole.USER, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -90,6 +92,10 @@ class UserSettings(db.Model):
     american_api_key = db.Column(db.String(255))
     delta_api_key = db.Column(db.String(255))
     southwest_api_key = db.Column(db.String(255))
+    
+    # Foursquare/Swarm API (for check-in integration)
+    foursquare_access_token = db.Column(db.String(500))
+    foursquare_enabled = db.Column(db.Boolean, default=False)
     
     # Relationships
     user = db.relationship('User', back_populates='user_settings')
@@ -183,6 +189,7 @@ class Trip(db.Model):
     accommodations = db.relationship('Accommodation', back_populates='trip', cascade='all, delete-orphan')
     shares = db.relationship('TripShare', back_populates='trip', cascade='all, delete-orphan')
     photos = db.relationship('TripPhoto', back_populates='trip', cascade='all, delete-orphan')
+    checkins = db.relationship('CheckIn', back_populates='trip', cascade='all, delete-orphan')
     
     def is_upcoming(self):
         """Check if trip is upcoming"""
@@ -310,6 +317,38 @@ class TripPhoto(db.Model):
     
     def __repr__(self):
         return f'<TripPhoto {self.id} for Trip {self.trip_id}>'
+
+class CheckIn(db.Model):
+    """Foursquare/Swarm check-ins associated with trips"""
+    __tablename__ = 'checkins'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    # Foursquare data
+    foursquare_checkin_id = db.Column(db.String(100), unique=True, index=True)
+    venue_name = db.Column(db.String(255))
+    venue_category = db.Column(db.String(255))
+    venue_address = db.Column(db.String(500))
+    
+    # Location data
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    
+    # Check-in details
+    checkin_time = db.Column(db.DateTime, nullable=False, index=True)
+    shout = db.Column(db.Text)  # User's comment/shout
+    photo_url = db.Column(db.String(500))
+    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    trip = db.relationship('Trip', back_populates='checkins')
+    user = db.relationship('User', backref='checkins')
+    
+    def __repr__(self):
+        return f'<CheckIn {self.venue_name} at {self.checkin_time}>'
 
 class EmailScanLog(db.Model):
     """Log of email scans for debugging"""
