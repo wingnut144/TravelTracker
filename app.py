@@ -23,9 +23,7 @@ from utils import (
 
 # Create Flask app
 app = Flask(__name__)
-# Trust proxy headers for HTTPS
-from werkzeug.middleware.proxy_fix import ProxyFix
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 # Load configuration
 env = os.environ.get('FLASK_ENV', 'development')
 app.config.from_object(config[env])
