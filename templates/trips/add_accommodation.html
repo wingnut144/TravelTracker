@@ -84,4 +84,33 @@
                     <div class="mb-3">
                         <label for="notes" class="form-label">Notes</label>
                         <textarea class="form-control" id="notes" name="notes" rows="3" 
-                                  placeholder="Parking info, check-in instructions, ameniti
+                                  placeholder="Parking info, check-in instructions, amenities, etc."></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Add Accommodation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6><i class="bi bi-lightbulb"></i> Tips for Airbnb/VRBO:</h6>
+                <ul class="mb-0 small">
+                    <li>Copy the property name from your booking confirmation</li>
+                    <li>Include the full address for easy navigation</li>
+                    <li>Add check-in instructions in the notes (door code, lockbox, etc.)</li>
+                    <li>Save your confirmation number for easy reference</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
