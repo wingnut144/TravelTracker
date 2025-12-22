@@ -417,8 +417,8 @@ def get_destination_background_image(destination):
     """
     try:
         # Use Pexels API (free, 200 requests/hour)
-        search_term = destination.split(',')[0].strip()
-        search_query = f"{search_term}"
+        parts = [p.strip() for p in destination.split(',')]
+        search_term = parts[0]
         
         # Pexels API endpoint
         url = "https://api.pexels.com/v1/search"
@@ -438,10 +438,20 @@ def get_destination_background_image(destination):
         response = requests.get(url, params=params, headers=headers, timeout=5)
         
         if response.status_code == 200:
-            data = response.json()
-            if data.get('photos') and len(data['photos']) > 0:
-                # Get the large size image
-                return data['photos'][0]['src']['large2x']
+           data = response.json()
+           if data.get('photos') and len(data['photos']) > 0:
+        # Get the large size image
+              return data['photos'][0]['src']['large2x']
+    
+    # No results for city? Try state/country
+        if len(parts) > 1:
+            for i in range(1, len(parts)):
+                search_term = parts[i]
+                response = requests.get(url, params={'query': search_term, 'per_page': 1, 'orientation': 'landscape'}, headers=headers, timeout=5)
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get('photos') and len(data['photos']) > 0:
+                        return data['photos'][0]['src']['large2x']
         
         # Fallback: return a generic beautiful travel image
         return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
