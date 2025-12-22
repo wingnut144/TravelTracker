@@ -329,38 +329,50 @@
                 {% endif %}
             </div>
             <div class="card-body">
-                <div class="list-group list-group-flush">
-                    {% for checkin in trip.checkins|sort(attribute='checkin_time', reverse=True) %}
-                    <div class="list-group-item">
-                        <div class="row align-items-center">
+                <div class="row g-3">
+                    {% for checkin in trip.checkins|sort(attribute='checkin_time') %}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 shadow-sm">
+                            <!-- Number badge -->
+                            <div class="position-absolute top-0 start-0 m-2">
+                                <span class="badge bg-primary" style="font-size: 1rem;">{{ loop.index }}</span>
+                            </div>
+                            
                             {% if checkin.photo_url %}
-                            <div class="col-auto">
-                                <img src="{{ checkin.photo_url }}" 
-                                     class="rounded" 
-                                     style="width: 80px; height: 80px; object-fit: cover;"
-                                     alt="{{ checkin.venue_name }}">
+                            <img src="{{ checkin.photo_url }}" 
+                                 class="card-img-top" 
+                                 style="height: 150px; object-fit: cover;"
+                                 alt="{{ checkin.venue_name }}">
+                            {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                <i class="bi bi-geo-alt-fill text-muted" style="font-size: 3rem;"></i>
                             </div>
                             {% endif %}
-                            <div class="col">
-                                <h6 class="mb-1">
+                            
+                            <div class="card-body p-3">
+                                <h6 class="card-title mb-2">
                                     <i class="bi bi-pin-map"></i> {{ checkin.venue_name }}
                                 </h6>
+                                
                                 {% if checkin.venue_category %}
-                                <p class="mb-1 text-muted small">
+                                <p class="card-text small text-muted mb-1">
                                     <i class="bi bi-tag"></i> {{ checkin.venue_category }}
                                 </p>
                                 {% endif %}
+                                
                                 {% if checkin.venue_address %}
-                                <p class="mb-1 text-muted small">
+                                <p class="card-text small text-muted mb-1">
                                     <i class="bi bi-geo-alt"></i> {{ checkin.venue_address }}
                                 </p>
                                 {% endif %}
-                                <p class="mb-1 text-muted small">
-                                    <i class="bi bi-clock"></i> {{ checkin.checkin_time.strftime('%b %d, %Y at %I:%M %p') }}
+                                
+                                <p class="card-text small text-muted mb-2">
+                                    <i class="bi bi-clock"></i> {{ checkin.checkin_time.strftime('%b %d at %I:%M %p') }}
                                 </p>
+                                
                                 {% if checkin.shout %}
-                                <p class="mb-0 mt-2">
-                                    <em>"{{ checkin.shout }}"</em>
+                                <p class="card-text small fst-italic">
+                                    "{{ checkin.shout }}"
                                 </p>
                                 {% endif %}
                             </div>
@@ -479,13 +491,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }).addTo(map);
     
     // Add markers for each check-in
+    // Add markers for each check-in with numbers
     const markers = [];
-    checkins.forEach(function(checkin) {
-        const marker = L.marker([checkin.lat, checkin.lng]).addTo(map);
+    checkins.forEach(function(checkin, index) {
+        // Create numbered icon
+        const numberIcon = L.divIcon({
+            html: `<div style="background-color: #0d6efd; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`,
+            iconSize: [30, 30],
+            className: 'numbered-marker'
+        });
+        
+        const marker = L.marker([checkin.lat, checkin.lng], {icon: numberIcon}).addTo(map);
         
         // Create popup content
         let popupContent = '<div style="min-width: 200px;">';
-        popupContent += '<h6 class="mb-1"><strong>' + checkin.name + '</strong></h6>';
+        popupContent += '<h6 class="mb-1"><span class="badge bg-primary me-1">' + (index + 1) + '</span><strong>' + checkin.name + '</strong></h6>';
         
         if (checkin.category) {
             popupContent += '<p class="mb-1 small text-muted"><i class="bi bi-tag"></i> ' + checkin.category + '</p>';
