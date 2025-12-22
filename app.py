@@ -113,6 +113,7 @@ def dashboard():
         current_trips=current_trips,
         recent_trips=recent_trips,
         shared_trips=shared_trips
+        now=datetime.now()
     )
 
 
