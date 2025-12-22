@@ -323,7 +323,7 @@ def validate_email(email):
 
 def search_locations(query):
     """
-    Search for locations worldwide using OpenStreetMap Photon
+    Search for locations worldwide using OpenStreetMap Nominatim
     Returns list of location suggestions for autocomplete
     
     Args:
@@ -333,67 +333,62 @@ def search_locations(query):
         list: List of dicts with location data
     """
     try:
-        # Use Photon for fast autocomplete-friendly search
-        url = 'https://photon.komoot.io/api/'
+        # Use Nominatim for geocoding
+        url = 'https://nominatim.openstreetmap.org/search'
         params = {
             'q': query,
-            'limit': 20,  # Get more results for better deduplication
-            'lang': 'en'
+            'format': 'json',
+            'limit': 20,
+            'addressdetails': 1
+        }
+        headers = {
+            'User-Agent': 'TravelTracker/1.0'  # Required by Nominatim
         }
         
-        response = requests.get(url, params=params, timeout=5)
+        response = requests.get(url, params=params, headers=headers, timeout=5)
         
         if response.status_code == 200:
             data = response.json()
             locations = []
             seen_names = set()  # Track unique display names
             
-            for feature in data.get('features', []):
-                props = feature.get('properties', {})
-                coords = feature.get('geometry', {}).get('coordinates', [])
+            for item in data:
+                address = item.get('address', {})
                 
                 # Build clean display name: "City, Country" format
                 name_parts = []
                 
-                # Get the primary place name (city or name)
-                primary_name = props.get('city') or props.get('name')
+                # Get the primary place name
+                primary_name = (address.get('city') or 
+                               address.get('town') or 
+                               address.get('village') or 
+                               address.get('county') or
+                               item.get('name'))
+                
                 if primary_name:
                     name_parts.append(primary_name)
                 
                 # Add country
-                if props.get('country'):
-                    name_parts.append(props['country'])
+                if address.get('country'):
+                    name_parts.append(address['country'])
                 
-                display_name = ', '.join(name_parts) if name_parts else 'Unknown Location'
+                display_name = ', '.join(name_parts) if name_parts else item.get('display_name', 'Unknown')
                 
-                # Skip duplicates - only show each "City, Country" once
+                # Skip duplicates
                 if display_name in seen_names:
                     continue
                 
                 seen_names.add(display_name)
                 
-                # Store full details for backend use
-                full_name_parts = []
-                if props.get('name'):
-                    full_name_parts.append(props['name'])
-                if props.get('city'):
-                    full_name_parts.append(props['city'])
-                if props.get('state'):
-                    full_name_parts.append(props['state'])
-                if props.get('country'):
-                    full_name_parts.append(props['country'])
-                
-                full_name = ', '.join(full_name_parts) if full_name_parts else display_name
-                
                 locations.append({
-                    'display_name': display_name,  # Clean name shown to user
-                    'full_name': full_name,  # Complete name for storage
-                    'name': props.get('name', ''),
-                    'city': props.get('city', ''),
-                    'state': props.get('state', ''),
-                    'country': props.get('country', ''),
-                    'latitude': coords[1] if len(coords) > 1 else None,
-                    'longitude': coords[0] if len(coords) > 0 else None
+                    'display_name': display_name,
+                    'full_name': item.get('display_name', display_name),
+                    'name': item.get('name', ''),
+                    'city': address.get('city', ''),
+                    'state': address.get('state', ''),
+                    'country': address.get('country', ''),
+                    'latitude': float(item.get('lat')) if item.get('lat') else None,
+                    'longitude': float(item.get('lon')) if item.get('lon') else None
                 })
                 
                 # Stop after 10 unique results
