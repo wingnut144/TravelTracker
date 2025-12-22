@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Share Trip - {{ trip.title }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('trips') }}">Trips</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('view_trip', trip_id=trip.id) }}">{{ trip.title }}</a></li>
+                <li class="breadcrumb-item active">Share</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-share"></i> Share Trip: {{ trip.title }}</h4>
+            </div>
+            <div class="card-body">
+                <!-- Create New Share Link -->
+                <div class="mb-4">
+                    <h5>Create Share Link</h5>
+                    <form method="POST" action="{{ url_for('share_trip', trip_id=trip.id) }}">
+                        <div class="mb-3">
+                            <label for="shared_with_email" class="form-label">Share with (Email) - Optional</label>
+                            <input type="email" class="form-control" id="shared_with_email" name="shared_with_email" 
+                                   placeholder="friend@example.com">
+                            <div class="form-text">Leave blank to create a shareable link for anyone</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="expires_days" class="form-label">Link Expiration</label>
+                            <select class="form-select" id="expires_days" name="expires_days">
+                                <option value="">Never expires</option>
+                                <option value="1">1 day</option>
+                                <option value="7" selected>7 days</option>
+                                <option value="30">30 days</option>
+                                <option value="90">90 days</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="can_edit" name="can_edit">
+                            <label class="form-check-label" for="can_edit">
+                                Allow editing (viewer can modify trip details)
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Create Share Link
+                        </button>
+                    </form>
+                </div>
+
+                <hr>
+
+                <!-- Existing Shares -->
+                {% if shares %}
+                <div class="mt-4">
+                    <h5>Active Share Links</h5>
+                    {% for share in shares %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    {% if share.shared_with_email %}
+                                    <p class="mb-1">
+                                        <i class="bi bi-person"></i> 
+                                        <strong>{{ share.shared_with_email }}</strong>
+                                    </p>
+                                    {% else %}
+                                    <p class="mb-1">
+                                        <i class="bi bi-link-45deg"></i> 
+                                        <strong>Public Link</strong>
+                                    </p>
+                                    {% endif %}
+
+                                    <div class="input-group input-group-sm mb-2">
+                                        <input type="text" class="form-control" 
+                                               value="{{ url_for('view_shared_trip', token=share.share_token, _external=True) }}" 
+                                               id="share-link-{{ share.id }}" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" 
+                                                onclick="copyShareLink('share-link-{{ share.id }}')">
+                                            <i class="bi bi-clipboard"></i> Copy
+                                        </button>
+                                    </div>
+
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> Created {{ share.created_at.strftime('%b %d, %Y') }}
+                                        {% if share.expires_at %}
+                                        | Expires {{ share.expires_at.strftime('%b %d, %Y') }}
+                                        {% else %}
+                                        | Never expires
+                                        {% endif %}
+                                        {% if share.can_edit %}
+                                        | <span class="badge bg-warning">Can Edit</span>
+                                        {% else %}
+                                        | <span class="badge bg-info">View Only</span>
+                                        {% endif %}
+                                    </small>
+                                </div>
+
+                                <div class="col-md-4 text-end">
+                                    <form method="POST" action="{{ url_for('delete_share', trip_id=trip.id, share_id=share.id) }}" 
+                                          class="d-inline" onsubmit="return confirm('Revoke this share link?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i> Revoke
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No active share links. Create one above to share this trip.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyShareLink(elementId) {
+    const input = document.getElementById(elementId);
+    input.select();
+    document.execCommand('copy');
+    
+    // Show feedback
+    const button = input.nextElementSibling;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-check"></i> Copied!';
+    setTimeout(() => {
+        button.innerHTML = originalText;
+    }, 2000);
+}
+</script>
+{% endblock %}
