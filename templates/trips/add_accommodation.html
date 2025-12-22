@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Add Accommodation - {{ trip.title }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('trips') }}">Trips</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('view_trip', trip_id=trip.id) }}">{{ trip.title }}</a></li>
+                <li class="breadcrumb-item active">Add Accommodation</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-house-add"></i> Add Accommodation</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_accommodation', trip_id=trip.id) }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Accommodation Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               placeholder="e.g., Hilton Downtown, Airbnb Studio, Cozy Beach House" required>
+                        <div class="form-text">Hotel name, Airbnb title, or property name</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="accommodation_type" class="form-label">Type *</label>
+                        <select class="form-select" id="accommodation_type" name="accommodation_type" required>
+                            <option value="">Select type...</option>
+                            <option value="hotel">Hotel</option>
+                            <option value="airbnb">Airbnb</option>
+                            <option value="vrbo">VRBO</option>
+                            <option value="hostel">Hostel</option>
+                            <option value="resort">Resort</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="2" 
+                                  placeholder="123 Main St, City, State, ZIP"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="check_in" class="form-label">Check-in Date *</label>
+                            <input type="date" class="form-control" id="check_in" name="check_in" 
+                                   value="{{ trip.start_date.strftime('%Y-%m-%d') }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="check_out" class="form-label">Check-out Date *</label>
+                            <input type="date" class="form-control" id="check_out" name="check_out" 
+                                   value="{{ trip.end_date.strftime('%Y-%m-%d') }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmation_number" class="form-label">Confirmation Number</label>
+                        <input type="text" class="form-control" id="confirmation_number" name="confirmation_number" 
+                               placeholder="e.g., ABC123456">
+                        <div class="form-text">Booking confirmation or reservation number</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cost" class="form-label">Cost</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="cost" name="cost" 
+                                   step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                  placeholder="Parking info, check-in instructions, ameniti
