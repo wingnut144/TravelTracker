@@ -431,10 +431,13 @@ def get_destination_background_image(destination):
             'per_page': 1,
             'orientation': 'landscape'
         }
-        headers = {
+        
+
+	api_key = os.environ.get('PEXELS_API_KEY', 'htKiJTZSBvJPxLE8wPxR71jjgDGCT572qpv8aC7JBLomxbasrYsD2VXm')
+
+	headers = {
             # Public demo API key (limited to 200/hour)
             # Get API key from environment
-            api_key = os.environ.get('PEXELS_API_KEY', 'htKiJTZSBvJPxLE8wPxR71jjgDGCT572qpv8aC7JBLomxbasrYsD2VXm')
             'Authorization': f'Bearer {api_key}'
         }
         
