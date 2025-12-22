@@ -422,8 +422,8 @@ def get_destination_background_image(destination):
     """
     try:
         # Use Pexels API (free, 200 requests/hour)
-        search_term = destination.replace(',', ' ').strip().lower()
-        search_query = f"{search_term} landmark travel"
+        search_term = destination.split(',')[0].strip()
+        search_query = f"{city_name}"
         
         # Pexels API endpoint
         url = "https://api.pexels.com/v1/search"
