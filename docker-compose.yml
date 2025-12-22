@@ -43,6 +43,12 @@ services:
       - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
       - MICROSOFT_REDIRECT_URI=${MICROSOFT_REDIRECT_URI:-http://localhost:5000/auth/microsoft/callback}
       
+      # Foursquare Oauth Info
+      - FOURSQUARE_CLIENT_ID=${FOURSQUARE_CLIENT_ID}
+      - FOURSQUARE_CLIENT_SECRET=${FOURSQUARE_CLIENT_SECRET}
+
+      # Pexels API for trip images
+      - PEXELS_API_KEY=${PEXELS_API_KEY}
       # Airline APIs
       - UNITED_API_KEY=${UNITED_API_KEY}
       - AMERICAN_API_KEY=${AMERICAN_API_KEY}

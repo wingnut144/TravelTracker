@@ -424,9 +424,6 @@ def get_destination_background_image(destination):
         search_term = destination.replace(',', ' ').strip().lower()
         search_query = f"{search_term} landmark travel"
         
-        # Get API key from environment
-        api_key = os.environ.get('PEXELS_API_KEY', '563492ad6f91700001000001c5d4d7c5b9b54ac2a2b51b1e86f0964f')
-        
         # Pexels API endpoint
         url = "https://api.pexels.com/v1/search"
         params = {
@@ -435,7 +432,8 @@ def get_destination_background_image(destination):
             'orientation': 'landscape'
         }
         headers = {
-            'Authorization': f'Bearer {api_key}'
+            # Public demo API key (limited to 200/hour)
+            'Authorization': 'Bearer htKiJTZSBvJPxLE8wPxR71jjgDGCT572qpv8aC7JBLomxbasrYsD2VXm'
         }
         
         response = requests.get(url, params=params, headers=headers, timeout=5)

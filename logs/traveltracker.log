@@ -674,3 +674,124 @@ jinja2.exceptions.TemplateNotFound: trips/share.html
 2025-12-12 17:40:00,683 INFO: Travel Tracker startup [in /app/app.py:55]
 2025-12-12 17:40:00,717 INFO: Travel Tracker startup [in /app/app.py:55]
 2025-12-12 17:40:00,734 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:06:06,796 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:06:07,806 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:06:07,927 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:06:08,080 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:06:08,087 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:16:12,618 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:16:13,671 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:16:13,696 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:16:13,721 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:16:13,814 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:19:34,273 ERROR: Exception on /settings/preferences [GET] [in /usr/local/lib/python3.11/site-packages/flask/app.py:825]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/app.py", line 681, in preferences_settings
+    return render_template('settings/preferences.html', settings=settings)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 151, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: settings/preferences.html
+2025-12-12 18:28:07,130 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:28:08,274 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:28:08,300 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:28:08,404 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:28:08,428 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:34:20,803 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:34:21,675 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:34:21,759 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:34:21,777 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:34:21,999 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:37:50,645 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:37:51,596 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:37:51,613 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:37:51,614 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:37:51,701 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:38:58,412 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:38:59,303 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:38:59,464 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:38:59,708 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:38:59,740 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:42:20,221 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:42:21,347 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:42:21,371 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:42:21,384 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 18:42:21,427 INFO: Travel Tracker startup [in /app/app.py:55]
+2025-12-12 19:27:03,567 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:27:04,443 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:27:04,530 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:27:04,543 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:27:04,646 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:30:48,162 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:30:49,153 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:30:49,196 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:30:49,337 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:30:49,362 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:52:49,425 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:52:50,287 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:52:50,495 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:52:50,536 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 19:52:50,551 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:13:51,005 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:13:51,880 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:13:51,912 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:13:51,962 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:13:51,991 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:26:56,197 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:26:57,113 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:26:57,197 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:26:57,396 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:26:57,519 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:48:39,555 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:48:40,463 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:48:40,517 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:48:40,560 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 22:48:40,567 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:12:15,758 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:12:16,652 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:12:16,679 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:12:16,736 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:12:16,782 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:19:02,838 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:19:04,109 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:19:04,140 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:19:04,174 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:19:04,225 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:43:14,987 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:43:15,790 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:43:15,812 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:43:16,001 INFO: Travel Tracker startup [in /app/app.py:56]
+2025-12-12 23:43:16,026 INFO: Travel Tracker startup [in /app/app.py:56]
