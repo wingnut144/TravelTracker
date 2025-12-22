@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Add Flight - {{ trip.title }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('trips') }}">Trips</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('view_trip', trip_id=trip.id) }}">{{ trip.title }}</a></li>
+                <li class="breadcrumb-item active">Add Flight</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-airplane"></i> Add Flight</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_flight', trip_id=trip.id) }}">
+                    <!-- Airline and Flight Number -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="airline" class="form-label">Airline *</label>
+                            <input type="text" class="form-control" id="airline" name="airline" 
+                                   placeholder="e.g., United Airlines, Delta" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="flight_number" class="form-label">Flight Number *</label>
+                            <input type="text" class="form-control" id="flight_number" name="flight_number" 
+                                   placeholder="e.g., UA123, DL456" required>
+                        </div>
+                    </div>
+
+                    <!-- Departure -->
+                    <div class="card mb-3 border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="bi bi-arrow-up-circle"></i> Departure</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="departure_airport" class="form-label">Airport Code *</label>
+                                    <input type="text" class="form-control" id="departure_airport" name="departure_airport" 
+                                           placeholder="e.g., SFO, JFK" maxlength="3" required style="text-transform: uppercase;">
+                                    <div class="form-text">3-letter airport code</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="departure_terminal" class="form-label">Terminal</label>
+                                    <input type="text" class="form-control" id="departure_terminal" name="departure_terminal" 
+                                           placeholder="e.g., Terminal 2, T3">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="departure_time" class="form-label">Date & Time *</label>
+                                    <input type="datetime-local" class="form-control" id="departure_time" name="departure_time" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="departure_gate" class="form-label">Gate</label>
+                                    <input type="text" class="form-control" id="departure_gate" name="departure_gate" 
+                                           placeholder="e.g., B12, C45">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Arrival -->
+                    <div class="card mb-3 border-success">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0"><i class="bi bi-arrow-down-circle"></i> Arrival</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="arrival_airport" class="form-label">Airport Code *</label>
+                                    <input type="text" class="form-control" id="arrival_airport" name="arrival_airport" 
+                                           placeholder="e.g., LAX, ORD" maxlength="3" required style="text-transform: uppercase;">
+                                    <div class="form-text">3-letter airport code</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="arrival_terminal" class="form-label">Terminal</label>
+                                    <input type="text" class="form-control" id="arrival_terminal" name="arrival_terminal" 
+                                           placeholder="e.g., Terminal 1, T2">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="arrival_time" class="form-label">Date & Time *</label>
+                                    <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="arrival_gate" class="form-label">Gate</label>
+                                    <input type="text" class="form-control" id="arrival_gate" name="arrival_gate" 
+                                           placeholder="e.g., A5, D20">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Details -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="confirmation_number" class="form-label">Confirmation Number</label>
+                            <input type="text" class="form-control" id="confirmation_number" name="confirmation_number" 
+                                   placeholder="e.g., ABC123">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="seat" class="form-label">Seat</label>
+                            <input type="text" class="form-control" id="seat" name="seat" 
+                                   placeholder="e.g., 12A, 24C">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cost" class="form-label">Cost</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="cost" name="cost" 
+                                   step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2" 
+                                  placeholder="Baggage info, special requests, etc."></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Add Flight
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6><i class="bi bi-lightbulb"></i> Tips:</h6>
+                <ul class="mb-0 small">
+                    <li>Airport codes are 3 letters (SFO, JFK, LAX, etc.)</li>
+                    <li>Check your confirmation email for gate and terminal info</li>
+                    <li>Time should be in local timezone</li>
+                    <li>Add baggage details or TSA PreCheck info in notes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
