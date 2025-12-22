@@ -433,12 +433,10 @@ def get_destination_background_image(destination):
         }
         
 
-	api_key = os.environ.get('PEXELS_API_KEY', 'htKiJTZSBvJPxLE8wPxR71jjgDGCT572qpv8aC7JBLomxbasrYsD2VXm')
+        api_key = os.environ.get('PEXELS_API_KEY', 'htKiJTZSBvJPxLE8wPxR71jjgDGCT572qpv8aC7JBLomxbasrYsD2VXm')
 
-	headers = {
+        headers = {
             # Public demo API key (limited to 200/hour)
-            # Get API key from environment
-            'Authorization': f'Bearer {api_key}'
         }
         
         response = requests.get(url, params=params, headers=headers, timeout=5)
