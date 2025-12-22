@@ -111,12 +111,29 @@
                             <i class="bi bi-geo-alt"></i> {{ trip.destination }}
                         </p>
                         
-                        <p class="card-text mb-0">
+                       <p class="card-text mb-2">
                             <small class="text-muted">
                                 <i class="bi bi-calendar3"></i>
                                 {{ trip.start_date.strftime('%b %d') }} - {{ trip.end_date.strftime('%b %d, %Y') }}
                             </small>
                         </p>
+                        
+                        <!-- Countdown Badge -->
+                        {% set now = now() %}
+                        {% set days_until = (trip.start_date.date() - now.date()).days %}
+                        {% if days_until > 0 %}
+                        <p class="card-text mb-0">
+                            <span class="badge bg-info">
+                                <i class="bi bi-hourglass-split"></i> {{ days_until }} day{{ 's' if days_until != 1 else '' }} away
+                            </span>
+                        </p>
+                        {% elif days_until == 0 %}
+                        <p class="card-text mb-0">
+                            <span class="badge bg-success">
+                                <i class="bi bi-star-fill"></i> Starts today!
+                            </span>
+                        </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
