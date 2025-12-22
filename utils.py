@@ -406,8 +406,8 @@ def search_locations(query):
 
 def get_destination_background_image(destination):
     """
-    Get a background image URL for a destination using Pexels
-    Free service with curated travel images
+    Get a background image URL for a destination using Unsplash
+    Free service with high-quality travel images
     
     Args:
         destination: Destination name (e.g., "Paris, France")
@@ -416,45 +416,33 @@ def get_destination_background_image(destination):
         str: Image URL or fallback generic travel image
     """
     try:
-        # Use Pexels API (free, 200 requests/hour)
-        parts = [p.strip() for p in destination.split(',')]
-        search_term = parts[0]
+        # Extract city name (first part before comma)
+        city_name = destination.split(',')[0].strip()
         
-        # Pexels API endpoint
-        url = "https://api.pexels.com/v1/search"
+        # Get API key from environment
+        api_key = os.environ.get('UNSPLASH_ACCESS_KEY')
+        if not api_key:
+            logger.warning("UNSPLASH_ACCESS_KEY not set, using fallback image")
+            return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        
+        # Unsplash API endpoint
+        url = "https://api.unsplash.com/search/photos"
         params = {
-            'query': search_query,
+            'query': city_name,
             'per_page': 1,
             'orientation': 'landscape'
         }
-        
-
-        api_key = os.environ.get('PEXELS_API_KEY')
-        if not api_key:
-            logger.warning("PEXELS_API_KEY not set, using fallback image")
-            return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
-        
         headers = {
-            'Authorization': f'Bearer {api_key}'
+            'Authorization': f'Client-ID {api_key}'
         }
         
         response = requests.get(url, params=params, headers=headers, timeout=5)
         
         if response.status_code == 200:
-           data = response.json()
-           if data.get('photos') and len(data['photos']) > 0:
-        # Get the large size image
-              return data['photos'][0]['src']['large2x']
-    
-    # No results for city? Try state/country
-        if len(parts) > 1:
-            for i in range(1, len(parts)):
-                search_term = parts[i]
-                response = requests.get(url, params={'query': search_term, 'per_page': 1, 'orientation': 'landscape'}, headers=headers, timeout=5)
-                if response.status_code == 200:
-                    data = response.json()
-                    if data.get('photos') and len(data['photos']) > 0:
-                        return data['photos'][0]['src']['large2x']
+            data = response.json()
+            if data.get('results') and len(data['results']) > 0:
+                # Get the regular size image
+                return data['results'][0]['urls']['regular']
         
         # Fallback: return a generic beautiful travel image
         return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
@@ -462,7 +450,7 @@ def get_destination_background_image(destination):
     except Exception as e:
         logger.error(f"Error fetching background image: {str(e)}")
         # Return generic travel image as fallback
-        return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600" 
 
 
 def sanitize_filename(filename):
