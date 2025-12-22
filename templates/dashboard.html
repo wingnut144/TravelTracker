@@ -119,8 +119,8 @@
                         </p>
                         
                         <!-- Countdown Badge -->
-                        {% set now = now() %}
-                        {% set days_until = (trip.start_date.date() - now.date()).days %}
+                        {% from "datetime" import datetime %}
+                        {% set days_until = (trip.start_date - trip.start_date.today()).days %}
                         {% if days_until > 0 %}
                         <p class="card-text mb-0">
                             <span class="badge bg-info">
