@@ -47,6 +47,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         
         if user and user.check_password(password) and user.is_active:
+            session.permanent = True
             login_user(user, remember=remember)
             user.last_login = datetime.utcnow()
             db.session.commit()
