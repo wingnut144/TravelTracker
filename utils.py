@@ -429,8 +429,11 @@ def get_destination_background_image(destination):
         }
         
 
-        api_key = os.environ.get('PEXELS_API_KEY', 'htKiJTZSBvJPxLE8wPxR71jjgDGCT572qpv8aC7JBLomxbasrYsD2VXm')
-
+        api_key = os.environ.get('PEXELS_API_KEY')
+        if not api_key:
+            logger.warning("PEXELS_API_KEY not set, using fallback image")
+            return "https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=1600"
+        
         headers = {
             'Authorization': f'Bearer {api_key}'
         }
