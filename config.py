@@ -20,11 +20,17 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     
-    # Session
-    PERMANENT_SESSION_LIFETIME = timedelta(days=7)
-    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() in ['true', 'on', '1']
+    # Session Security & Timeout
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=2)  # Auto-logout after 2 hours
+    SESSION_COOKIE_SECURE = True  # Force HTTPS (set to False for local dev)
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_REFRESH_EACH_REQUEST = True  # Reset timer on each page load
+    
+    # Remember Me (when "remember me" checkbox is used)
+    REMEMBER_COOKIE_DURATION = timedelta(days=30)
+    REMEMBER_COOKIE_SECURE = True
+    REMEMBER_COOKIE_HTTPONLY = True
     
     # Email Scanner Settings
     EMAIL_SCAN_INTERVAL = int(os.environ.get('EMAIL_SCAN_INTERVAL', 300))  # 5 minutes
