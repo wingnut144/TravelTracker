@@ -207,11 +207,10 @@ function lookupFlight() {
     
     statusDiv.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split"></i> Looking up your flight details...</div>';
     
-    fetch(`/api/flights/lookup?flight_number=${flightNumber}&date=${flightDate}`)
+    fetch('/api/flights/lookup?flight_number=' + flightNumber + '&date=' + flightDate)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Fill in the form with API data
                 document.getElementById('airline').value = data.flight.airline || '';
                 document.getElementById('flight_number').value = data.flight.flight_number || flightNumber;
                 document.getElementById('departure_airport').value = data.flight.departure_airport || '';
@@ -223,64 +222,45 @@ function lookupFlight() {
                 document.getElementById('departure_gate').value = data.flight.departure_gate || '';
                 document.getElementById('arrival_gate').value = data.flight.arrival_gate || '';
                 
-                // Show city names below airport codes
-if (data.flight.departure_city && data.flight.departure_name) {
-    const depCity = data.flight.departure_city;
-    const depName = data.flight.departure_name;
-    // Only show city if it's not already in the airport name
-    if (depName.includes(depCity)) {
-        document.getElementById('departure_info').textContent = depName;
-    } else {
-        document.getElementById('departure_info').textContent = `${depCity} - ${depName}`;
-    }
-}
-
-if (data.flight.arrival_city && data.flight.arrival_name) {
-    const arrCity = data.flight.arrival_city;
-    const arrName = data.flight.arrival_name;
-    // Only show city if it's not already in the airport name
-    if (arrName.includes(arrCity)) {
-        document.getElementById('arrival_info').textContent = arrName;
-    } else {
-        document.getElementById('arrival_info').textContent = `${arrCity} - ${arrName}`;
-    }
-}
-This will show:
-
-"Singapore Changi Airport" ✅ (city is in name)
-"Newark - Liberty International Airport" ✅ (city not in name)
-
-Replace those sections in the template and rebuild! 🎯Claude is AI and can make mistakes. Please double-check responses.
+                if (data.flight.departure_city && data.flight.departure_name) {
+                    const depCity = data.flight.departure_city;
+                    const depName = data.flight.departure_name;
+                    if (depName.includes(depCity)) {
+                        document.getElementById('departure_info').textContent = depName;
+                    } else {
+                        document.getElementById('departure_info').textContent = depCity + ' - ' + depName;
+                    }
+                }
                 
-                // Hide lookup, show form
+                if (data.flight.arrival_city && data.flight.arrival_name) {
+                    const arrCity = data.flight.arrival_city;
+                    const arrName = data.flight.arrival_name;
+                    if (arrName.includes(arrCity)) {
+                        document.getElementById('arrival_info').textContent = arrName;
+                    } else {
+                        document.getElementById('arrival_info').textContent = arrCity + ' - ' + arrName;
+                    }
+                }
+                
                 document.getElementById('lookupSection').style.display = 'none';
                 document.getElementById('flightForm').style.display = 'block';
-                
                 statusDiv.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle"></i> Flight found! Review and edit details below.</div>';
                 window.scrollTo(0, 0);
             } else {
-                statusDiv.innerHTML = `<div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle"></i> ${data.message || 'Could not find flight details. Please check the flight number and date.'}
-                    <button type="button" class="btn btn-sm btn-warning ms-2" onclick="showManualForm()">Enter Manually</button>
-                </div>`;
+                statusDiv.innerHTML = '<div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> ' + (data.message || 'Could not find flight details.') + ' <button type="button" class="btn btn-sm btn-warning ms-2" onclick="showManualForm()">Enter Manually</button></div>';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            statusDiv.innerHTML = `<div class="alert alert-danger">
-                <i class="bi bi-x-circle"></i> Error looking up flight. Please try again or enter details manually.
-                <button type="button" class="btn btn-sm btn-danger ms-2" onclick="showManualForm()">Enter Manually</button>
-            </div>`;
+            statusDiv.innerHTML = '<div class="alert alert-danger"><i class="bi bi-x-circle"></i> Error looking up flight. <button type="button" class="btn btn-sm btn-danger ms-2" onclick="showManualForm()">Enter Manually</button></div>';
         });
 }
 
 function showManualForm() {
     const flightNumber = document.getElementById('flightNumber').value.toUpperCase();
-    
     if (flightNumber) {
         document.getElementById('flight_number').value = flightNumber;
     }
-    
     document.getElementById('lookupSection').style.display = 'none';
     document.getElementById('flightForm').style.display = 'block';
     window.scrollTo(0, 0);
@@ -298,7 +278,6 @@ function resetForm() {
     window.scrollTo(0, 0);
 }
 
-// Set default date to today
 document.addEventListener('DOMContentLoaded', function() {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('flightDate').value = today;
