@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!mapElement) return;
     
     const checkins = [
-        {% for checkin in trip.checkins %}
+        {% for checkin in trip.checkins|sort(attribute='checkin_time') %}
         {% if checkin.latitude and checkin.longitude %}
         {
             lat: {{ checkin.latitude }},
