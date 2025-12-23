@@ -240,29 +240,12 @@
                                 {% endif %}
                             </div>
                             
-                            <!-- Right Column: Cost & Actions -->
+                            <!-- Right Column: Cost -->
                             <div class="col-md-4 text-end">
                                 {% if flight.cost %}
                                 <h3 class="text-success mb-3">
                                     ${{ '%.2f'|format(flight.cost) }}
                                 </h3>
-                                {% endif %}
-                                
-                                {% if can_edit %}
-                                <div class="btn-group-vertical" role="group">
-                                    <a href="{{ url_for('edit_flight', trip_id=trip.id, flight_id=flight.id) }}" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </a>
-                                    <form method="POST" 
-                                          action="{{ url_for('delete_flight', trip_id=trip.id, flight_id=flight.id) }}"
-                                          onsubmit="return confirm('Delete this flight?');"
-                                          class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                                            <i class="bi bi-trash"></i> Delete
-                                        </button>
-                                    </form>
-                                </div>
                                 {% endif %}
                             </div>
                         </div>
@@ -288,6 +271,7 @@
     </div>
 </div>
 {% endif %}
+
 <!-- Accommodations -->
 {% if trip.accommodations %}
 <div class="row mb-4">
@@ -410,7 +394,6 @@
                     {% for checkin in trip.checkins|sort(attribute='checkin_time') %}
                     <div class="col-md-6 col-lg-3">
                         <div class="card h-100 shadow-sm">
-                            <!-- Number badge -->
                             <div class="position-absolute top-0 start-0 m-2">
                                 <span class="badge bg-primary" style="font-size: 1rem;">{{ loop.index }}</span>
                             </div>
@@ -508,7 +491,6 @@
 {% endblock %}
 
 {% block extra_css %}
-<!-- Leaflet CSS for maps -->
 {% if trip.checkins %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
@@ -517,20 +499,16 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- Leaflet JS for maps -->
 {% if trip.checkins %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
         crossorigin=""></script>
 
 <script>
-// Initialize map when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if map element exists
     const mapElement = document.getElementById('checkin-map');
     if (!mapElement) return;
     
-    // Create checkins data array
     const checkins = [
         {% for checkin in trip.checkins %}
         {% if checkin.latitude and checkin.longitude %}
@@ -552,35 +530,28 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Calculate center and bounds
     const lats = checkins.map(c => c.lat);
     const lngs = checkins.map(c => c.lng);
     const centerLat = (Math.max(...lats) + Math.min(...lats)) / 2;
     const centerLng = (Math.max(...lngs) + Math.min(...lngs)) / 2;
     
-    // Initialize map
     const map = L.map('checkin-map').setView([centerLat, centerLng], 13);
     
-    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
     }).addTo(map);
     
-    // Add markers for each check-in
-    // Add markers for each check-in with numbers
     const markers = [];
     checkins.forEach(function(checkin, index) {
-        // Create numbered icon
         const numberIcon = L.divIcon({
-            html: `<div style="background-color: #0d6efd; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`,
+            html: '<div style="background-color: #0d6efd; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">' + (index + 1) + '</div>',
             iconSize: [30, 30],
             className: 'numbered-marker'
         });
         
         const marker = L.marker([checkin.lat, checkin.lng], {icon: numberIcon}).addTo(map);
         
-        // Create popup content
         let popupContent = '<div style="min-width: 200px;">';
         popupContent += '<h6 class="mb-1"><span class="badge bg-primary me-1">' + (index + 1) + '</span><strong>' + checkin.name + '</strong></h6>';
         
@@ -604,105 +575,11 @@ document.addEventListener('DOMContentLoaded', function() {
         markers.push(marker);
     });
     
-    // Fit map to show all markers
     if (markers.length > 1) {
         const group = new L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.1));
     }
-    
-    // Add trip start location if available
-    {% if trip.destination_latitude and trip.destination_longitude %}
-    const tripIcon = L.divIcon({
-        html: '<i class="bi bi-pin-map-fill text-primary" style="font-size: 24px;"></i>',
-        iconSize: [24, 24],
-        className: 'trip-marker'
-    });
-    
-    L.marker([{{ trip.destination_latitude }}, {{ trip.destination_longitude }}], {icon: tripIcon})
-        .addTo(map)
-        .bindPopup('<div><h6><strong>{{ trip.destination|replace("'", "\\'") }}</strong></h6><p class="mb-0 small">Trip Destination</p></div>');
-    {% endif %}
 });
 </script>
-{% endif %}
-<!-- Accommodations Section -->
-{% if trip.accommodations %}
-<div class="row mb-4">
-    <div class="col">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="bi bi-house-door"></i> Accommodations
-                </h5>
-                {% if can_edit %}
-                <a href="{{ url_for('add_accommodation', trip_id=trip.id) }}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-plus-circle"></i> Add Accommodation
-                </a>
-                {% endif %}
-            </div>
-            <div class="card-body">
-                {% for accommodation in trip.accommodations %}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h5 class="card-title">
-                                    <i class="bi bi-{% if accommodation.accommodation_type == 'airbnb' %}house-heart{% elif accommodation.accommodation_type == 'hotel' %}building{% else %}house-door{% endif %}"></i>
-                                    {{ accommodation.name }}
-                                    <span class="badge bg-secondary ms-2">{{ accommodation.accommodation_type|title }}</span>
-                                </h5>
-                                
-                                {% if accommodation.address %}
-                                <p class="card-text mb-1">
-                                    <i class="bi bi-geo-alt"></i> {{ accommodation.address }}
-                                </p>
-                                {% endif %}
-                                
-                                <p class="card-text mb-1">
-                                    <i class="bi bi-calendar-check"></i> 
-                                    Check-in: {{ accommodation.check_in.strftime('%b %d, %Y') }}
-                                    <span class="mx-2">|</span>
-                                    <i class="bi bi-calendar-x"></i> 
-                                    Check-out: {{ accommodation.check_out.strftime('%b %d, %Y') }}
-                                </p>
-                                
-                                {% if accommodation.confirmation_number %}
-                                <p class="card-text mb-1">
-                                    <i class="bi bi-receipt"></i> 
-                                    Confirmation: <code>{{ accommodation.confirmation_number }}</code>
-                                </p>
-                                {% endif %}
-                                
-                                {% if accommodation.notes %}
-                                <p class="card-text small text-muted mt-2">
-                                    <i class="bi bi-sticky"></i> {{ accommodation.notes }}
-                                </p>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-4 text-end">
-                                {% if accommodation.cost %}
-                                <h3 class="text-success mb-3">${{ '%.2f'|format(accommodation.cost) }}</h3>
-                                {% endif %}
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
-{% elif can_edit %}
-<div class="row mb-4">
-    <div class="col">
-        <div class="alert alert-info">
-            <i class="bi bi-house-door"></i> 
-            No accommodations added yet. 
-            <a href="{{ url_for('add_accommodation', trip_id=trip.id) }}" class="alert-link">Add your first accommodation</a>
-        </div>
-    </div>
-</div>
 {% endif %}
 {% endblock %}
