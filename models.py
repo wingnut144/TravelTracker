@@ -364,3 +364,16 @@ class EmailScanLog(db.Model):
     
     def __repr__(self):
         return f'<EmailScanLog {self.scan_time}>'
+
+class APIStatus(db.Model):
+    """Track API service status"""
+    __tablename__ = 'api_status'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    service_name = db.Column(db.String(50), unique=True, nullable=False)  # 'airlabs', 'unsplash', etc.
+    is_active = db.Column(db.Boolean, default=False)
+    last_checked = db.Column(db.DateTime, default=datetime.utcnow)
+    status_message = db.Column(db.String(200))
+    
+    def __repr__(self):
+        return f'<APIStatus {self.service_name}: {"✓" if self.is_active else "✗"}>'
