@@ -87,12 +87,6 @@ class UserSettings(db.Model):
     # Google Maps API - NO LONGER NEEDED (using free OpenStreetMap)
     # google_maps_api_key = db.Column(db.String(255))
     
-    # Airline APIs
-    united_api_key = db.Column(db.String(255))
-    american_api_key = db.Column(db.String(255))
-    delta_api_key = db.Column(db.String(255))
-    southwest_api_key = db.Column(db.String(255))
-    
     # Foursquare/Swarm API (for check-in integration)
     foursquare_access_token = db.Column(db.String(500))
     foursquare_enabled = db.Column(db.Boolean, default=False)
