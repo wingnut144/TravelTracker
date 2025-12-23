@@ -28,8 +28,8 @@
                     <h5>Create Share Link</h5>
                     <form method="POST" action="{{ url_for('share_trip', trip_id=trip.id) }}">
                         <div class="mb-3">
-                            <label for="shared_with_email" class="form-label">Share with (Email) - Optional</label>
-                            <input type="email" class="form-control" id="shared_with_email" name="shared_with_email" 
+                            <label for="external_email" class="form-label">Share with (Email) - Optional</label>
+                            <input type="email" class="form-control" id="external_email" name="external_email" 
                                    placeholder="friend@example.com">
                             <div class="form-text">Leave blank to create a shareable link for anyone</div>
                         </div>
@@ -69,10 +69,10 @@
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-8">
-                                    {% if share.shared_with_email %}
+                                    {% if share.external_email %}
                                     <p class="mb-1">
                                         <i class="bi bi-person"></i> 
-                                        <strong>{{ share.shared_with_email }}</strong>
+                                        <strong>{{ share.external_email }}</strong>
                                     </p>
                                     {% else %}
                                     <p class="mb-1">
