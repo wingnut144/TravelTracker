@@ -18,38 +18,29 @@
             <h5><i class="bi bi-search"></i> Find Your Flight</h5>
         </div>
         <div class="card-body">
-            <p class="text-muted">Enter your confirmation number and select your airline. We'll automatically fill in your flight details!</p>
+            <p class="text-muted">Enter your flight number and date. We'll automatically retrieve your flight details!</p>
             
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="airline" class="form-label">Airline *</label>
-                    <select class="form-select" id="airline" required>
-                        <option value="">Select Airline...</option>
-                        <option value="AA">American Airlines</option>
-                        <option value="DL">Delta Air Lines</option>
-                        <option value="UA">United Airlines</option>
-                        <option value="WN">Southwest Airlines</option>
-                        <option value="B6">JetBlue Airways</option>
-                        <option value="AS">Alaska Airlines</option>
-                        <option value="F9">Frontier Airlines</option>
-                        <option value="NK">Spirit Airlines</option>
-                    </select>
+                    <label for="flightNumber" class="form-label">Flight Number *</label>
+                    <input type="text" class="form-control text-uppercase" id="flightNumber" 
+                           placeholder="e.g., UA123, DL456, AA789" required>
+                    <small class="text-muted">Include airline code (e.g., UA123, not just 123)</small>
                 </div>
                 
                 <div class="col-md-6 mb-3">
-                    <label for="confirmationNumber" class="form-label">Confirmation Number *</label>
-                    <input type="text" class="form-control text-uppercase" id="confirmationNumber" 
-                           placeholder="e.g., ABC123" required>
-                    <small class="text-muted">Usually 6 characters (letters and numbers)</small>
+                    <label for="flightDate" class="form-label">Flight Date *</label>
+                    <input type="date" class="form-control" id="flightDate" required>
+                    <small class="text-muted">Date of departure</small>
                 </div>
             </div>
 
-            <button type="button" class="btn btn-primary" onclick="lookupFlight()">
-                <i class="bi bi-search"></i> Find Flight
+            <button type="button" class="btn btn-primary btn-lg" onclick="lookupFlight()">
+                <i class="bi bi-search"></i> Find My Flight
             </button>
             
             <button type="button" class="btn btn-outline-secondary" onclick="showManualForm()">
-                <i class="bi bi-pencil"></i> Enter Manually
+                <i class="bi bi-pencil"></i> Enter Manually Instead
             </button>
 
             <div id="lookupStatus" class="mt-3"></div>
@@ -59,20 +50,19 @@
     <!-- Step 2: Flight Details Form -->
     <form method="POST" id="flightForm" style="display: none;">
         <div class="card mb-4">
-            <div class="card-header">
+            <div class="card-header bg-info text-white">
                 <h5><i class="bi bi-airplane"></i> Flight Details</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="airlineDisplay" class="form-label">Airline *</label>
-                        <input type="text" class="form-control" id="airlineDisplay" name="airline" required>
+                        <label for="airline" class="form-label">Airline *</label>
+                        <input type="text" class="form-control" id="airline" name="airline" required>
                     </div>
                     
                     <div class="col-md-6 mb-3">
                         <label for="flight_number" class="form-label">Flight Number *</label>
-                        <input type="text" class="form-control" id="flight_number" name="flight_number" 
-                               placeholder="e.g., UA123" required>
+                        <input type="text" class="form-control" id="flight_number" name="flight_number" required>
                     </div>
                 </div>
             </div>
@@ -88,13 +78,14 @@
                     <div class="col-md-3 mb-3">
                         <label for="departure_airport" class="form-label">Airport Code *</label>
                         <input type="text" class="form-control text-uppercase" id="departure_airport" 
-                               name="departure_airport" placeholder="E.G., SFO" maxlength="3" required>
+                               name="departure_airport" placeholder="SFO" maxlength="3" required>
+                        <small class="text-muted">3-letter code</small>
                     </div>
                     
                     <div class="col-md-3 mb-3">
                         <label for="departure_terminal" class="form-label">Terminal</label>
                         <input type="text" class="form-control" id="departure_terminal" 
-                               name="departure_terminal" placeholder="e.g., 2, T3">
+                               name="departure_terminal" placeholder="2">
                     </div>
                     
                     <div class="col-md-3 mb-3">
@@ -106,7 +97,7 @@
                     <div class="col-md-3 mb-3">
                         <label for="departure_gate" class="form-label">Gate</label>
                         <input type="text" class="form-control" id="departure_gate" 
-                               name="departure_gate" placeholder="e.g., B12">
+                               name="departure_gate" placeholder="B12">
                     </div>
                 </div>
             </div>
@@ -122,13 +113,14 @@
                     <div class="col-md-3 mb-3">
                         <label for="arrival_airport" class="form-label">Airport Code *</label>
                         <input type="text" class="form-control text-uppercase" id="arrival_airport" 
-                               name="arrival_airport" placeholder="E.G., LAX" maxlength="3" required>
+                               name="arrival_airport" placeholder="LAX" maxlength="3" required>
+                        <small class="text-muted">3-letter code</small>
                     </div>
                     
                     <div class="col-md-3 mb-3">
                         <label for="arrival_terminal" class="form-label">Terminal</label>
                         <input type="text" class="form-control" id="arrival_terminal" 
-                               name="arrival_terminal" placeholder="e.g., 1, T2">
+                               name="arrival_terminal" placeholder="1">
                     </div>
                     
                     <div class="col-md-3 mb-3">
@@ -140,7 +132,7 @@
                     <div class="col-md-3 mb-3">
                         <label for="arrival_gate" class="form-label">Gate</label>
                         <input type="text" class="form-control" id="arrival_gate" 
-                               name="arrival_gate" placeholder="e.g., A5">
+                               name="arrival_gate" placeholder="A5">
                     </div>
                 </div>
             </div>
@@ -156,13 +148,13 @@
                     <div class="col-md-6 mb-3">
                         <label for="confirmation_number" class="form-label">Confirmation Number</label>
                         <input type="text" class="form-control" id="confirmation_number" 
-                               name="confirmation_number">
+                               name="confirmation_number" placeholder="ABC123">
                     </div>
                     
                     <div class="col-md-6 mb-3">
                         <label for="seat_number" class="form-label">Seat</label>
                         <input type="text" class="form-control" id="seat_number" 
-                               name="seat_number" placeholder="e.g., 12A">
+                               name="seat_number" placeholder="12A">
                     </div>
                 </div>
 
@@ -179,14 +171,13 @@
 
                 <div class="mb-3">
                     <label for="notes" class="form-label">Notes</label>
-                    <textarea class="form-control" id="notes" name="notes" rows="3" 
-                              placeholder="Any additional notes..."></textarea>
+                    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
                 </div>
             </div>
         </div>
 
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success btn-lg">
                 <i class="bi bi-check-circle"></i> Add Flight
             </button>
             <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="btn btn-secondary">
@@ -201,24 +192,24 @@
 
 <script>
 function lookupFlight() {
-    const airline = document.getElementById('airline').value;
-    const confirmationNumber = document.getElementById('confirmationNumber').value.toUpperCase();
+    const flightNumber = document.getElementById('flightNumber').value.toUpperCase().trim();
+    const flightDate = document.getElementById('flightDate').value;
     const statusDiv = document.getElementById('lookupStatus');
     
-    if (!airline || !confirmationNumber) {
-        statusDiv.innerHTML = '<div class="alert alert-warning">Please select an airline and enter a confirmation number.</div>';
+    if (!flightNumber || !flightDate) {
+        statusDiv.innerHTML = '<div class="alert alert-warning"><i class="bi bi-exclamation-triangle"></i> Please enter both flight number and date.</div>';
         return;
     }
     
-    statusDiv.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split"></i> Looking up your flight...</div>';
+    statusDiv.innerHTML = '<div class="alert alert-info"><i class="bi bi-hourglass-split"></i> Looking up your flight details...</div>';
     
-    fetch(`/api/flights/lookup?airline=${airline}&confirmation=${confirmationNumber}`)
+    fetch(`/api/flights/lookup?flight_number=${flightNumber}&date=${flightDate}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 // Fill in the form with API data
-                document.getElementById('airlineDisplay').value = data.flight.airline_name || airline;
-                document.getElementById('flight_number').value = data.flight.flight_number || '';
+                document.getElementById('airline').value = data.flight.airline || '';
+                document.getElementById('flight_number').value = data.flight.flight_number || flightNumber;
                 document.getElementById('departure_airport').value = data.flight.departure_airport || '';
                 document.getElementById('arrival_airport').value = data.flight.arrival_airport || '';
                 document.getElementById('departure_time').value = data.flight.departure_time || '';
@@ -227,61 +218,55 @@ function lookupFlight() {
                 document.getElementById('arrival_terminal').value = data.flight.arrival_terminal || '';
                 document.getElementById('departure_gate').value = data.flight.departure_gate || '';
                 document.getElementById('arrival_gate').value = data.flight.arrival_gate || '';
-                document.getElementById('confirmation_number').value = confirmationNumber;
                 
                 // Hide lookup, show form
                 document.getElementById('lookupSection').style.display = 'none';
                 document.getElementById('flightForm').style.display = 'block';
-                statusDiv.innerHTML = '';
+                
+                statusDiv.innerHTML = '<div class="alert alert-success"><i class="bi bi-check-circle"></i> Flight found! Review and edit details below.</div>';
+                window.scrollTo(0, 0);
             } else {
                 statusDiv.innerHTML = `<div class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle"></i> ${data.message || 'Could not find flight details.'}
-                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="showManualForm()">Enter Manually</button>
+                    <i class="bi bi-exclamation-triangle"></i> ${data.message || 'Could not find flight details. Please check the flight number and date.'}
+                    <button type="button" class="btn btn-sm btn-warning ms-2" onclick="showManualForm()">Enter Manually</button>
                 </div>`;
             }
         })
         .catch(error => {
+            console.error('Error:', error);
             statusDiv.innerHTML = `<div class="alert alert-danger">
-                <i class="bi bi-x-circle"></i> Error looking up flight. 
-                <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="showManualForm()">Enter Manually</button>
+                <i class="bi bi-x-circle"></i> Error looking up flight. Please try again or enter details manually.
+                <button type="button" class="btn btn-sm btn-danger ms-2" onclick="showManualForm()">Enter Manually</button>
             </div>`;
         });
 }
 
 function showManualForm() {
-    const airline = document.getElementById('airline').value;
-    const confirmationNumber = document.getElementById('confirmationNumber').value;
+    const flightNumber = document.getElementById('flightNumber').value.toUpperCase();
     
-    // Pre-fill what we have
-    if (airline) {
-        const airlineNames = {
-            'AA': 'American Airlines',
-            'DL': 'Delta Air Lines',
-            'UA': 'United Airlines',
-            'WN': 'Southwest Airlines',
-            'B6': 'JetBlue Airways',
-            'AS': 'Alaska Airlines',
-            'F9': 'Frontier Airlines',
-            'NK': 'Spirit Airlines'
-        };
-        document.getElementById('airlineDisplay').value = airlineNames[airline] || airline;
-    }
-    
-    if (confirmationNumber) {
-        document.getElementById('confirmation_number').value = confirmationNumber.toUpperCase();
+    if (flightNumber) {
+        document.getElementById('flight_number').value = flightNumber;
     }
     
     document.getElementById('lookupSection').style.display = 'none';
     document.getElementById('flightForm').style.display = 'block';
+    window.scrollTo(0, 0);
 }
 
 function resetForm() {
     document.getElementById('lookupSection').style.display = 'block';
     document.getElementById('flightForm').style.display = 'none';
     document.getElementById('lookupStatus').innerHTML = '';
-    document.getElementById('airline').value = '';
-    document.getElementById('confirmationNumber').value = '';
+    document.getElementById('flightNumber').value = '';
+    document.getElementById('flightDate').value = '';
     document.getElementById('flightForm').reset();
+    window.scrollTo(0, 0);
 }
+
+// Set default date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('flightDate').value = today;
+});
 </script>
 {% endblock %}
