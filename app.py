@@ -160,7 +160,7 @@ def dashboard():
     ).all()
     
     # Get recent trips
-    recent_trips = Trip.query.filter(
+    past_trips = Trip.query.filter(
         Trip.user_id == current_user.id,
         Trip.end_date < now
     ).order_by(Trip.end_date.desc()).limit(5).all()
@@ -175,7 +175,7 @@ def dashboard():
         'dashboard.html',
         upcoming_trips=upcoming_trips,
         current_trips=current_trips,
-        recent_trips=recent_trips,
+        past_trips=past_trips,
         shared_trips=shared_trips,
         now=datetime.now()
     )
