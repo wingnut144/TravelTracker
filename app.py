@@ -434,14 +434,6 @@ def api_integrations():
             db.session.commit()
             flash('Google Maps API key saved!', 'success')
         
-        elif action == 'save_airlines':
-            settings.united_api_key = request.form.get('united_api_key', '').strip()
-            settings.american_api_key = request.form.get('american_api_key', '').strip()
-            settings.delta_api_key = request.form.get('delta_api_key', '').strip()
-            settings.southwest_api_key = request.form.get('southwest_api_key', '').strip()
-            db.session.commit()
-            flash('Airline API keys saved!', 'success')
-        
         elif action == 'delete_immich':
             settings.immich_api_url = None
             settings.immich_api_key = None
@@ -452,14 +444,6 @@ def api_integrations():
             settings.google_maps_api_key = None
             db.session.commit()
             flash('Google Maps API key removed.', 'info')
-        
-        elif action == 'delete_airlines':
-            settings.united_api_key = None
-            settings.american_api_key = None
-            settings.delta_api_key = None
-            settings.southwest_api_key = None
-            db.session.commit()
-            flash('Airline API keys removed.', 'info')
         
         return redirect(url_for('api_integrations'))
     
@@ -519,36 +503,6 @@ def test_immich():
         return jsonify({'success': False, 'message': 'Connection error - check URL and network'})
     except Exception as e:
         return jsonify({'success': False, 'message': f'Error: {str(e)}'})
-
-
-
-@app.route('/api/test/airline/<airline>', methods=['POST'])
-@login_required
-def test_airline(airline):
-    """Test airline API key"""
-    settings = current_user.user_settings
-    
-    # Get API key (temporary or saved)
-    api_key = request.form.get(f'{airline}_api_key')
-    if not api_key:
-        airline_keys = {
-            'united': settings.united_api_key,
-            'american': settings.american_api_key,
-            'delta': settings.delta_api_key,
-            'southwest': settings.southwest_api_key
-        }
-        api_key = airline_keys.get(airline)
-    
-    if not api_key:
-        return jsonify({'success': False, 'message': 'API key is required'})
-    
-    # Note: These are placeholder endpoints since actual airline APIs require partnerships
-    # In production, you would replace with actual API endpoints
-    return jsonify({
-        'success': True, 
-        'message': f'{airline.title()} API key format looks valid! Note: Full validation requires an active API partnership with {airline.title()} Airlines.',
-        'info': 'Airline APIs require direct partnerships. This validates the key format only.'
-    })
 
 
 @app.route('/settings/oauth-apps', methods=['GET', 'POST'])
@@ -683,36 +637,6 @@ def preferences_settings():
     return render_template('settings/preferences.html', settings=settings)
 
 
-@app.route('/api/flights/<int:flight_id>/update', methods=['POST'])
-@login_required
-def update_flight_status(flight_id):
-    """Update flight status from airline API"""
-    flight = Flight.query.get_or_404(flight_id)
-    trip = flight.trip
-    
-    if not can_edit_trip(current_user, trip):
-        return jsonify({'error': 'Permission denied'}), 403
-    
-    # Check if user has configured the airline API
-    if not current_user.user_settings.has_airline_api(flight.airline):
-        return jsonify({
-            'error': f'Please configure {flight.airline} API key in Settings → API Integrations'
-        }), 400
-    
-    from airline_apis import AirlineAPIManager
-    
-    api_manager = AirlineAPIManager(current_user.user_settings)
-    success = api_manager.update_flight_status(flight)
-    
-    if success:
-        return jsonify({
-            'success': True,
-            'status': flight.status,
-            'gate': flight.gate,
-            'terminal': flight.terminal
-        })
-    else:
-        return jsonify({'error': 'Failed to update flight status'}), 500
 
 
 # Foursquare/Swarm Integration
