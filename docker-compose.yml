@@ -50,11 +50,7 @@ services:
       # Upspash API for trip images
       - UNSPLASH_ACCESS_KEY=${UNSPLASH_ACCESS_KEY}
       # Airline APIs
-      - UNITED_API_KEY=${UNITED_API_KEY}
-      - AMERICAN_API_KEY=${AMERICAN_API_KEY}
-      - DELTA_API_KEY=${DELTA_API_KEY}
-      - SOUTHWEST_API_KEY=${SOUTHWEST_API_KEY}
-      
+      - AIRLABS_API_KEY=${AIRLABS_API_KEY}      
       # Immich Integration
       - IMMICH_API_URL=${IMMICH_API_URL}
       - IMMICH_API_KEY=${IMMICH_API_KEY}
