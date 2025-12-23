@@ -45,11 +45,8 @@ class Config:
     MICROSOFT_CLIENT_SECRET = os.environ.get('MICROSOFT_CLIENT_SECRET')
     MICROSOFT_REDIRECT_URI = os.environ.get('MICROSOFT_REDIRECT_URI', 'http://localhost:5000/auth/microsoft/callback')
     
-    # Airline API Keys
-    UNITED_API_KEY = os.environ.get('UNITED_API_KEY')
-    AMERICAN_API_KEY = os.environ.get('AMERICAN_API_KEY')
-    DELTA_API_KEY = os.environ.get('DELTA_API_KEY')
-    SOUTHWEST_API_KEY = os.environ.get('SOUTHWEST_API_KEY')
+   # AirLabs API (for all airlines)
+    AIRLABS_API_KEY = os.environ.get('AIRLABS_API_KEY')
     
     # Immich Integration
     IMMICH_API_URL = os.environ.get('IMMICH_API_URL')
