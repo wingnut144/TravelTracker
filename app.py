@@ -21,6 +21,70 @@ from utils import (
     get_coordinates_from_address
 )
 
+# Add this near the top of app.py (after imports)
+from functools import lru_cache
+import requests
+
+@lru_cache(maxsize=500)  # Cache up to 500 airports
+def get_airport_info(iata_code):
+    """Fetch airport info from AirLabs API with caching"""
+    if not iata_code or len(iata_code) != 3:
+        return {'city': iata_code, 'name': iata_code}
+    
+    try:
+        airlabs_api_key = os.getenv('AIRLABS_API_KEY')
+        if not airlabs_api_key:
+            return {'city': iata_code, 'name': iata_code}
+        
+        url = 'https://airlabs.co/api/v9/airports'
+        params = {
+            'api_key': airlabs_api_key,
+            'iata_code': iata_code
+        }
+        
+        response = requests.get(url, params=params, timeout=5)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('response') and len(data['response']) > 0:
+                airport = data['response'][0]
+                return {
+                    'city': airport.get('city', iata_code),
+                    'name': airport.get('name', iata_code),
+                    'country': airport.get('country_code', '')
+                }
+    except Exception as e:
+        logger.error(f"Error fetching airport info for {iata_code}: {str(e)}")
+    
+    return {'city': iata_code, 'name': iata_code}
+
+def get_airline_name(iata_code):
+    """Convert airline IATA code to full name"""
+    airlines = {
+        'AA': 'American Airlines',
+        'DL': 'Delta Air Lines',
+        'UA': 'United Airlines',
+        'WN': 'Southwest Airlines',
+        'B6': 'JetBlue Airways',
+        'AS': 'Alaska Airlines',
+        'F9': 'Frontier Airlines',
+        'NK': 'Spirit Airlines',
+        'G4': 'Allegiant Air',
+        'SY': 'Sun Country Airlines',
+        'HA': 'Hawaiian Airlines',
+        'AC': 'Air Canada',
+        'BA': 'British Airways',
+        'LH': 'Lufthansa',
+        'AF': 'Air France',
+        'KL': 'KLM',
+        'EK': 'Emirates',
+        'QR': 'Qatar Airways',
+        'SQ': 'Singapore Airlines',
+        'CX': 'Cathay Pacific',
+        'QF': 'Qantas',
+        'NZ': 'Air New Zealand',
+    }
+    return airlines.get(iata_code, iata_code)
 # Create Flask app
 app = Flask(__name__)
 
@@ -793,13 +857,25 @@ def lookup_flight():
         flight_data = data['response'][0]
         
         # Parse and format the data
+        dep_code = flight_data.get('dep_iata', '')
+        arr_code = flight_data.get('arr_iata', '')
+        airline_code = flight_data.get('airline_iata', '')
+        
+        # Fetch airport info from AirLabs
+        dep_info = get_airport_info(dep_code)
+        arr_info = get_airport_info(arr_code)
+        
         result = {
             'success': True,
             'flight': {
-                'airline': flight_data.get('airline_iata', ''),  # Changed from airline_name
+                'airline': get_airline_name(airline_code),
                 'flight_number': flight_number,
-                'departure_airport': flight_data.get('dep_iata', ''),  # Changed
-                'arrival_airport': flight_data.get('arr_iata', ''),  # Changed
+                'departure_airport': dep_code,
+                'departure_city': dep_info['city'],
+                'departure_name': dep_info['name'],
+                'arrival_airport': arr_code,
+                'arrival_city': arr_info['city'],
+                'arrival_name': arr_info['name'],
                 'departure_time': format_airlabs_time(flight_data.get('dep_time')),
                 'arrival_time': format_airlabs_time(flight_data.get('arr_time')),
                 'departure_terminal': flight_data.get('dep_terminal', ''),
