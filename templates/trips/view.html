@@ -138,55 +138,133 @@
                 {% endif %}
             </div>
             <div class="card-body">
-                {% for flight in trip.flights %}
-                <div class="border rounded p-3 mb-3">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>{{ flight.airline }} {{ flight.flight_number }}</h6>
-                            <p class="mb-1">
-                                <strong>{{ flight.departure_airport }}</strong> 
-                                <i class="bi bi-arrow-right"></i> 
-                                <strong>{{ flight.arrival_airport }}</strong>
-                            </p>
-                            <p class="text-muted mb-0">
-                                <small>
-                                    <i class="bi bi-calendar3"></i>
-                                    {{ flight.departure_time.strftime('%b %d, %Y at %I:%M %p') }}
-                                </small>
-                            </p>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            {% if flight.status %}
-                            <span class="badge 
-                                {% if flight.status == 'scheduled' %}bg-primary
-                                {% elif flight.status == 'boarding' %}bg-warning
-                                {% elif flight.status == 'departed' %}bg-info
-                                {% elif flight.status == 'arrived' %}bg-success
-                                {% elif flight.status == 'delayed' %}bg-warning
-                                {% elif flight.status == 'cancelled' %}bg-danger
-                                {% else %}bg-secondary
-                                {% endif %}">
-                                {{ flight.status|upper }}
-                            </span>
-                            {% endif %}
+                {% for flight in trip.flights|sort(attribute='departure_time') %}
+                <div class="card mb-3 border-primary">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Left Column: Flight Info -->
+                            <div class="col-md-8">
+                                <h5 class="card-title">
+                                    <i class="bi bi-airplane"></i>
+                                    {{ flight.airline }} {{ flight.flight_number }}
+                                    {% if flight.status %}
+                                    <span class="badge ms-2
+                                        {% if flight.status == 'scheduled' %}bg-primary
+                                        {% elif flight.status == 'boarding' %}bg-warning
+                                        {% elif flight.status == 'departed' %}bg-info
+                                        {% elif flight.status == 'arrived' %}bg-success
+                                        {% elif flight.status == 'delayed' %}bg-warning
+                                        {% elif flight.status == 'cancelled' %}bg-danger
+                                        {% else %}bg-secondary
+                                        {% endif %}">
+                                        {{ flight.status|upper }}
+                                    </span>
+                                    {% endif %}
+                                </h5>
+                                
+                                <!-- Departure -->
+                                <div class="mb-3">
+                                    <h6 class="text-primary mb-2">
+                                        <i class="bi bi-airplane-engines"></i> Departure
+                                    </h6>
+                                    <div class="ms-3">
+                                        <p class="mb-1">
+                                            <strong class="text-uppercase">{{ flight.departure_airport }}</strong>
+                                            {% if flight.departure_terminal %}
+                                            <span class="ms-2">
+                                                <i class="bi bi-building"></i> Terminal {{ flight.departure_terminal }}
+                                            </span>
+                                            {% endif %}
+                                            {% if flight.departure_gate %}
+                                            <span class="ms-2">
+                                                <i class="bi bi-door-open"></i> Gate {{ flight.departure_gate }}
+                                            </span>
+                                            {% endif %}
+                                        </p>
+                                        <p class="mb-0">
+                                            <i class="bi bi-clock"></i>
+                                            {{ flight.departure_time.strftime('%B %d, %Y at %I:%M %p') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Arrival -->
+                                <div class="mb-3">
+                                    <h6 class="text-success mb-2">
+                                        <i class="bi bi-airplane-fill"></i> Arrival
+                                    </h6>
+                                    <div class="ms-3">
+                                        <p class="mb-1">
+                                            <strong class="text-uppercase">{{ flight.arrival_airport }}</strong>
+                                            {% if flight.arrival_terminal %}
+                                            <span class="ms-2">
+                                                <i class="bi bi-building"></i> Terminal {{ flight.arrival_terminal }}
+                                            </span>
+                                            {% endif %}
+                                            {% if flight.arrival_gate %}
+                                            <span class="ms-2">
+                                                <i class="bi bi-door-open"></i> Gate {{ flight.arrival_gate }}
+                                            </span>
+                                            {% endif %}
+                                        </p>
+                                        <p class="mb-0">
+                                            <i class="bi bi-clock"></i>
+                                            {{ flight.arrival_time.strftime('%B %d, %Y at %I:%M %p') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional Details -->
+                                <div class="d-flex flex-wrap gap-3 mt-2">
+                                    {% if flight.seat_number %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-chair"></i> Seat {{ flight.seat_number }}
+                                    </span>
+                                    {% endif %}
+                                    
+                                    {% if flight.confirmation_number %}
+                                    <span>
+                                        <i class="bi bi-receipt"></i> 
+                                        Confirmation: <code>{{ flight.confirmation_number }}</code>
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if flight.notes %}
+                                <div class="mt-3 p-2 bg-light rounded">
+                                    <small class="text-muted">
+                                        <i class="bi bi-sticky"></i> <strong>Notes:</strong><br>
+                                        {{ flight.notes }}
+                                    </small>
+                                </div>
+                                {% endif %}
+                            </div>
                             
-                            {% if flight.seat_number %}
-                            <p class="mb-1 mt-2">
-                                <small><i class="bi bi-seat"></i> Seat: {{ flight.seat_number }}</small>
-                            </p>
-                            {% endif %}
-                            
-                            {% if flight.gate %}
-                            <p class="mb-1">
-                                <small><i class="bi bi-door-open"></i> Gate: {{ flight.gate }}</small>
-                            </p>
-                            {% endif %}
-                            
-                            {% if flight.confirmation_number %}
-                            <p class="mb-0">
-                                <small>Confirmation: <code>{{ flight.confirmation_number }}</code></small>
-                            </p>
-                            {% endif %}
+                            <!-- Right Column: Cost & Actions -->
+                            <div class="col-md-4 text-end">
+                                {% if flight.cost %}
+                                <h3 class="text-success mb-3">
+                                    ${{ '%.2f'|format(flight.cost) }}
+                                </h3>
+                                {% endif %}
+                                
+                                {% if can_edit %}
+                                <div class="btn-group-vertical" role="group">
+                                    <a href="{{ url_for('edit_flight', trip_id=trip.id, flight_id=flight.id) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <form method="POST" 
+                                          action="{{ url_for('delete_flight', trip_id=trip.id, flight_id=flight.id) }}"
+                                          onsubmit="return confirm('Delete this flight?');"
+                                          class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -210,7 +288,6 @@
     </div>
 </div>
 {% endif %}
-
 <!-- Accommodations -->
 {% if trip.accommodations %}
 <div class="row mb-4">
