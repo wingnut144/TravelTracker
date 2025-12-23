@@ -336,6 +336,54 @@ def bulk_actions():
     
     return redirect(url_for('admin.users'))
 
+@admin_bp.route('/api-status')
+@admin_required
+def api_status():
+    """View and manage API status"""
+    from models import APIStatus
+    from utils import check_airlabs_api_status
+    
+    # Get or create AirLabs status
+    airlabs_status = APIStatus.query.filter_by(service_name='airlabs').first()
+    
+    if not airlabs_status:
+        airlabs_status = APIStatus(service_name='airlabs')
+        db.session.add(airlabs_status)
+    
+    # Check if we need to refresh (check monthly)
+    from datetime import timedelta
+    needs_refresh = (
+        not airlabs_status.last_checked or 
+        datetime.utcnow() - airlabs_status.last_checked > timedelta(days=30)
+    )
+    
+    return render_template('admin/api_status.html', 
+                         airlabs_status=airlabs_status,
+                         needs_refresh=needs_refresh)
+
+@admin_bp.route('/api-status/check/<service>')
+@admin_required
+def check_api_status(service):
+    """Manually check API status"""
+    from models import APIStatus
+    from utils import check_airlabs_api_status
+    
+    if service == 'airlabs':
+        result = check_airlabs_api_status()
+        
+        status = APIStatus.query.filter_by(service_name='airlabs').first()
+        if not status:
+            status = APIStatus(service_name='airlabs')
+            db.session.add(status)
+        
+        status.is_active = result['status']
+        status.last_checked = result['last_checked']
+        status.status_message = result['message']
+        db.session.commit()
+        
+        flash(f"AirLabs API: {result['message']}", 'success' if result['status'] else 'danger')
+    
+    return redirect(url_for('admin.api_status'))
 
 def init_admin(app):
     """Initialize admin module"""
