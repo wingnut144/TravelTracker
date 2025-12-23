@@ -756,8 +756,9 @@ def lookup_flight():
         })
     
     # Get admin AirLabs API key from settings
-    admin_settings = UserSettings.query.filter_by(user_id=1).first()  # Admin user
-    if not admin_settings or not admin_settings.airlabs_api_key:
+    import os
+    airlabs_api_key = os.getenv('AIRLABS_API_KEY')
+    if not airlabs_api_key:
         return jsonify({
             'success': False,
             'message': 'AirLabs API not configured. Please contact administrator.'
@@ -767,7 +768,7 @@ def lookup_flight():
         # Call AirLabs API
         url = 'https://airlabs.co/api/v9/schedules'
         params = {
-            'api_key': admin_settings.airlabs_api_key,
+            'api_key': airlabs_api_key,
             'flight_iata': flight_number,
             'dep_date': flight_date  # Format: YYYY-MM-DD
         }
