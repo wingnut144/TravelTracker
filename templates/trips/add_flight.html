@@ -75,26 +75,28 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="departure_airport" class="form-label">Airport Code *</label>
                         <input type="text" class="form-control text-uppercase" id="departure_airport" 
                                name="departure_airport" placeholder="SFO" maxlength="3" required>
-                        <small class="text-muted">3-letter code</small>
+                        <small class="text-muted" id="departure_info"></small>
                     </div>
                     
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="departure_terminal" class="form-label">Terminal</label>
                         <input type="text" class="form-control" id="departure_terminal" 
                                name="departure_terminal" placeholder="2">
                     </div>
-                    
-                    <div class="col-md-3 mb-3">
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
                         <label for="departure_time" class="form-label">Date & Time *</label>
                         <input type="datetime-local" class="form-control" id="departure_time" 
                                name="departure_time" required>
                     </div>
                     
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="departure_gate" class="form-label">Gate</label>
                         <input type="text" class="form-control" id="departure_gate" 
                                name="departure_gate" placeholder="B12">
@@ -110,26 +112,28 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="arrival_airport" class="form-label">Airport Code *</label>
                         <input type="text" class="form-control text-uppercase" id="arrival_airport" 
                                name="arrival_airport" placeholder="LAX" maxlength="3" required>
-                        <small class="text-muted">3-letter code</small>
+                        <small class="text-muted" id="arrival_info"></small>
                     </div>
                     
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="arrival_terminal" class="form-label">Terminal</label>
                         <input type="text" class="form-control" id="arrival_terminal" 
                                name="arrival_terminal" placeholder="1">
                     </div>
-                    
-                    <div class="col-md-3 mb-3">
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
                         <label for="arrival_time" class="form-label">Date & Time *</label>
                         <input type="datetime-local" class="form-control" id="arrival_time" 
                                name="arrival_time" required>
                     </div>
                     
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="arrival_gate" class="form-label">Gate</label>
                         <input type="text" class="form-control" id="arrival_gate" 
                                name="arrival_gate" placeholder="A5">
@@ -219,6 +223,35 @@ function lookupFlight() {
                 document.getElementById('departure_gate').value = data.flight.departure_gate || '';
                 document.getElementById('arrival_gate').value = data.flight.arrival_gate || '';
                 
+                // Show city names below airport codes
+if (data.flight.departure_city && data.flight.departure_name) {
+    const depCity = data.flight.departure_city;
+    const depName = data.flight.departure_name;
+    // Only show city if it's not already in the airport name
+    if (depName.includes(depCity)) {
+        document.getElementById('departure_info').textContent = depName;
+    } else {
+        document.getElementById('departure_info').textContent = `${depCity} - ${depName}`;
+    }
+}
+
+if (data.flight.arrival_city && data.flight.arrival_name) {
+    const arrCity = data.flight.arrival_city;
+    const arrName = data.flight.arrival_name;
+    // Only show city if it's not already in the airport name
+    if (arrName.includes(arrCity)) {
+        document.getElementById('arrival_info').textContent = arrName;
+    } else {
+        document.getElementById('arrival_info').textContent = `${arrCity} - ${arrName}`;
+    }
+}
+This will show:
+
+"Singapore Changi Airport" ✅ (city is in name)
+"Newark - Liberty International Airport" ✅ (city not in name)
+
+Replace those sections in the template and rebuild! 🎯Claude is AI and can make mistakes. Please double-check responses.
+                
                 // Hide lookup, show form
                 document.getElementById('lookupSection').style.display = 'none';
                 document.getElementById('flightForm').style.display = 'block';
@@ -260,6 +293,8 @@ function resetForm() {
     document.getElementById('flightNumber').value = '';
     document.getElementById('flightDate').value = '';
     document.getElementById('flightForm').reset();
+    document.getElementById('departure_info').textContent = '';
+    document.getElementById('arrival_info').textContent = '';
     window.scrollTo(0, 0);
 }
 
