@@ -114,6 +114,15 @@ class EmailAccount(db.Model):
     __tablename__ = 'email_accounts'
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    email_type = db.Column(db.String(20), nullable=False)  # 'gmail' or 'outlook'
+    email_address = db.Column(db.String(120), nullable=False)
+    
+    # OAuth tokens (encrypted in production)
+    access_token = db.Column(db.Text)
+    refresh_token = db.Column(db.Text)
+    token_expires_at = db.Column(db.DateTime)
+    
     last_scan = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
