@@ -590,3 +590,61 @@ def sync_trip_checkins(trip):
     
     return new_checkins
 
+def check_airlabs_api_status():
+    """
+    Check if AirLabs API key is valid
+    Returns: dict with 'status' (bool), 'message' (str), 'last_checked' (datetime)
+    """
+    from flask import current_app
+    import requests
+    from datetime import datetime
+    
+    api_key = current_app.config.get('AIRLABS_API_KEY')
+    
+    if not api_key:
+        return {
+            'status': False,
+            'message': 'API key not configured',
+            'last_checked': datetime.utcnow()
+        }
+    
+    try:
+        # Test with a simple airlines endpoint
+        url = 'https://airlabs.co/api/v9/airlines'
+        params = {'api_key': api_key}
+        
+        response = requests.get(url, params=params, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('response'):
+                return {
+                    'status': True,
+                    'message': 'API key valid',
+                    'last_checked': datetime.utcnow()
+                }
+            else:
+                return {
+                    'status': False,
+                    'message': data.get('error', {}).get('message', 'Unknown error'),
+                    'last_checked': datetime.utcnow()
+                }
+        elif response.status_code == 401:
+            return {
+                'status': False,
+                'message': 'Invalid API key',
+                'last_checked': datetime.utcnow()
+            }
+        else:
+            return {
+                'status': False,
+                'message': f'API returned status {response.status_code}',
+                'last_checked': datetime.utcnow()
+            }
+    
+    except Exception as e:
+        return {
+            'status': False,
+            'message': f'Error: {str(e)}',
+            'last_checked': datetime.utcnow()
+        }
