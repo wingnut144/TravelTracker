@@ -199,7 +199,7 @@ def trips():
     elif filter_type == 'current':
         query = query.filter(Trip.start_date <= now, Trip.end_date >= now)
     
-    trips = query.order_by(Trip.start_date.desc()).paginate(
+    trips = query.order_by(Trip.start_date).paginate(
         page=page, per_page=20, error_out=False
     )
     
