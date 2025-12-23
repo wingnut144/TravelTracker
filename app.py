@@ -746,22 +746,102 @@ def manual_sync_checkins(trip_id):
 @login_required
 def lookup_flight():
     """Look up flight details using AirLabs API"""
-    airline = request.args.get('airline')
-    confirmation = request.args.get('confirmation')
+    flight_number = request.args.get('flight_number', '').upper().strip()
+    flight_date = request.args.get('date')
     
-    if not airline or not confirmation:
-        return jsonify({'success': False, 'message': 'Missing airline or confirmation number'})
+    if not flight_number or not flight_date:
+        return jsonify({
+            'success': False, 
+            'message': 'Missing flight number or date'
+        })
     
-    # Note: AirLabs API doesn't actually support lookup by confirmation number
-    # This is a placeholder - in reality, you'd need the flight number and date
-    # Most airlines require their own API or screen scraping for confirmation lookups
+    # Get admin AirLabs API key from settings
+    admin_settings = UserSettings.query.filter_by(user_id=1).first()  # Admin user
+    if not admin_settings or not admin_settings.airlabs_api_key:
+        return jsonify({
+            'success': False,
+            'message': 'AirLabs API not configured. Please contact administrator.'
+        })
     
-    # For now, return a helpful message
-    return jsonify({
-        'success': False,
-        'message': 'Flight lookup by confirmation number requires airline-specific APIs. Please enter flight details manually or use flight number + date.'
-    })
+    try:
+        # Call AirLabs API
+        url = 'https://airlabs.co/api/v9/schedules'
+        params = {
+            'api_key': admin_settings.airlabs_api_key,
+            'flight_iata': flight_number,
+            'dep_date': flight_date  # Format: YYYY-MM-DD
+        }
+        
+        response = requests.get(url, params=params, timeout=10)
+        
+        if response.status_code != 200:
+            return jsonify({
+                'success': False,
+                'message': f'API error: {response.status_code}'
+            })
+        
+        data = response.json()
+        
+        if not data.get('response') or len(data['response']) == 0:
+            return jsonify({
+                'success': False,
+                'message': 'Flight not found. Please check flight number and date.'
+            })
+        
+        # Get first matching flight
+        flight_data = data['response'][0]
+        
+        # Parse and format the data
+        result = {
+            'success': True,
+            'flight': {
+                'airline': flight_data.get('airline_name', ''),
+                'flight_number': flight_number,
+                'departure_airport': flight_data.get('dep_iata', ''),
+                'arrival_airport': flight_data.get('arr_iata', ''),
+                'departure_time': format_airlabs_time(flight_data.get('dep_time')),
+                'arrival_time': format_airlabs_time(flight_data.get('arr_time')),
+                'departure_terminal': flight_data.get('dep_terminal', ''),
+                'arrival_terminal': flight_data.get('arr_terminal', ''),
+                'departure_gate': flight_data.get('dep_gate', ''),
+                'arrival_gate': flight_data.get('arr_gate', ''),
+                'status': flight_data.get('status', '')
+            }
+        }
+        
+        return jsonify(result)
+        
+    except requests.exceptions.Timeout:
+        return jsonify({
+            'success': False,
+            'message': 'Request timed out. Please try again.'
+        })
+    except requests.exceptions.RequestException as e:
+        logger.error(f"AirLabs API error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Error connecting to flight data service.'
+        })
+    except Exception as e:
+        logger.error(f"Flight lookup error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'An error occurred while looking up flight details.'
+        })
 
+def format_airlabs_time(time_str):
+    """Convert AirLabs time format to datetime-local format"""
+    if not time_str:
+        return ''
+    
+    try:
+        # AirLabs format: "2024-12-25 14:30"
+        from datetime import datetime
+        dt = datetime.strptime(time_str, '%Y-%m-%d %H:%M')
+        # Convert to HTML datetime-local format: "2024-12-25T14:30"
+        return dt.strftime('%Y-%m-%dT%H:%M')
+    except:
+        return ''
 
 # Error handlers
 @app.errorhandler(404)
