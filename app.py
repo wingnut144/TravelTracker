@@ -742,6 +742,26 @@ def manual_sync_checkins(trip_id):
     
     return redirect(url_for('view_trip', trip_id=trip_id))
 
+@app.route('/api/flights/lookup', methods=['GET'])
+@login_required
+def lookup_flight():
+    """Look up flight details using AirLabs API"""
+    airline = request.args.get('airline')
+    confirmation = request.args.get('confirmation')
+    
+    if not airline or not confirmation:
+        return jsonify({'success': False, 'message': 'Missing airline or confirmation number'})
+    
+    # Note: AirLabs API doesn't actually support lookup by confirmation number
+    # This is a placeholder - in reality, you'd need the flight number and date
+    # Most airlines require their own API or screen scraping for confirmation lookups
+    
+    # For now, return a helpful message
+    return jsonify({
+        'success': False,
+        'message': 'Flight lookup by confirmation number requires airline-specific APIs. Please enter flight details manually or use flight number + date.'
+    })
+
 
 # Error handlers
 @app.errorhandler(404)
