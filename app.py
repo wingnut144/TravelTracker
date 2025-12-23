@@ -796,10 +796,10 @@ def lookup_flight():
         result = {
             'success': True,
             'flight': {
-                'airline': flight_data.get('airline_name', ''),
+                'airline': flight_data.get('airline_iata', ''),  # Changed from airline_name
                 'flight_number': flight_number,
-                'departure_airport': flight_data.get('dep_iata', ''),
-                'arrival_airport': flight_data.get('arr_iata', ''),
+                'departure_airport': flight_data.get('dep_iata', ''),  # Changed
+                'arrival_airport': flight_data.get('arr_iata', ''),  # Changed
                 'departure_time': format_airlabs_time(flight_data.get('dep_time')),
                 'arrival_time': format_airlabs_time(flight_data.get('arr_time')),
                 'departure_terminal': flight_data.get('dep_terminal', ''),
