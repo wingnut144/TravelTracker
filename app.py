@@ -403,7 +403,6 @@ def add_accommodation(trip_id):
 
 @app.route('/trips/<int:trip_id>/share', methods=['GET', 'POST'])
 @login_required
-@trip_access_required(edit_required=True)
 def share_trip(trip_id):
     """Share trip with friends or via external link"""
     trip = Trip.query.get_or_404(trip_id)
