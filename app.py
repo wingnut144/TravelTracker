@@ -24,6 +24,7 @@ from utils import (
 # Add this near the top of app.py (after imports)
 from functools import lru_cache
 import requests
+from models import User, Trip, Flight, Accommodation, UserSettings, EmailAccount, TripShare, TripPhoto, CheckIn, APIStatus, FriendRequest
 
 @lru_cache(maxsize=500)  # Cache up to 500 airports
 def get_airport_info(iata_code):
@@ -919,6 +920,111 @@ def format_airlabs_time(time_str):
         return dt.strftime('%Y-%m-%dT%H:%M')
     except:
         return ''
+
+# ============================================
+# FRIEND ROUTES
+# ============================================
+
+@app.route('/friends')
+@login_required
+def friends():
+    """View friends list and requests"""
+    friends = current_user.get_friends()
+    pending_requests = current_user.get_pending_requests()
+    sent_requests = [req for req in current_user.sent_friend_requests if req.status == 'pending']
+    
+    return render_template('friends/index.html',
+                         friends=friends,
+                         pending_requests=pending_requests,
+                         sent_requests=sent_requests)
+
+@app.route('/friends/request', methods=['POST'])
+@login_required
+def send_friend_request():
+    """Send a friend request"""
+    email = request.form.get('email')
+    
+    if not email:
+        flash('Please provide an email address.', 'danger')
+        return redirect(url_for('friends'))
+    
+    receiver = User.query.filter_by(email=email).first()
+    
+    if not receiver:
+        flash('No user found with that email address.', 'danger')
+        return redirect(url_for('friends'))
+    
+    if receiver.id == current_user.id:
+        flash('You cannot send a friend request to yourself.', 'warning')
+        return redirect(url_for('friends'))
+    
+    if current_user.is_friend_with(receiver):
+        flash('You are already friends with this user.', 'info')
+        return redirect(url_for('friends'))
+    
+    existing = FriendRequest.query.filter(
+        ((FriendRequest.sender_id == current_user.id) & (FriendRequest.receiver_id == receiver.id)) |
+        ((FriendRequest.sender_id == receiver.id) & (FriendRequest.receiver_id == current_user.id))
+    ).filter(FriendRequest.status == 'pending').first()
+    
+    if existing:
+        flash('A friend request already exists.', 'info')
+        return redirect(url_for('friends'))
+    
+    friend_request = FriendRequest(sender_id=current_user.id, receiver_id=receiver.id)
+    db.session.add(friend_request)
+    db.session.commit()
+    
+    flash(f'Friend request sent to {receiver.username}!', 'success')
+    return redirect(url_for('friends'))
+
+@app.route('/friends/accept/<int:request_id>', methods=['POST'])
+@login_required
+def accept_friend_request(request_id):
+    """Accept a friend request"""
+    friend_request = FriendRequest.query.get_or_404(request_id)
+    
+    if friend_request.receiver_id != current_user.id:
+        flash('Invalid request.', 'danger')
+        return redirect(url_for('friends'))
+    
+    friend_request.status = 'accepted'
+    db.session.commit()
+    
+    flash(f'You are now friends with {friend_request.sender.username}!', 'success')
+    return redirect(url_for('friends'))
+
+@app.route('/friends/reject/<int:request_id>', methods=['POST'])
+@login_required
+def reject_friend_request(request_id):
+    """Reject a friend request"""
+    friend_request = FriendRequest.query.get_or_404(request_id)
+    
+    if friend_request.receiver_id != current_user.id:
+        flash('Invalid request.', 'danger')
+        return redirect(url_for('friends'))
+    
+    friend_request.status = 'rejected'
+    db.session.commit()
+    
+    flash('Friend request rejected.', 'info')
+    return redirect(url_for('friends'))
+
+@app.route('/friends/remove/<int:user_id>', methods=['POST'])
+@login_required
+def remove_friend(user_id):
+    """Remove a friend"""
+    friend_request = FriendRequest.query.filter(
+        ((FriendRequest.sender_id == current_user.id) & (FriendRequest.receiver_id == user_id)) |
+        ((FriendRequest.sender_id == user_id) & (FriendRequest.receiver_id == current_user.id))
+    ).filter(FriendRequest.status == 'accepted').first()
+    
+    if friend_request:
+        db.session.delete(friend_request)
+        db.session.commit()
+        flash('Friend removed.', 'info')
+    
+    return redirect(url_for('friends'))
 
 # Error handlers
 @app.errorhandler(404)
