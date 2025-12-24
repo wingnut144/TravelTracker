@@ -41,7 +41,13 @@
                     {% for request in pending_requests %}
                     <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
                         <div>
-                            <strong>{{ request.sender.username }}</strong>
+                            <strong>
+                                {% if request.sender.first_name or request.sender.last_name %}
+                                    {{ request.sender.first_name }} {{ request.sender.last_name }}
+                                {% else %}
+                                    {{ request.sender.username }}
+                                {% endif %}
+                            </strong>
                             <small class="text-muted d-block">{{ request.sender.email }}</small>
                             <small class="text-muted">{{ request.created_at.strftime('%b %d, %Y') }}</small>
                         </div>
@@ -76,11 +82,13 @@
                 <div class="card-body">
                     {% for request in sent_requests %}
                     <div class="border-bottom pb-2 mb-2">
-                        <strong>{% if request.receiver.first_name or request.receiver.last_name %}
-            {{ request.receiver.first_name }} {{ request.receiver.last_name }}
-        {% else %}
-            {{ request.receiver.username }}
-        {% endif %}</strong>
+                        <strong>
+                            {% if request.receiver.first_name or request.receiver.last_name %}
+                                {{ request.receiver.first_name }} {{ request.receiver.last_name }}
+                            {% else %}
+                                {{ request.receiver.username }}
+                            {% endif %}
+                        </strong>
                         <small class="text-muted d-block">{{ request.receiver.email }}</small>
                         <small class="text-muted">Sent {{ request.created_at.strftime('%b %d, %Y') }}</small>
                     </div>
@@ -107,7 +115,13 @@
                         <div class="col-md-6 col-lg-4 mb-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h6>{{ friend.username }}</h6>
+                                    <h6>
+                                        {% if friend.first_name or friend.last_name %}
+                                            {{ friend.first_name }} {{ friend.last_name }}
+                                        {% else %}
+                                            {{ friend.username }}
+                                        {% endif %}
+                                    </h6>
                                     <p class="small text-muted mb-2">{{ friend.email }}</p>
                                     <form method="POST" action="{{ url_for('remove_friend', user_id=friend.id) }}"
                                           onsubmit="return confirm('Remove this friend?');">
