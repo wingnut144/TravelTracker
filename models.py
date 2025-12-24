@@ -53,6 +53,34 @@ class User(UserMixin, db.Model):
         """Check if user is admin"""
         return self.role == UserRole.ADMIN
     
+    def get_friends(self):
+        """Get list of accepted friends"""
+        friends = []
+        # Friends who I sent request to
+        for req in self.sent_friend_requests:
+            if req.status == 'accepted':
+                friends.append(req.receiver)
+        # Friends who sent request to me
+        for req in self.received_friend_requests:
+            if req.status == 'accepted':
+                friends.append(req.sender)
+        return friends
+    
+    def get_pending_requests(self):
+        """Get pending friend requests received"""
+        return [req for req in self.received_friend_requests if req.status == 'pending']
+    
+    def is_friend_with(self, user):
+        """Check if this user is friends with another user"""
+        return user in self.get_friends()
+    
+    def has_pending_request_from(self, user):
+        """Check if there's a pending request from a user"""
+        for req in self.received_friend_requests:
+            if req.sender_id == user.id and req.status == 'pending':
+                return True
+        return False
+    
     def __repr__(self):
         return f'<User {self.username}>'
 
@@ -83,9 +111,6 @@ class UserSettings(db.Model):
     # Immich integration
     immich_api_url = db.Column(db.String(255))
     immich_api_key = db.Column(db.String(255))
-    
-    # Google Maps API - NO LONGER NEEDED (using free OpenStreetMap)
-    # google_maps_api_key = db.Column(db.String(255))
     
     # Foursquare/Swarm API (for check-in integration)
     foursquare_access_token = db.Column(db.String(500))
@@ -203,9 +228,13 @@ class Flight(db.Model):
     arrival_time = db.Column(db.DateTime, nullable=False)
     
     # Additional details
+    departure_terminal = db.Column(db.String(10))
+    arrival_terminal = db.Column(db.String(10))
+    departure_gate = db.Column(db.String(10))
+    arrival_gate = db.Column(db.String(10))
     seat_number = db.Column(db.String(10))
-    gate = db.Column(db.String(10))
-    terminal = db.Column(db.String(10))
+    cost = db.Column(db.Float)
+    notes = db.Column(db.Text)
     status = db.Column(db.String(50))  # 'scheduled', 'delayed', 'cancelled', 'boarding', 'departed', 'arrived'
     
     # API sync
@@ -356,3 +385,21 @@ class APIStatus(db.Model):
     
     def __repr__(self):
         return f'<APIStatus {self.service_name}: {"✓" if self.is_active else "✗"}>'
+
+class FriendRequest(db.Model):
+    """Friend request model"""
+    __tablename__ = 'friend_requests'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    status = db.Column(db.String(20), default='pending')  # pending, accepted, rejected
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_friend_requests')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_friend_requests')
+    
+    def __repr__(self):
+        return f'<FriendRequest {self.sender.username} -> {self.receiver.username}>'
