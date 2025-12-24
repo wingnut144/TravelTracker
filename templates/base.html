@@ -99,6 +99,14 @@
                                 <i class="bi bi-plus-circle"></i> New Trip
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('friends') }}">
+                                <i class="bi bi-people"></i> Friends
+                                {% if current_user.get_pending_requests()|length > 0 %}
+                                <span class="badge bg-danger">{{ current_user.get_pending_requests()|length }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav">
