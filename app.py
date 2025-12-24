@@ -975,8 +975,8 @@ def send_friend_request():
     db.session.add(friend_request)
     db.session.commit()
     
-    flash(f'Friend request sent to {receiver.username}!', 'success')
-    return redirect(url_for('friends'))
+    receiver_name = f"{receiver.first_name} {receiver.last_name}".strip() if receiver.first_name or receiver.last_name else receiver.username
+    flash(f'Friend request sent to {receiver_name}!', 'success')
 
 @app.route('/friends/accept/<int:request_id>', methods=['POST'])
 @login_required
