@@ -18,15 +18,112 @@
 
 <div class="row">
     <div class="col-lg-8 offset-lg-2">
-        <div class="card">
+        <h2><i class="bi bi-share"></i> Share Trip: {{ trip.title }}</h2>
+        
+        {% if trip.visibility.value == 'private' %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Note:</strong> This trip is currently set to <strong>Private</strong>. 
+            Consider changing it to <strong>Shared</strong> in 
+            <a href="{{ url_for('edit_trip', trip_id=trip.id) }}" class="alert-link">trip settings</a> 
+            before sharing.
+        </div>
+        {% endif %}
+
+        <!-- SECTION 1: Share with Friends (Internal) -->
+        {% if friends %}
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-people"></i> Share with Friends</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="share_type" value="friends">
+                    <p class="text-muted">Select friends who can view this trip:</p>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="50">Share</th>
+                                    <th>Friend</th>
+                                    <th>Email</th>
+                                    <th width="120" class="text-center">Can Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for friend in friends %}
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input friend-checkbox" 
+                                                   type="checkbox" 
+                                                   name="friends[]" 
+                                                   value="{{ friend.id }}" 
+                                                   id="friend_{{ friend.id }}"
+                                                   {% if friend.id in shared_friend_ids %}checked{% endif %}>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <label for="friend_{{ friend.id }}" class="form-label mb-0" style="cursor: pointer;">
+                                            <strong>
+                                                {% if friend.first_name or friend.last_name %}
+                                                    {{ friend.first_name }} {{ friend.last_name }}
+                                                {% else %}
+                                                    {{ friend.username }}
+                                                {% endif %}
+                                            </strong>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ friend.email }}</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input edit-checkbox" 
+                                                   type="checkbox" 
+                                                   name="can_edit[]" 
+                                                   value="{{ friend.id }}" 
+                                                   id="edit_{{ friend.id }}"
+                                                   data-friend-id="{{ friend.id }}"
+                                                   {% if shared_friend_ids.get(friend.id) %}checked{% endif %}>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="selectAll()">
+                                <i class="bi bi-check-all"></i> Select All
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="selectNone()">
+                                <i class="bi bi-x"></i> Select None
+                            </button>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Save Friend Sharing
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- SECTION 2: External Share Links -->
+        <div class="card mb-4">
             <div class="card-header">
-                <h4 class="mb-0"><i class="bi bi-share"></i> Share Trip: {{ trip.title }}</h4>
+                <h5 class="mb-0"><i class="bi bi-link-45deg"></i> Share with Link</h5>
             </div>
             <div class="card-body">
                 <!-- Create New Share Link -->
                 <div class="mb-4">
-                    <h5>Create Share Link</h5>
+                    <h6>Create Share Link</h6>
                     <form method="POST" action="{{ url_for('share_trip', trip_id=trip.id) }}">
+                        <input type="hidden" name="share_type" value="external">
                         <div class="mb-3">
                             <label for="external_email" class="form-label">Share with (Email) - Optional</label>
                             <input type="email" class="form-control" id="external_email" name="external_email" 
@@ -63,7 +160,7 @@
                 <!-- Existing Shares -->
                 {% if shares %}
                 <div class="mt-4">
-                    <h5>Active Share Links</h5>
+                    <h6>Active Share Links</h6>
                     {% for share in shares %}
                     <div class="card mb-3">
                         <div class="card-body">
@@ -126,6 +223,12 @@
                 {% endif %}
             </div>
         </div>
+
+        <div class="text-center">
+            <a href="{{ url_for('view_trip', trip_id=trip.id) }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Trip
+            </a>
+        </div>
     </div>
 </div>
 
@@ -135,7 +238,6 @@ function copyShareLink(elementId) {
     input.select();
     document.execCommand('copy');
     
-    // Show feedback
     const button = input.nextElementSibling;
     const originalText = button.innerHTML;
     button.innerHTML = '<i class="bi bi-check"></i> Copied!';
@@ -143,5 +245,24 @@ function copyShareLink(elementId) {
         button.innerHTML = originalText;
     }, 2000);
 }
+
+function selectAll() {
+    document.querySelectorAll('.friend-checkbox').forEach(cb => cb.checked = true);
+}
+
+function selectNone() {
+    document.querySelectorAll('.friend-checkbox').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.edit-checkbox').forEach(cb => cb.checked = false);
+}
+
+// Auto-check friend checkbox when edit checkbox is checked
+document.querySelectorAll('.edit-checkbox').forEach(editCb => {
+    editCb.addEventListener('change', function() {
+        if (this.checked) {
+            const friendId = this.dataset.friendId;
+            document.getElementById('friend_' + friendId).checked = true;
+        }
+    });
+});
 </script>
 {% endblock %}
