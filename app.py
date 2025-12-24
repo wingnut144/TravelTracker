@@ -403,67 +403,54 @@ def add_accommodation(trip_id):
 
 @app.route('/trips/<int:trip_id>/share', methods=['GET', 'POST'])
 @login_required
-@requires_trip_access(edit=True)
+@trip_access_required(edit_required=True)
 def share_trip(trip_id):
-    """Share trip with other users"""
+    """Share trip with friends"""
     trip = Trip.query.get_or_404(trip_id)
     
     if request.method == 'POST':
-        share_type = request.form.get('share_type')
+        # Get selected friend IDs from form
+        selected_friends = request.form.getlist('friends[]')
+        can_edit_friends = request.form.getlist('can_edit[]')
         
-        if share_type == 'internal':
-            username = request.form.get('username')
-            can_edit = request.form.get('can_edit') == 'true'
-            
-            user = User.query.filter_by(username=username).first()
-            if not user:
-                flash('User not found.', 'danger')
-                return render_template('trips/share.html', trip=trip)
-            
-            # Check if already shared
-            existing = TripShare.query.filter_by(
-                trip_id=trip.id,
-                shared_with_user_id=user.id
-            ).first()
-            
-            if existing:
-                flash('Trip already shared with this user.', 'warning')
-            else:
-                share = TripShare(
-                    trip_id=trip.id,
-                    shared_with_user_id=user.id,
-                    can_edit=can_edit
-                )
-                db.session.add(share)
-                db.session.commit()
-                flash(f'Trip shared with {username}!', 'success')
+        # Remove all existing shares with friends (we'll recreate them)
+        TripShare.query.filter_by(trip_id=trip.id).filter(
+            TripShare.shared_with_user_id.isnot(None)
+        ).delete()
         
-        elif share_type == 'external':
-            email = request.form.get('email')
-            
-            # Generate share token
-            token = generate_share_token()
+        # Create new shares
+        for friend_id in selected_friends:
+            friend_id = int(friend_id)
+            can_edit = str(friend_id) in can_edit_friends
             
             share = TripShare(
                 trip_id=trip.id,
-                external_email=email,
-                share_token=token,
-                expires_at=datetime.utcnow() + timedelta(days=30)
+                shared_with_user_id=friend_id,
+                can_edit=can_edit
             )
-            
             db.session.add(share)
-            db.session.commit()
-            
-            share_url = url_for('view_shared_trip', token=token, _external=True)
-            flash(f'Share link created: {share_url}', 'success')
         
-        return redirect(url_for('share_trip', trip_id=trip.id))
+        db.session.commit()
+        
+        if selected_friends:
+            flash(f'Trip shared with {len(selected_friends)} friend(s)!', 'success')
+        else:
+            flash('All friend shares removed.', 'info')
+        
+        return redirect(url_for('view_trip', trip_id=trip.id))
     
-    # Get existing shares
-    shares = TripShare.query.filter_by(trip_id=trip.id).all()
+    # GET request - show form
+    friends = current_user.get_friends()
     
-    return render_template('trips/share.html', trip=trip, shares=shares)
-
+    # Get currently shared friends
+    shared_friend_ids = {share.shared_with_user_id: share.can_edit 
+                         for share in trip.shares 
+                         if share.shared_with_user_id is not None}
+    
+    return render_template('trips/share.html',
+                         trip=trip,
+                         friends=friends,
+                         shared_friend_ids=shared_friend_ids)
 
 @app.route('/shared/<token>')
 def view_shared_trip(token):
