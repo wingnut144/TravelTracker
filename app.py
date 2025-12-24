@@ -86,6 +86,7 @@ def get_airline_name(iata_code):
         'NZ': 'Air New Zealand',
     }
     return airlines.get(iata_code, iata_code)
+
 # Create Flask app
 app = Flask(__name__)
 
@@ -119,6 +120,9 @@ if not app.debug:
     
     app.logger.setLevel(logging.INFO)
     app.logger.info('Travel Tracker startup')
+
+# Get logger for use in helper functions
+logger = app.logger
 
 # Template filters
 @app.template_filter('datetime')
@@ -999,6 +1003,7 @@ def send_friend_request():
     
     receiver_name = f"{receiver.first_name} {receiver.last_name}".strip() if receiver.first_name or receiver.last_name else receiver.username
     flash(f'Friend request sent to {receiver_name}!', 'success')
+    return redirect(url_for('friends'))
 
 @app.route('/friends/accept/<int:request_id>', methods=['POST'])
 @login_required
